@@ -1,0 +1,498 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://building-bridges.local/schema/scenario.schema.json",
+  "title": "Building Bridges scenario seed file",
+  "description": "All scenarios for the Building Bridges conference simulator. All people, schools, and records are fictional (Pemberton Falls Public Schools, MA).",
+  "type": "object",
+  "required": [
+    "scenarios"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "$schema": {
+      "type": "string"
+    },
+    "scenarios": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/definitions/scenario"
+      }
+    }
+  },
+  "definitions": {
+    "nonEmpty": {
+      "type": "string",
+      "minLength": 1
+    },
+    "stringList": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/nonEmpty"
+      }
+    },
+    "docLetter": {
+      "type": "string",
+      "enum": [
+        "A",
+        "B",
+        "C",
+        "D",
+        "E",
+        "F"
+      ]
+    },
+    "stat": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "text",
+        "source"
+      ],
+      "properties": {
+        "text": {
+          "description": "The finding. Keep direct quotes in quotation marks.",
+          "$ref": "#/definitions/nonEmpty"
+        },
+        "source": {
+          "description": "Attribution, e.g. 'U.S. Department of Education' or 'DESE 2026 release, via Lynn Community TV'.",
+          "$ref": "#/definitions/nonEmpty"
+        }
+      }
+    },
+    "scenario": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "status",
+        "title",
+        "topic",
+        "research",
+        "raised_by",
+        "student_name",
+        "grade",
+        "setting",
+        "teacher_concern",
+        "student_strength",
+        "documents",
+        "parent_persona",
+        "student_persona",
+        "support_contacts"
+      ],
+      "properties": {
+        "id": {
+          "description": "Two-digit id. Also the prefix of this scenario's document files (e.g. 01A-...).",
+          "type": "string",
+          "pattern": "^[0-9]{2}$"
+        },
+        "status": {
+          "description": "'ready' scenarios can be drawn at random (High temperature). 'stub' scenarios can only be picked by hand.",
+          "type": "string",
+          "enum": [
+            "ready",
+            "stub"
+          ]
+        },
+        "title": {
+          "$ref": "#/definitions/nonEmpty"
+        },
+        "topic": {
+          "description": "The situation this scenario practices, e.g. 'Student is repeatedly absent and missing content'.",
+          "$ref": "#/definitions/nonEmpty"
+        },
+        "research": {
+          "description": "Why this conversation matters. Shown to the teacher in the briefing.",
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "prevalence",
+            "why_address_it",
+            "massachusetts"
+          ],
+          "properties": {
+            "prevalence": {
+              "$ref": "#/definitions/stat"
+            },
+            "why_address_it": {
+              "$ref": "#/definitions/stat"
+            },
+            "massachusetts": {
+              "$ref": "#/definitions/stat"
+            }
+          }
+        },
+        "raised_by": {
+          "description": "Who asked for the conference. If 'parent', the parent opens the meeting with their concern.",
+          "type": "string",
+          "enum": [
+            "teacher",
+            "parent"
+          ]
+        },
+        "student_name": {
+          "$ref": "#/definitions/nonEmpty"
+        },
+        "grade": {
+          "description": "Grade level, 0 = kindergarten.",
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 12
+        },
+        "setting": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "school",
+            "teacher_role",
+            "meeting_context"
+          ],
+          "properties": {
+            "school": {
+              "$ref": "#/definitions/nonEmpty"
+            },
+            "teacher_role": {
+              "description": "Who the player is, e.g. 'Grade 9 Algebra I teacher'.",
+              "$ref": "#/definitions/nonEmpty"
+            },
+            "meeting_context": {
+              "description": "When/where/why the meeting is happening.",
+              "$ref": "#/definitions/nonEmpty"
+            }
+          }
+        },
+        "teacher_concern": {
+          "description": "The teacher's opening concern.",
+          "$ref": "#/definitions/nonEmpty"
+        },
+        "student_strength": {
+          "description": "The 'BUT I notice...' observation that advocates for the student.",
+          "$ref": "#/definitions/nonEmpty"
+        },
+        "documents": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "A"
+          ],
+          "properties": {
+            "A": {
+              "$ref": "#/definitions/record"
+            },
+            "B": {
+              "$ref": "#/definitions/record"
+            },
+            "C": {
+              "$ref": "#/definitions/record"
+            },
+            "D": {
+              "$ref": "#/definitions/policy"
+            },
+            "E": {
+              "$ref": "#/definitions/surprise"
+            },
+            "F": {
+              "$ref": "#/definitions/surprise"
+            }
+          },
+          "description": "A is required. B-F are optional (a tutorial can have just one or two records and no surprise document)."
+        },
+        "parent_persona": {
+          "$ref": "#/definitions/parentPersona"
+        },
+        "student_persona": {
+          "$ref": "#/definitions/studentPersona"
+        },
+        "support_contacts": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "counselor",
+            "nurse",
+            "principal",
+            "colleague"
+          ],
+          "properties": {
+            "counselor": {
+              "$ref": "#/definitions/contact"
+            },
+            "nurse": {
+              "$ref": "#/definitions/contact"
+            },
+            "principal": {
+              "$ref": "#/definitions/contact"
+            },
+            "colleague": {
+              "$ref": "#/definitions/contact"
+            }
+          }
+        },
+        "tutorial": {
+          "description": "A gentle first conference: listed first in setup, with coaching tips and no walkout.",
+          "type": "boolean"
+        }
+      }
+    },
+    "documentBase": {
+      "type": "object",
+      "required": [
+        "title",
+        "file",
+        "source",
+        "summary"
+      ],
+      "properties": {
+        "title": {
+          "$ref": "#/definitions/nonEmpty"
+        },
+        "file": {
+          "description": "File name inside content/documents/, e.g. 01A-attendance-letter.html",
+          "type": "string",
+          "pattern": "^[0-9]{2}[A-F]-[a-z0-9-]+\\.html$"
+        },
+        "source": {
+          "description": "Where the record lives, e.g. 'StudentView', 'Attendance Office'.",
+          "$ref": "#/definitions/nonEmpty"
+        },
+        "summary": {
+          "description": "Plain-language summary of what the document shows. Given to the AI tension judge and support contacts; never shown to the parent or student.",
+          "$ref": "#/definitions/nonEmpty"
+        }
+      }
+    },
+    "record": {
+      "description": "Internal record (A, B, C). Visible to the teacher during the briefing.",
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/documentBase"
+        }
+      ],
+      "properties": {
+        "title": true,
+        "file": true,
+        "source": true,
+        "summary": true
+      },
+      "additionalProperties": false
+    },
+    "policy": {
+      "description": "Cited policy (D). Visible to the teacher during the briefing.",
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/documentBase"
+        }
+      ],
+      "required": [
+        "citation"
+      ],
+      "properties": {
+        "title": true,
+        "file": true,
+        "source": true,
+        "summary": true,
+        "citation": {
+          "description": "Short citation, e.g. 'PFPS Policy JH, Section 3'.",
+          "$ref": "#/definitions/nonEmpty"
+        }
+      },
+      "additionalProperties": false
+    },
+    "surprise": {
+      "description": "Surprise document. E reveals the school dropped the ball; F contradicts the family's likely claim.",
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/documentBase"
+        }
+      ],
+      "required": [
+        "delivery"
+      ],
+      "properties": {
+        "title": true,
+        "file": true,
+        "source": true,
+        "summary": true,
+        "delivery": {
+          "$ref": "#/definitions/delivery"
+        }
+      },
+      "additionalProperties": false
+    },
+    "delivery": {
+      "description": "How the surprise document reaches the teacher's computer. Should match where the document lives.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "channel",
+        "app",
+        "from",
+        "subject",
+        "body",
+        "attachment_name",
+        "notification"
+      ],
+      "properties": {
+        "channel": {
+          "type": "string",
+          "enum": [
+            "email",
+            "chat",
+            "portal"
+          ]
+        },
+        "app": {
+          "description": "The app on the teacher's computer, e.g. 'PFPS Mail', 'StudentView'.",
+          "$ref": "#/definitions/nonEmpty"
+        },
+        "from": {
+          "$ref": "#/definitions/nonEmpty"
+        },
+        "subject": {
+          "$ref": "#/definitions/nonEmpty"
+        },
+        "body": {
+          "$ref": "#/definitions/nonEmpty"
+        },
+        "attachment_name": {
+          "$ref": "#/definitions/nonEmpty"
+        },
+        "notification": {
+          "description": "Toast text, e.g. 'New message from Attendance Office · 1 attachment'.",
+          "$ref": "#/definitions/nonEmpty"
+        }
+      }
+    },
+    "personaBase": {
+      "type": "object",
+      "required": [
+        "name",
+        "personality",
+        "speaking_style",
+        "knows",
+        "hiding",
+        "likely_claim"
+      ],
+      "properties": {
+        "name": {
+          "$ref": "#/definitions/nonEmpty"
+        },
+        "personality": {
+          "$ref": "#/definitions/nonEmpty"
+        },
+        "speaking_style": {
+          "$ref": "#/definitions/nonEmpty"
+        },
+        "knows": {
+          "description": "Everything this character knows. They know nothing else about school records.",
+          "$ref": "#/definitions/stringList"
+        },
+        "hiding": {
+          "description": "What they are hiding or haven't said yet. Revealed only if the teacher earns trust.",
+          "$ref": "#/definitions/stringList"
+        },
+        "likely_claim": {
+          "description": "The claim they are likely to make. Document F contradicts it.",
+          "$ref": "#/definitions/nonEmpty"
+        }
+      }
+    },
+    "parentPersona": {
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/personaBase"
+        }
+      ],
+      "required": [
+        "relationship"
+      ],
+      "properties": {
+        "name": true,
+        "personality": true,
+        "speaking_style": true,
+        "knows": true,
+        "hiding": true,
+        "likely_claim": true,
+        "relationship": {
+          "description": "Relationship to the student, e.g. 'mother'.",
+          "$ref": "#/definitions/nonEmpty"
+        },
+        "softens_when": {
+          "$ref": "#/definitions/stringList"
+        },
+        "escalates_when": {
+          "$ref": "#/definitions/stringList"
+        }
+      },
+      "additionalProperties": false
+    },
+    "studentPersona": {
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/personaBase"
+        }
+      ],
+      "required": [
+        "age"
+      ],
+      "properties": {
+        "name": true,
+        "personality": true,
+        "speaking_style": true,
+        "knows": true,
+        "hiding": true,
+        "likely_claim": true,
+        "age": {
+          "type": "integer",
+          "minimum": 4,
+          "maximum": 20
+        },
+        "speaks_up_when": {
+          "$ref": "#/definitions/stringList"
+        }
+      },
+      "additionalProperties": false
+    },
+    "contact": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "name",
+        "title",
+        "knows",
+        "can_share"
+      ],
+      "properties": {
+        "name": {
+          "$ref": "#/definitions/nonEmpty"
+        },
+        "title": {
+          "$ref": "#/definitions/nonEmpty"
+        },
+        "knows": {
+          "description": "What this person knows about the student.",
+          "$ref": "#/definitions/nonEmpty"
+        },
+        "can_share": {
+          "description": "Document letter this contact can send the teacher, or null.",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/docLetter"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "can_join": {
+          "description": "True if this person can be asked to come into the room and join the conference in person.",
+          "type": "boolean"
+        }
+      }
+    }
+  }
+}

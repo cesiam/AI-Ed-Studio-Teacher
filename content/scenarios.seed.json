@@ -1,0 +1,1788 @@
+{
+  "$schema": "./schema/scenario.schema.json",
+  "scenarios": [
+    {
+      "id": "00",
+      "status": "ready",
+      "tutorial": true,
+      "title": "Tutorial: A Good Start with Leo",
+      "topic": "A friendly check-in: a strong reader whose reading log keeps coming back blank",
+      "research": {
+        "prevalence": {
+          "text": "33% of U.S. fourth graders performed at or above the NAEP Proficient level in reading in 2022.",
+          "source": "NAEP 2022 Reading Report Card (NCES)"
+        },
+        "why_address_it": {
+          "text": "\"When schools, families, and community groups work together to support learning, children tend to do better in school, stay in school longer, and like school more.\"",
+          "source": "Henderson & Mapp, A New Wave of Evidence (SEDL, 2002)"
+        },
+        "massachusetts": {
+          "text": "Massachusetts fourth graders' average NAEP reading score is consistently among the highest in the nation.",
+          "source": "NAEP State Profiles (NCES)"
+        }
+      },
+      "raised_by": "teacher",
+      "student_name": "Leo Martins",
+      "grade": 3,
+      "setting": {
+        "school": "Pemberton Falls Elementary School",
+        "teacher_role": "Grade 3 classroom teacher",
+        "meeting_context": "A short, teacher-requested check-in after school on a Thursday in Room 108. Ms. Martins came straight from work and brought Leo with her. She seems glad to be here."
+      },
+      "teacher_concern": "Leo's weekly reading log has come back blank or half-filled for three of the last four weeks, so he's missing the reading-log points on his report card. You'd like to agree on a simple routine at home.",
+      "student_strength": "BUT I notice Leo is one of the most enthusiastic readers in the room. He's always the first to volunteer during read-aloud, and last week he explained the ending of our chapter book to his whole table.",
+      "documents": {
+        "A": {
+          "title": "Leo's Reading Progress",
+          "file": "00A-reading-progress.html",
+          "source": "Classroom records",
+          "summary": "Leo reads above grade level and his fall-to-winter reading level went up two steps. Reading-log points: 1 of 4 weeks complete this month."
+        },
+        "B": {
+          "title": "Weekly Reading Log",
+          "file": "00B-reading-log.html",
+          "source": "Leo's take-home folder",
+          "summary": "Leo's log for the last four weeks: week 1 is full, weeks 2 and 3 are blank, week 4 has two nights filled in. Parent signature lines are empty."
+        }
+      },
+      "parent_persona": {
+        "name": "Sofia Martins",
+        "relationship": "mother",
+        "personality": "Warm, friendly and a little apologetic. She works as a dental hygienist and evenings are busy with Leo and his baby sister. She's proud of Leo and happy the teacher asked to meet. She wants to help and is easy to talk to.",
+        "speaking_style": "Friendly and chatty, laughs easily, says 'oh, I know' and 'that's so him'. Asks practical questions.",
+        "knows": [
+          "Leo loves to read, especially comics and dragon books.",
+          "The reading log goes home in his folder, but she doesn't always see it.",
+          "Evenings are hectic since the baby was born in the summer.",
+          "She thinks Leo is doing well in school."
+        ],
+        "hiding": [
+          "She never really understood the log was graded; she thought it was optional.",
+          "She's a little worried Leo will struggle like his older cousin did, and she'd love ideas for how to keep him reading."
+        ],
+        "likely_claim": "Leo reads every night, she's sure of it; they just forget to write it down.",
+        "softens_when": [
+          "The teacher says something nice and specific about Leo.",
+          "The teacher asks about their evenings.",
+          "The teacher suggests something simple and practical."
+        ],
+        "escalates_when": [
+          "The teacher makes it sound like she doesn't care about Leo's reading."
+        ]
+      },
+      "student_persona": {
+        "name": "Leo Martins",
+        "age": 8,
+        "personality": "Cheerful, talkative, a bit shy at first with grown-ups in a meeting. Lights up when books come up.",
+        "speaking_style": "Short, excited sentences. Says 'um' a lot. Loves to name the book he's reading.",
+        "knows": [
+          "He reads comics in bed with a flashlight most nights.",
+          "The log is at the bottom of his backpack and he forgets about it.",
+          "He is reading a dragon series and is on book three."
+        ],
+        "hiding": [
+          "He reads under the covers after lights-out and is afraid he'll get in trouble for staying up."
+        ],
+        "likely_claim": "He does read. He just forgets the paper.",
+        "speaks_up_when": [
+          "The teacher asks him directly.",
+          "Someone mentions books, dragons, or read-aloud."
+        ]
+      },
+      "support_contacts": {
+        "counselor": {
+          "name": "Grace Whitfield",
+          "title": "School Counselor",
+          "knows": "Knows Leo as a happy, well-adjusted kid. No concerns on file. Suggests praising the reading he already does and keeping any routine tiny.",
+          "can_share": null
+        },
+        "nurse": {
+          "name": "Tom Aldana",
+          "title": "School Nurse",
+          "knows": "No health concerns on file for Leo. Mentions that eight-year-olds need about 9 to 12 hours of sleep, so a bedtime reading routine with a set lights-out can help.",
+          "can_share": null
+        },
+        "principal": {
+          "name": "Janelle Ruiz",
+          "title": "Principal",
+          "knows": "The school counts reading minutes any way families can manage: a photo of the log, a quick note, or the class app. The log is meant to build a habit, not to punish.",
+          "can_share": null
+        },
+        "colleague": {
+          "name": "Ben Castillo",
+          "title": "Grade 3 teacher next door",
+          "knows": "Has had luck letting students keep the log taped inside their book instead of in the folder, so it's there when they read.",
+          "can_share": null
+        }
+      }
+    },
+    {
+      "id": "01",
+      "status": "ready",
+      "title": "Chronic Absence: Maya",
+      "topic": "Student is repeatedly absent and missing content",
+      "research": {
+        "prevalence": {
+          "text": "\"The U.S. rate of chronic absenteeism ... decreased to 28% in the 2022-23 school year.\"",
+          "source": "U.S. Department of Education"
+        },
+        "why_address_it": {
+          "text": "\"Chronic absenteeism is the single strongest predictor of dropping out before graduation.\"",
+          "source": "NJ Department of Education"
+        },
+        "massachusetts": {
+          "text": "17.1% of students were chronically absent in 2025-26, down from 22.2% in 2022-23.",
+          "source": "DESE 2026 release, via Lynn Community TV"
+        }
+      },
+      "raised_by": "teacher",
+      "student_name": "Maya Reyes",
+      "grade": 9,
+      "setting": {
+        "school": "Pemberton Falls High School",
+        "teacher_role": "Grade 9 Algebra I teacher",
+        "meeting_context": "Teacher-requested conference, Tuesday November 25, 2025, 3:15 PM, Room 214. Ms. Reyes left work early to be here. Maya came with her."
+      },
+      "teacher_concern": "Maya has missed 14 days since September (9 of them unexcused) and signed in late 4 times. She is missing core Algebra I instruction, and her grade has dropped from a B+ to a D because of 11 missing assignments.",
+      "student_strength": "BUT I notice that when Maya is here, she's the first to finish the warm-up, her quiz average is a 91, and she helps the students at her table without being asked. She also mentioned she's been walking her little brother to school since her mom started early shifts.",
+      "documents": {
+        "A": {
+          "title": "7-Day Absence Notification Letter",
+          "file": "01A-attendance-letter.html",
+          "source": "Attendance Office",
+          "summary": "Form letter dated October 20, 2025, mailed to the Reyes home at 18 Orchard Lane. States Maya has 7 absences, 5 of them unexcused, cites Massachusetts law (M.G.L. c. 76, § 1A) and PFPS Policy JH, and asks the family to call the Attendance Office to schedule a meeting to agree on action steps. No reply is recorded."
+        },
+        "B": {
+          "title": "StudentView Attendance Summary",
+          "file": "01B-attendance-record.html",
+          "source": "StudentView",
+          "summary": "Term 1 attendance through November 21: 14 absences (5 excused with a parent note, 9 unexcused) and 4 tardies to period 1. 12 of the 14 absences fall on a Monday or Friday. Maya's attendance rate is 76%, well below the 90% line for chronic absence."
+        },
+        "C": {
+          "title": "Algebra I Progress Report",
+          "file": "01C-progress-report.html",
+          "source": "PFPS Classroom",
+          "summary": "Current grade 64 (D), down from 88 (B+) at the start of October. Quiz average 91. 11 missing homework and classwork assignments, most from days she was absent. Warm-up completion 100% on days present. Teacher comment: 'Strong reasoning; missing work is the issue.'"
+        },
+        "D": {
+          "title": "PFPS Policy JH: Student Attendance",
+          "file": "01D-attendance-policy.html",
+          "source": "PFPS Policy Manual",
+          "citation": "PFPS Policy JH, Sections 2-4; M.G.L. c. 76, § 1A",
+          "summary": "Chronic absence means missing 10% or more of enrolled days for any reason. After 5 unexcused absences (M.G.L. c. 76, § 1A) the school must make a good-faith effort to reach the family by phone and mail and invite them to build an attendance plan together. Supports named in the policy: family liaison, transportation review, counselor referral, and referral to before- and after-school programs. The policy says the purpose is support, not punishment."
+        },
+        "E": {
+          "title": "Automated Attendance Call Log",
+          "file": "01E-auto-call-log.html",
+          "source": "Main Office (StudentView call system)",
+          "summary": "All 9 automated absence calls since September 15 went to (413) 555-0192, which returned 'number not in service' every time. A contact update form Ms. Reyes submitted on September 8 with her new number, (413) 555-0347, was stamped received but never entered into StudentView. The school never actually reached her by phone.",
+          "delivery": {
+            "channel": "email",
+            "app": "PFPS Mail",
+            "from": "Carla Mendes, Main Office",
+            "subject": "Re: Reyes contact info",
+            "body": "I pulled the call log you asked about. The new number Ms. Reyes gave us in September never got entered, so every absence call went to a dead line. I'm so sorry. I'm fixing it right now.",
+            "attachment_name": "AutoCall_Log_Reyes_M.pdf",
+            "notification": "New message from Main Office · 1 attachment"
+          }
+        },
+        "F": {
+          "title": "Late Arrival Sign-In Sheet",
+          "file": "01F-late-arrival-sheet.html",
+          "source": "Attendance Office",
+          "summary": "Maya's four late sign-ins, written in her own handwriting: 10/15 8:41 'overslept', 10/28 8:52 'missed bus', 11/12 9:10 'overslept', 11/19 8:38 'stopped at dunkin w/ friends'. The Route 6 bus log for 10/28 shows the bus arrived at 7:16 AM, two minutes early. None of the reasons mention the bus being late.",
+          "delivery": {
+            "channel": "email",
+            "app": "PFPS Mail",
+            "from": "Denise Albright, Attendance Office",
+            "subject": "Maya Reyes late sign-ins",
+            "body": "Here is the scan you asked for.",
+            "attachment_name": "Late_Arrival_Sheet_Maya_R.pdf",
+            "notification": "New message from Attendance Office · 1 attachment"
+          }
+        }
+      },
+      "parent_persona": {
+        "name": "Ana Reyes",
+        "relationship": "mother",
+        "personality": "Warm but proud and exhausted. Since late August she has worked the 6:00 AM shift as a shift lead at the Pioneer Valley distribution center. Fiercely protective of Maya and afraid of being judged as a neglectful mother. Direct; gets clipped and cold when she feels talked down to. Relaxes quickly when someone treats her as a partner.",
+        "speaking_style": "Plain, direct sentences. Bilingual; slips into a Spanish word or phrase ('mija', 'mira', 'ay') when emotional. Says 'with all respect' right before she disagrees.",
+        "knows": [
+          "Maya has 'missed some days'. She thinks it is five or six, not fourteen.",
+          "Maya has complained about morning headaches.",
+          "A letter came from the school in October. She skimmed it and thought it was an automated form letter.",
+          "She has never received a single phone call from the school about absences.",
+          "She switched to early shifts in late August and leaves the house at 5:30 AM.",
+          "Maya's little brother Mateo is in grade 2 at Pemberton Falls Elementary."
+        ],
+        "hiding": [
+          "She asks Maya to walk Mateo to Pemberton Falls Elementary every morning. The elementary school doesn't open its doors until 8:10, so Maya is late to high school or gives up and stays home.",
+          "When Mateo is sick, Maya stays home with him because Ana cannot lose shifts.",
+          "She is scared of losing her job if she asks her supervisor for a later shift.",
+          "She updated her phone number at the high school main office in September and assumed the school had it. She has not mentioned this yet."
+        ],
+        "likely_claim": "Maya's lateness and absences are the bus's fault: the Route 6 bus is unreliable, comes late or skips the stop, so Maya misses it.",
+        "softens_when": [
+          "The teacher names something specific Maya does well.",
+          "The teacher asks about the family's mornings instead of assuming.",
+          "The teacher offers concrete help (for example, a before-school program for Mateo) rather than consequences.",
+          "The school admits its own mistakes."
+        ],
+        "escalates_when": [
+          "She hears words like 'truancy', 'court', 'DCF', or 'consequences'.",
+          "The teacher reads numbers at her without context or uses education jargon.",
+          "Anyone implies she doesn't care about Maya's education.",
+          "The teacher accuses Maya of lying in front of her."
+        ]
+      },
+      "student_persona": {
+        "name": "Maya Reyes",
+        "age": 14,
+        "personality": "Quiet, dry sense of humor, sharp at math and secretly proud of it. Loyal to her mom and protective of her little brother. Short answers and little eye contact with adults she doesn't trust yet; opens up when someone notices something she is good at.",
+        "speaking_style": "Short, flat teenage answers ('I guess', 'it's fine'). Longer and warmer when talking about math puzzles or Mateo. Never swears in front of her mom.",
+        "knows": [
+          "She has missed more days than her mom realizes.",
+          "The bus has mostly been on time. She misses it because she walks Mateo to Pemberton Falls Elementary first.",
+          "She wrote 'overslept' and 'missed bus' on the sign-in sheet so no one would ask questions.",
+          "She falls behind on homework because she watches Mateo after school and is exhausted by the time he's asleep.",
+          "She actually likes Algebra and the warm-ups are her favorite part of the day."
+        ],
+        "hiding": [
+          "That she walks Mateo to school every morning. She is afraid her mom will get in trouble.",
+          "That she stayed home four or five times when Mateo was sick.",
+          "That one late arrival was because she stopped at Dunkin' with friends. She's embarrassed about it."
+        ],
+        "likely_claim": "The bus is unreliable, and sometimes she just oversleeps.",
+        "speaks_up_when": [
+          "The teacher asks her a question directly.",
+          "Her mom is being blamed or looks upset.",
+          "Someone mentions math, the warm-ups, or Mateo."
+        ]
+      },
+      "support_contacts": {
+        "counselor": {
+          "name": "Daniel Okafor",
+          "title": "School Counselor",
+          "knows": "Met with Maya once in October for a 9th-grade check-in. She said she was 'just tired, helping at home a lot' and didn't want to say more. On October 24 he tried calling home and the number was out of service. He emailed the main office about it and the office sent him the automated call log, but he never heard whether it was fixed.",
+          "can_share": "E"
+        },
+        "nurse": {
+          "name": "Patricia Lindqvist",
+          "title": "School Nurse",
+          "knows": "Maya visited twice in October during period 1 with headaches. Both times she said she skipped breakfast; she ate crackers and returned to class. No chronic health condition on file; immunizations current.",
+          "can_share": null
+        },
+        "principal": {
+          "name": "Dr. Renée Castellanos",
+          "title": "Principal",
+          "knows": "Under Massachusetts law (M.G.L. c. 76, § 1A) and Policy JH, once a student has 5 unexcused absences the school must notify the family and the principal must try to meet with them to agree on action steps. The purpose is support, not punishment. The district family liaison, Luz Ortega, speaks Spanish and can join a follow-up meeting. Pemberton Falls Elementary runs a before-school program that opens at 7:15 AM with sliding-scale fees, and the district can request a transportation review.",
+          "can_share": "D"
+        },
+        "colleague": {
+          "name": "Holly Brandt",
+          "title": "Grade 9 Biology teacher",
+          "knows": "Maya is absent in Biology on the same days. She got one of the top scores on the cell-model project. In October Maya told Ms. Brandt she was 'on Mateo duty' in the mornings and had to get him to Pemberton Falls Elementary first.",
+          "can_share": null
+        }
+      }
+    },
+    {
+      "id": "02",
+      "status": "stub",
+      "title": "Inattention in Class",
+      "topic": "Student cannot focus / is inattentive",
+      "research": {
+        "prevalence": {
+          "text": "26% of public school leaders reported that \"a lack of focus or inattention from students had a 'severe negative impact' on learning\" in 2023-24.",
+          "source": "IES/NCES School Pulse Panel"
+        },
+        "why_address_it": {
+          "text": "\"A lack of student attentiveness and focus is causing disruption in public schools across the nation\"",
+          "source": "NCSSLE, U.S. Dept. of Education"
+        },
+        "massachusetts": {
+          "text": "66% of MA parents of grades 6-12 students support a statewide school-day ban on cellphones and smartwatches (MassINC poll, fall 2025).",
+          "source": "Boston Globe"
+        }
+      },
+      "raised_by": "teacher",
+      "student_name": "TODO: student name",
+      "grade": 9,
+      "setting": {
+        "school": "Pemberton Falls High School",
+        "teacher_role": "TODO: who the teacher is",
+        "meeting_context": "TODO: when, where, and why the meeting is happening"
+      },
+      "teacher_concern": "TODO: the teacher's opening concern",
+      "student_strength": "TODO: BUT I notice...",
+      "documents": {
+        "A": {
+          "title": "TODO: internal record title",
+          "file": "02A-todo.html",
+          "source": "TODO: where this record lives",
+          "summary": "TODO: what this document shows"
+        },
+        "B": {
+          "title": "TODO: internal record title",
+          "file": "02B-todo.html",
+          "source": "TODO: where this record lives",
+          "summary": "TODO: what this document shows"
+        },
+        "C": {
+          "title": "TODO: internal record title",
+          "file": "02C-todo.html",
+          "source": "TODO: where this record lives",
+          "summary": "TODO: what this document shows"
+        },
+        "D": {
+          "title": "TODO: cited policy title",
+          "file": "02D-todo.html",
+          "source": "TODO: where this record lives",
+          "summary": "TODO: what this document shows",
+          "citation": "TODO: policy citation"
+        },
+        "E": {
+          "title": "TODO: school-dropped-the-ball document title",
+          "file": "02E-todo.html",
+          "source": "TODO: where this record lives",
+          "summary": "TODO: what this document shows",
+          "delivery": {
+            "channel": "email",
+            "app": "PFPS Mail",
+            "from": "TODO: sender name, office",
+            "subject": "TODO: subject line",
+            "body": "TODO: message body",
+            "attachment_name": "TODO: Attachment_Name.pdf",
+            "notification": "TODO: New message from ... · 1 attachment"
+          }
+        },
+        "F": {
+          "title": "TODO: document contradicting the family's claim title",
+          "file": "02F-todo.html",
+          "source": "TODO: where this record lives",
+          "summary": "TODO: what this document shows",
+          "delivery": {
+            "channel": "email",
+            "app": "PFPS Mail",
+            "from": "TODO: sender name, office",
+            "subject": "TODO: subject line",
+            "body": "TODO: message body",
+            "attachment_name": "TODO: Attachment_Name.pdf",
+            "notification": "TODO: New message from ... · 1 attachment"
+          }
+        }
+      },
+      "parent_persona": {
+        "name": "TODO: parent name",
+        "relationship": "TODO: relationship to student",
+        "personality": "TODO: personality",
+        "speaking_style": "TODO: how they talk",
+        "knows": [
+          "TODO: what the parent knows"
+        ],
+        "hiding": [
+          "TODO: what the parent is hiding or hasn't said"
+        ],
+        "likely_claim": "TODO: the claim document F contradicts",
+        "softens_when": [
+          "TODO: what calms them down"
+        ],
+        "escalates_when": [
+          "TODO: what sets them off"
+        ]
+      },
+      "student_persona": {
+        "name": "TODO: student name",
+        "age": 14,
+        "personality": "TODO: personality",
+        "speaking_style": "TODO: how they talk",
+        "knows": [
+          "TODO: what the student knows"
+        ],
+        "hiding": [
+          "TODO: what the student is hiding or hasn't said"
+        ],
+        "likely_claim": "TODO: the student's version",
+        "speaks_up_when": [
+          "TODO: when the student jumps in"
+        ]
+      },
+      "support_contacts": {
+        "counselor": {
+          "name": "TODO: counselor name",
+          "title": "TODO: counselor title",
+          "knows": "TODO: what the counselor knows about this student",
+          "can_share": null
+        },
+        "nurse": {
+          "name": "TODO: nurse name",
+          "title": "TODO: nurse title",
+          "knows": "TODO: what the nurse knows about this student",
+          "can_share": null
+        },
+        "principal": {
+          "name": "TODO: principal name",
+          "title": "TODO: principal title",
+          "knows": "TODO: what the principal knows about this student",
+          "can_share": null
+        },
+        "colleague": {
+          "name": "TODO: colleague name",
+          "title": "TODO: colleague title",
+          "knows": "TODO: what the colleague knows about this student",
+          "can_share": null
+        }
+      }
+    },
+    {
+      "id": "03",
+      "status": "stub",
+      "title": "Bruises and Bullying",
+      "topic": "Parent reports bruises or bullying",
+      "research": {
+        "prevalence": {
+          "text": "\"19% of students in grades 9–12 reported being bullied on school property in the past year\" (2023 national YRBS).",
+          "source": "Mass.gov"
+        },
+        "why_address_it": {
+          "text": "\"Bullying can result in physical injury, social and emotional distress, self-harm, and even death.\"",
+          "source": "CDC"
+        },
+        "massachusetts": {
+          "text": "44% of MA middle schoolers reported being bullied and/or cyberbullied in the past year, a 16% increase from 2021 to 2023 (MA Youth Health Survey).",
+          "source": "Mass.gov"
+        }
+      },
+      "raised_by": "parent",
+      "student_name": "TODO: student name",
+      "grade": 9,
+      "setting": {
+        "school": "Pemberton Falls High School",
+        "teacher_role": "TODO: who the teacher is",
+        "meeting_context": "TODO: when, where, and why the meeting is happening"
+      },
+      "teacher_concern": "TODO: the teacher's opening concern",
+      "student_strength": "TODO: BUT I notice...",
+      "documents": {
+        "A": {
+          "title": "TODO: internal record title",
+          "file": "03A-todo.html",
+          "source": "TODO: where this record lives",
+          "summary": "TODO: what this document shows"
+        },
+        "B": {
+          "title": "TODO: internal record title",
+          "file": "03B-todo.html",
+          "source": "TODO: where this record lives",
+          "summary": "TODO: what this document shows"
+        },
+        "C": {
+          "title": "TODO: internal record title",
+          "file": "03C-todo.html",
+          "source": "TODO: where this record lives",
+          "summary": "TODO: what this document shows"
+        },
+        "D": {
+          "title": "TODO: cited policy title",
+          "file": "03D-todo.html",
+          "source": "TODO: where this record lives",
+          "summary": "TODO: what this document shows",
+          "citation": "TODO: policy citation"
+        },
+        "E": {
+          "title": "TODO: school-dropped-the-ball document title",
+          "file": "03E-todo.html",
+          "source": "TODO: where this record lives",
+          "summary": "TODO: what this document shows",
+          "delivery": {
+            "channel": "email",
+            "app": "PFPS Mail",
+            "from": "TODO: sender name, office",
+            "subject": "TODO: subject line",
+            "body": "TODO: message body",
+            "attachment_name": "TODO: Attachment_Name.pdf",
+            "notification": "TODO: New message from ... · 1 attachment"
+          }
+        },
+        "F": {
+          "title": "TODO: document contradicting the family's claim title",
+          "file": "03F-todo.html",
+          "source": "TODO: where this record lives",
+          "summary": "TODO: what this document shows",
+          "delivery": {
+            "channel": "email",
+            "app": "PFPS Mail",
+            "from": "TODO: sender name, office",
+            "subject": "TODO: subject line",
+            "body": "TODO: message body",
+            "attachment_name": "TODO: Attachment_Name.pdf",
+            "notification": "TODO: New message from ... · 1 attachment"
+          }
+        }
+      },
+      "parent_persona": {
+        "name": "TODO: parent name",
+        "relationship": "TODO: relationship to student",
+        "personality": "TODO: personality",
+        "speaking_style": "TODO: how they talk",
+        "knows": [
+          "TODO: what the parent knows"
+        ],
+        "hiding": [
+          "TODO: what the parent is hiding or hasn't said"
+        ],
+        "likely_claim": "TODO: the claim document F contradicts",
+        "softens_when": [
+          "TODO: what calms them down"
+        ],
+        "escalates_when": [
+          "TODO: what sets them off"
+        ]
+      },
+      "student_persona": {
+        "name": "TODO: student name",
+        "age": 14,
+        "personality": "TODO: personality",
+        "speaking_style": "TODO: how they talk",
+        "knows": [
+          "TODO: what the student knows"
+        ],
+        "hiding": [
+          "TODO: what the student is hiding or hasn't said"
+        ],
+        "likely_claim": "TODO: the student's version",
+        "speaks_up_when": [
+          "TODO: when the student jumps in"
+        ]
+      },
+      "support_contacts": {
+        "counselor": {
+          "name": "TODO: counselor name",
+          "title": "TODO: counselor title",
+          "knows": "TODO: what the counselor knows about this student",
+          "can_share": null
+        },
+        "nurse": {
+          "name": "TODO: nurse name",
+          "title": "TODO: nurse title",
+          "knows": "TODO: what the nurse knows about this student",
+          "can_share": null
+        },
+        "principal": {
+          "name": "TODO: principal name",
+          "title": "TODO: principal title",
+          "knows": "TODO: what the principal knows about this student",
+          "can_share": null
+        },
+        "colleague": {
+          "name": "TODO: colleague name",
+          "title": "TODO: colleague title",
+          "knows": "TODO: what the colleague knows about this student",
+          "can_share": null
+        }
+      }
+    },
+    {
+      "id": "04",
+      "status": "stub",
+      "title": "Off Track to Graduate",
+      "topic": "Student is struggling to meet graduation requirements",
+      "research": {
+        "prevalence": {
+          "text": "In 2021-22, \"the U.S. average adjusted cohort graduation rate (ACGR) for public high school students was 87 percent\"",
+          "source": "NCES"
+        },
+        "why_address_it": {
+          "text": "For full-time workers who started but did not finish high school, \"median annual earnings in 2018 were $35,600 for males and $25,140 for females\" (vs. $45,580 and $32,620 for high school completers).",
+          "source": "NCES Digest"
+        },
+        "massachusetts": {
+          "text": "The statewide four-year graduation rate was 89.3% for the class of 2025, the first class not required to pass MCAS; Boston Public Schools was at 81.3%.",
+          "source": "Boston.com"
+        }
+      },
+      "raised_by": "teacher",
+      "student_name": "TODO: student name",
+      "grade": 9,
+      "setting": {
+        "school": "Pemberton Falls High School",
+        "teacher_role": "TODO: who the teacher is",
+        "meeting_context": "TODO: when, where, and why the meeting is happening"
+      },
+      "teacher_concern": "TODO: the teacher's opening concern",
+      "student_strength": "TODO: BUT I notice...",
+      "documents": {
+        "A": {
+          "title": "TODO: internal record title",
+          "file": "04A-todo.html",
+          "source": "TODO: where this record lives",
+          "summary": "TODO: what this document shows"
+        },
+        "B": {
+          "title": "TODO: internal record title",
+          "file": "04B-todo.html",
+          "source": "TODO: where this record lives",
+          "summary": "TODO: what this document shows"
+        },
+        "C": {
+          "title": "TODO: internal record title",
+          "file": "04C-todo.html",
+          "source": "TODO: where this record lives",
+          "summary": "TODO: what this document shows"
+        },
+        "D": {
+          "title": "TODO: cited policy title",
+          "file": "04D-todo.html",
+          "source": "TODO: where this record lives",
+          "summary": "TODO: what this document shows",
+          "citation": "TODO: policy citation"
+        },
+        "E": {
+          "title": "TODO: school-dropped-the-ball document title",
+          "file": "04E-todo.html",
+          "source": "TODO: where this record lives",
+          "summary": "TODO: what this document shows",
+          "delivery": {
+            "channel": "email",
+            "app": "PFPS Mail",
+            "from": "TODO: sender name, office",
+            "subject": "TODO: subject line",
+            "body": "TODO: message body",
+            "attachment_name": "TODO: Attachment_Name.pdf",
+            "notification": "TODO: New message from ... · 1 attachment"
+          }
+        },
+        "F": {
+          "title": "TODO: document contradicting the family's claim title",
+          "file": "04F-todo.html",
+          "source": "TODO: where this record lives",
+          "summary": "TODO: what this document shows",
+          "delivery": {
+            "channel": "email",
+            "app": "PFPS Mail",
+            "from": "TODO: sender name, office",
+            "subject": "TODO: subject line",
+            "body": "TODO: message body",
+            "attachment_name": "TODO: Attachment_Name.pdf",
+            "notification": "TODO: New message from ... · 1 attachment"
+          }
+        }
+      },
+      "parent_persona": {
+        "name": "TODO: parent name",
+        "relationship": "TODO: relationship to student",
+        "personality": "TODO: personality",
+        "speaking_style": "TODO: how they talk",
+        "knows": [
+          "TODO: what the parent knows"
+        ],
+        "hiding": [
+          "TODO: what the parent is hiding or hasn't said"
+        ],
+        "likely_claim": "TODO: the claim document F contradicts",
+        "softens_when": [
+          "TODO: what calms them down"
+        ],
+        "escalates_when": [
+          "TODO: what sets them off"
+        ]
+      },
+      "student_persona": {
+        "name": "TODO: student name",
+        "age": 14,
+        "personality": "TODO: personality",
+        "speaking_style": "TODO: how they talk",
+        "knows": [
+          "TODO: what the student knows"
+        ],
+        "hiding": [
+          "TODO: what the student is hiding or hasn't said"
+        ],
+        "likely_claim": "TODO: the student's version",
+        "speaks_up_when": [
+          "TODO: when the student jumps in"
+        ]
+      },
+      "support_contacts": {
+        "counselor": {
+          "name": "TODO: counselor name",
+          "title": "TODO: counselor title",
+          "knows": "TODO: what the counselor knows about this student",
+          "can_share": null
+        },
+        "nurse": {
+          "name": "TODO: nurse name",
+          "title": "TODO: nurse title",
+          "knows": "TODO: what the nurse knows about this student",
+          "can_share": null
+        },
+        "principal": {
+          "name": "TODO: principal name",
+          "title": "TODO: principal title",
+          "knows": "TODO: what the principal knows about this student",
+          "can_share": null
+        },
+        "colleague": {
+          "name": "TODO: colleague name",
+          "title": "TODO: colleague title",
+          "knows": "TODO: what the colleague knows about this student",
+          "can_share": null
+        }
+      }
+    },
+    {
+      "id": "05",
+      "status": "stub",
+      "title": "Missing Homework",
+      "topic": "Student has trouble completing homework and assignments",
+      "research": {
+        "prevalence": {
+          "text": "21% of public school leaders said students being \"academically unprepared for school (e.g., not doing homework, not bringing necessary supplies)\" had a severe negative impact on learning in 2023-24.",
+          "source": "Education Week, on NCES School Pulse Panel"
+        },
+        "why_address_it": {
+          "text": "A synthesis of U.S. research found \"consistent evidence for a positive influence of homework on achievement,\" strongest in grades 7-12.",
+          "source": "Cooper et al., 2006, Duke"
+        },
+        "massachusetts": {
+          "text": "Only 40% of MA students in grades 3-8 met or exceeded expectations in ELA on the 2026 MCAS, down 2 points from 2025 and 12 points from 2019 (general achievement, not homework-specific).",
+          "source": "WWLP/SHNS"
+        }
+      },
+      "raised_by": "teacher",
+      "student_name": "TODO: student name",
+      "grade": 9,
+      "setting": {
+        "school": "Pemberton Falls High School",
+        "teacher_role": "TODO: who the teacher is",
+        "meeting_context": "TODO: when, where, and why the meeting is happening"
+      },
+      "teacher_concern": "TODO: the teacher's opening concern",
+      "student_strength": "TODO: BUT I notice...",
+      "documents": {
+        "A": {
+          "title": "TODO: internal record title",
+          "file": "05A-todo.html",
+          "source": "TODO: where this record lives",
+          "summary": "TODO: what this document shows"
+        },
+        "B": {
+          "title": "TODO: internal record title",
+          "file": "05B-todo.html",
+          "source": "TODO: where this record lives",
+          "summary": "TODO: what this document shows"
+        },
+        "C": {
+          "title": "TODO: internal record title",
+          "file": "05C-todo.html",
+          "source": "TODO: where this record lives",
+          "summary": "TODO: what this document shows"
+        },
+        "D": {
+          "title": "TODO: cited policy title",
+          "file": "05D-todo.html",
+          "source": "TODO: where this record lives",
+          "summary": "TODO: what this document shows",
+          "citation": "TODO: policy citation"
+        },
+        "E": {
+          "title": "TODO: school-dropped-the-ball document title",
+          "file": "05E-todo.html",
+          "source": "TODO: where this record lives",
+          "summary": "TODO: what this document shows",
+          "delivery": {
+            "channel": "email",
+            "app": "PFPS Mail",
+            "from": "TODO: sender name, office",
+            "subject": "TODO: subject line",
+            "body": "TODO: message body",
+            "attachment_name": "TODO: Attachment_Name.pdf",
+            "notification": "TODO: New message from ... · 1 attachment"
+          }
+        },
+        "F": {
+          "title": "TODO: document contradicting the family's claim title",
+          "file": "05F-todo.html",
+          "source": "TODO: where this record lives",
+          "summary": "TODO: what this document shows",
+          "delivery": {
+            "channel": "email",
+            "app": "PFPS Mail",
+            "from": "TODO: sender name, office",
+            "subject": "TODO: subject line",
+            "body": "TODO: message body",
+            "attachment_name": "TODO: Attachment_Name.pdf",
+            "notification": "TODO: New message from ... · 1 attachment"
+          }
+        }
+      },
+      "parent_persona": {
+        "name": "TODO: parent name",
+        "relationship": "TODO: relationship to student",
+        "personality": "TODO: personality",
+        "speaking_style": "TODO: how they talk",
+        "knows": [
+          "TODO: what the parent knows"
+        ],
+        "hiding": [
+          "TODO: what the parent is hiding or hasn't said"
+        ],
+        "likely_claim": "TODO: the claim document F contradicts",
+        "softens_when": [
+          "TODO: what calms them down"
+        ],
+        "escalates_when": [
+          "TODO: what sets them off"
+        ]
+      },
+      "student_persona": {
+        "name": "TODO: student name",
+        "age": 14,
+        "personality": "TODO: personality",
+        "speaking_style": "TODO: how they talk",
+        "knows": [
+          "TODO: what the student knows"
+        ],
+        "hiding": [
+          "TODO: what the student is hiding or hasn't said"
+        ],
+        "likely_claim": "TODO: the student's version",
+        "speaks_up_when": [
+          "TODO: when the student jumps in"
+        ]
+      },
+      "support_contacts": {
+        "counselor": {
+          "name": "TODO: counselor name",
+          "title": "TODO: counselor title",
+          "knows": "TODO: what the counselor knows about this student",
+          "can_share": null
+        },
+        "nurse": {
+          "name": "TODO: nurse name",
+          "title": "TODO: nurse title",
+          "knows": "TODO: what the nurse knows about this student",
+          "can_share": null
+        },
+        "principal": {
+          "name": "TODO: principal name",
+          "title": "TODO: principal title",
+          "knows": "TODO: what the principal knows about this student",
+          "can_share": null
+        },
+        "colleague": {
+          "name": "TODO: colleague name",
+          "title": "TODO: colleague title",
+          "knows": "TODO: what the colleague knows about this student",
+          "can_share": null
+        }
+      }
+    },
+    {
+      "id": "06",
+      "status": "stub",
+      "title": "Accommodations Not Met",
+      "topic": "Parent says accommodations are not being met",
+      "research": {
+        "prevalence": {
+          "text": "In 2022-23, students served under IDEA numbered \"7.5 million, or the equivalent of 15 percent of all public school students.\"",
+          "source": "NCES"
+        },
+        "why_address_it": {
+          "text": "Of complaints to the U.S. Education Department's Office for Civil Rights in FY 2023, \"35 percent were based on disability.\"",
+          "source": "CSBA, on the OCR annual report"
+        },
+        "massachusetts": {
+          "text": "19.7% of MA public school students (about 182,100) were served under IDEA in 2022-23, the 4th-highest share nationally.",
+          "source": "Stacker, using NCES data"
+        }
+      },
+      "raised_by": "parent",
+      "student_name": "TODO: student name",
+      "grade": 9,
+      "setting": {
+        "school": "Pemberton Falls High School",
+        "teacher_role": "TODO: who the teacher is",
+        "meeting_context": "TODO: when, where, and why the meeting is happening"
+      },
+      "teacher_concern": "TODO: the teacher's opening concern",
+      "student_strength": "TODO: BUT I notice...",
+      "documents": {
+        "A": {
+          "title": "TODO: internal record title",
+          "file": "06A-todo.html",
+          "source": "TODO: where this record lives",
+          "summary": "TODO: what this document shows"
+        },
+        "B": {
+          "title": "TODO: internal record title",
+          "file": "06B-todo.html",
+          "source": "TODO: where this record lives",
+          "summary": "TODO: what this document shows"
+        },
+        "C": {
+          "title": "TODO: internal record title",
+          "file": "06C-todo.html",
+          "source": "TODO: where this record lives",
+          "summary": "TODO: what this document shows"
+        },
+        "D": {
+          "title": "TODO: cited policy title",
+          "file": "06D-todo.html",
+          "source": "TODO: where this record lives",
+          "summary": "TODO: what this document shows",
+          "citation": "TODO: policy citation"
+        },
+        "E": {
+          "title": "TODO: school-dropped-the-ball document title",
+          "file": "06E-todo.html",
+          "source": "TODO: where this record lives",
+          "summary": "TODO: what this document shows",
+          "delivery": {
+            "channel": "email",
+            "app": "PFPS Mail",
+            "from": "TODO: sender name, office",
+            "subject": "TODO: subject line",
+            "body": "TODO: message body",
+            "attachment_name": "TODO: Attachment_Name.pdf",
+            "notification": "TODO: New message from ... · 1 attachment"
+          }
+        },
+        "F": {
+          "title": "TODO: document contradicting the family's claim title",
+          "file": "06F-todo.html",
+          "source": "TODO: where this record lives",
+          "summary": "TODO: what this document shows",
+          "delivery": {
+            "channel": "email",
+            "app": "PFPS Mail",
+            "from": "TODO: sender name, office",
+            "subject": "TODO: subject line",
+            "body": "TODO: message body",
+            "attachment_name": "TODO: Attachment_Name.pdf",
+            "notification": "TODO: New message from ... · 1 attachment"
+          }
+        }
+      },
+      "parent_persona": {
+        "name": "TODO: parent name",
+        "relationship": "TODO: relationship to student",
+        "personality": "TODO: personality",
+        "speaking_style": "TODO: how they talk",
+        "knows": [
+          "TODO: what the parent knows"
+        ],
+        "hiding": [
+          "TODO: what the parent is hiding or hasn't said"
+        ],
+        "likely_claim": "TODO: the claim document F contradicts",
+        "softens_when": [
+          "TODO: what calms them down"
+        ],
+        "escalates_when": [
+          "TODO: what sets them off"
+        ]
+      },
+      "student_persona": {
+        "name": "TODO: student name",
+        "age": 14,
+        "personality": "TODO: personality",
+        "speaking_style": "TODO: how they talk",
+        "knows": [
+          "TODO: what the student knows"
+        ],
+        "hiding": [
+          "TODO: what the student is hiding or hasn't said"
+        ],
+        "likely_claim": "TODO: the student's version",
+        "speaks_up_when": [
+          "TODO: when the student jumps in"
+        ]
+      },
+      "support_contacts": {
+        "counselor": {
+          "name": "TODO: counselor name",
+          "title": "TODO: counselor title",
+          "knows": "TODO: what the counselor knows about this student",
+          "can_share": null
+        },
+        "nurse": {
+          "name": "TODO: nurse name",
+          "title": "TODO: nurse title",
+          "knows": "TODO: what the nurse knows about this student",
+          "can_share": null
+        },
+        "principal": {
+          "name": "TODO: principal name",
+          "title": "TODO: principal title",
+          "knows": "TODO: what the principal knows about this student",
+          "can_share": null
+        },
+        "colleague": {
+          "name": "TODO: colleague name",
+          "title": "TODO: colleague title",
+          "knows": "TODO: what the colleague knows about this student",
+          "can_share": null
+        }
+      }
+    },
+    {
+      "id": "07",
+      "status": "stub",
+      "title": "Unfair Grading",
+      "topic": "Parent believes the grading policy is unfair",
+      "research": {
+        "prevalence": {
+          "text": "About half of K-12 teachers said \"their school or district has adopted at least one of these equitable grading policies\" (fall 2024 survey).",
+          "source": "Education Week, on Fordham/RAND"
+        },
+        "why_address_it": {
+          "text": "\"Most teachers report feeling pressured to give higher grades\"",
+          "source": "Fordham Institute, via ERIC"
+        },
+        "massachusetts": {
+          "text": "No MA dataset on grading complaints found. Closest proxy: 59% of MA voters ended the MCAS graduation requirement in 2024, so diplomas now rest on district-certified coursework, raising the stakes of local grading.",
+          "source": "Cambridge Day"
+        }
+      },
+      "raised_by": "parent",
+      "student_name": "TODO: student name",
+      "grade": 9,
+      "setting": {
+        "school": "Pemberton Falls High School",
+        "teacher_role": "TODO: who the teacher is",
+        "meeting_context": "TODO: when, where, and why the meeting is happening"
+      },
+      "teacher_concern": "TODO: the teacher's opening concern",
+      "student_strength": "TODO: BUT I notice...",
+      "documents": {
+        "A": {
+          "title": "TODO: internal record title",
+          "file": "07A-todo.html",
+          "source": "TODO: where this record lives",
+          "summary": "TODO: what this document shows"
+        },
+        "B": {
+          "title": "TODO: internal record title",
+          "file": "07B-todo.html",
+          "source": "TODO: where this record lives",
+          "summary": "TODO: what this document shows"
+        },
+        "C": {
+          "title": "TODO: internal record title",
+          "file": "07C-todo.html",
+          "source": "TODO: where this record lives",
+          "summary": "TODO: what this document shows"
+        },
+        "D": {
+          "title": "TODO: cited policy title",
+          "file": "07D-todo.html",
+          "source": "TODO: where this record lives",
+          "summary": "TODO: what this document shows",
+          "citation": "TODO: policy citation"
+        },
+        "E": {
+          "title": "TODO: school-dropped-the-ball document title",
+          "file": "07E-todo.html",
+          "source": "TODO: where this record lives",
+          "summary": "TODO: what this document shows",
+          "delivery": {
+            "channel": "email",
+            "app": "PFPS Mail",
+            "from": "TODO: sender name, office",
+            "subject": "TODO: subject line",
+            "body": "TODO: message body",
+            "attachment_name": "TODO: Attachment_Name.pdf",
+            "notification": "TODO: New message from ... · 1 attachment"
+          }
+        },
+        "F": {
+          "title": "TODO: document contradicting the family's claim title",
+          "file": "07F-todo.html",
+          "source": "TODO: where this record lives",
+          "summary": "TODO: what this document shows",
+          "delivery": {
+            "channel": "email",
+            "app": "PFPS Mail",
+            "from": "TODO: sender name, office",
+            "subject": "TODO: subject line",
+            "body": "TODO: message body",
+            "attachment_name": "TODO: Attachment_Name.pdf",
+            "notification": "TODO: New message from ... · 1 attachment"
+          }
+        }
+      },
+      "parent_persona": {
+        "name": "TODO: parent name",
+        "relationship": "TODO: relationship to student",
+        "personality": "TODO: personality",
+        "speaking_style": "TODO: how they talk",
+        "knows": [
+          "TODO: what the parent knows"
+        ],
+        "hiding": [
+          "TODO: what the parent is hiding or hasn't said"
+        ],
+        "likely_claim": "TODO: the claim document F contradicts",
+        "softens_when": [
+          "TODO: what calms them down"
+        ],
+        "escalates_when": [
+          "TODO: what sets them off"
+        ]
+      },
+      "student_persona": {
+        "name": "TODO: student name",
+        "age": 14,
+        "personality": "TODO: personality",
+        "speaking_style": "TODO: how they talk",
+        "knows": [
+          "TODO: what the student knows"
+        ],
+        "hiding": [
+          "TODO: what the student is hiding or hasn't said"
+        ],
+        "likely_claim": "TODO: the student's version",
+        "speaks_up_when": [
+          "TODO: when the student jumps in"
+        ]
+      },
+      "support_contacts": {
+        "counselor": {
+          "name": "TODO: counselor name",
+          "title": "TODO: counselor title",
+          "knows": "TODO: what the counselor knows about this student",
+          "can_share": null
+        },
+        "nurse": {
+          "name": "TODO: nurse name",
+          "title": "TODO: nurse title",
+          "knows": "TODO: what the nurse knows about this student",
+          "can_share": null
+        },
+        "principal": {
+          "name": "TODO: principal name",
+          "title": "TODO: principal title",
+          "knows": "TODO: what the principal knows about this student",
+          "can_share": null
+        },
+        "colleague": {
+          "name": "TODO: colleague name",
+          "title": "TODO: colleague title",
+          "knows": "TODO: what the colleague knows about this student",
+          "can_share": null
+        }
+      }
+    },
+    {
+      "id": "08",
+      "status": "stub",
+      "title": "Not Challenged Enough",
+      "topic": "Parent says student is not challenged enough",
+      "research": {
+        "prevalence": {
+          "text": "73% of teachers agreed that \"Too often, the brightest students are bored and under-challenged in school\" (Fordham survey).",
+          "source": "NAGC"
+        },
+        "why_address_it": {
+          "text": "Advanced students need work at their level \"to nurture their talents and prevent them from becoming bored and disruptive in class.\"",
+          "source": "UConn Neag School"
+        },
+        "massachusetts": {
+          "text": "MA has no state definition of or mandate for gifted education, and more than three-quarters of Black and Hispanic students identified as academically advanced in 3rd grade were no longer in the top decile by 6th grade.",
+          "source": "MA DESE"
+        }
+      },
+      "raised_by": "parent",
+      "student_name": "TODO: student name",
+      "grade": 9,
+      "setting": {
+        "school": "Pemberton Falls High School",
+        "teacher_role": "TODO: who the teacher is",
+        "meeting_context": "TODO: when, where, and why the meeting is happening"
+      },
+      "teacher_concern": "TODO: the teacher's opening concern",
+      "student_strength": "TODO: BUT I notice...",
+      "documents": {
+        "A": {
+          "title": "TODO: internal record title",
+          "file": "08A-todo.html",
+          "source": "TODO: where this record lives",
+          "summary": "TODO: what this document shows"
+        },
+        "B": {
+          "title": "TODO: internal record title",
+          "file": "08B-todo.html",
+          "source": "TODO: where this record lives",
+          "summary": "TODO: what this document shows"
+        },
+        "C": {
+          "title": "TODO: internal record title",
+          "file": "08C-todo.html",
+          "source": "TODO: where this record lives",
+          "summary": "TODO: what this document shows"
+        },
+        "D": {
+          "title": "TODO: cited policy title",
+          "file": "08D-todo.html",
+          "source": "TODO: where this record lives",
+          "summary": "TODO: what this document shows",
+          "citation": "TODO: policy citation"
+        },
+        "E": {
+          "title": "TODO: school-dropped-the-ball document title",
+          "file": "08E-todo.html",
+          "source": "TODO: where this record lives",
+          "summary": "TODO: what this document shows",
+          "delivery": {
+            "channel": "email",
+            "app": "PFPS Mail",
+            "from": "TODO: sender name, office",
+            "subject": "TODO: subject line",
+            "body": "TODO: message body",
+            "attachment_name": "TODO: Attachment_Name.pdf",
+            "notification": "TODO: New message from ... · 1 attachment"
+          }
+        },
+        "F": {
+          "title": "TODO: document contradicting the family's claim title",
+          "file": "08F-todo.html",
+          "source": "TODO: where this record lives",
+          "summary": "TODO: what this document shows",
+          "delivery": {
+            "channel": "email",
+            "app": "PFPS Mail",
+            "from": "TODO: sender name, office",
+            "subject": "TODO: subject line",
+            "body": "TODO: message body",
+            "attachment_name": "TODO: Attachment_Name.pdf",
+            "notification": "TODO: New message from ... · 1 attachment"
+          }
+        }
+      },
+      "parent_persona": {
+        "name": "TODO: parent name",
+        "relationship": "TODO: relationship to student",
+        "personality": "TODO: personality",
+        "speaking_style": "TODO: how they talk",
+        "knows": [
+          "TODO: what the parent knows"
+        ],
+        "hiding": [
+          "TODO: what the parent is hiding or hasn't said"
+        ],
+        "likely_claim": "TODO: the claim document F contradicts",
+        "softens_when": [
+          "TODO: what calms them down"
+        ],
+        "escalates_when": [
+          "TODO: what sets them off"
+        ]
+      },
+      "student_persona": {
+        "name": "TODO: student name",
+        "age": 14,
+        "personality": "TODO: personality",
+        "speaking_style": "TODO: how they talk",
+        "knows": [
+          "TODO: what the student knows"
+        ],
+        "hiding": [
+          "TODO: what the student is hiding or hasn't said"
+        ],
+        "likely_claim": "TODO: the student's version",
+        "speaks_up_when": [
+          "TODO: when the student jumps in"
+        ]
+      },
+      "support_contacts": {
+        "counselor": {
+          "name": "TODO: counselor name",
+          "title": "TODO: counselor title",
+          "knows": "TODO: what the counselor knows about this student",
+          "can_share": null
+        },
+        "nurse": {
+          "name": "TODO: nurse name",
+          "title": "TODO: nurse title",
+          "knows": "TODO: what the nurse knows about this student",
+          "can_share": null
+        },
+        "principal": {
+          "name": "TODO: principal name",
+          "title": "TODO: principal title",
+          "knows": "TODO: what the principal knows about this student",
+          "can_share": null
+        },
+        "colleague": {
+          "name": "TODO: colleague name",
+          "title": "TODO: colleague title",
+          "knows": "TODO: what the colleague knows about this student",
+          "can_share": null
+        }
+      }
+    },
+    {
+      "id": "09",
+      "status": "stub",
+      "title": "Another Infraction",
+      "topic": "Student has another infraction; parent, teacher, and student seek a compromise with school expectations",
+      "research": {
+        "prevalence": {
+          "text": "In 2020-21, \"32 percent of public school teachers agreed that student misbehavior interfered with their teaching\"",
+          "source": "NCES"
+        },
+        "why_address_it": {
+          "text": "Research shows \"exclusion from school is linked to poorer academic outcomes, higher risk of dropout\" and more justice-system contact.",
+          "source": "The 74"
+        },
+        "massachusetts": {
+          "text": "A 2022 state law requires districts to try alternatives (restorative justice, counseling, mediation) before exclusion; out-of-school suspensions fell from about 28,500 (2018) to under 22,000 (2025), while emergency removals rose from about 1,500 to over 3,900.",
+          "source": "CommonWealth Beacon"
+        }
+      },
+      "raised_by": "teacher",
+      "student_name": "TODO: student name",
+      "grade": 9,
+      "setting": {
+        "school": "Pemberton Falls High School",
+        "teacher_role": "TODO: who the teacher is",
+        "meeting_context": "TODO: when, where, and why the meeting is happening"
+      },
+      "teacher_concern": "TODO: the teacher's opening concern",
+      "student_strength": "TODO: BUT I notice...",
+      "documents": {
+        "A": {
+          "title": "TODO: internal record title",
+          "file": "09A-todo.html",
+          "source": "TODO: where this record lives",
+          "summary": "TODO: what this document shows"
+        },
+        "B": {
+          "title": "TODO: internal record title",
+          "file": "09B-todo.html",
+          "source": "TODO: where this record lives",
+          "summary": "TODO: what this document shows"
+        },
+        "C": {
+          "title": "TODO: internal record title",
+          "file": "09C-todo.html",
+          "source": "TODO: where this record lives",
+          "summary": "TODO: what this document shows"
+        },
+        "D": {
+          "title": "TODO: cited policy title",
+          "file": "09D-todo.html",
+          "source": "TODO: where this record lives",
+          "summary": "TODO: what this document shows",
+          "citation": "TODO: policy citation"
+        },
+        "E": {
+          "title": "TODO: school-dropped-the-ball document title",
+          "file": "09E-todo.html",
+          "source": "TODO: where this record lives",
+          "summary": "TODO: what this document shows",
+          "delivery": {
+            "channel": "email",
+            "app": "PFPS Mail",
+            "from": "TODO: sender name, office",
+            "subject": "TODO: subject line",
+            "body": "TODO: message body",
+            "attachment_name": "TODO: Attachment_Name.pdf",
+            "notification": "TODO: New message from ... · 1 attachment"
+          }
+        },
+        "F": {
+          "title": "TODO: document contradicting the family's claim title",
+          "file": "09F-todo.html",
+          "source": "TODO: where this record lives",
+          "summary": "TODO: what this document shows",
+          "delivery": {
+            "channel": "email",
+            "app": "PFPS Mail",
+            "from": "TODO: sender name, office",
+            "subject": "TODO: subject line",
+            "body": "TODO: message body",
+            "attachment_name": "TODO: Attachment_Name.pdf",
+            "notification": "TODO: New message from ... · 1 attachment"
+          }
+        }
+      },
+      "parent_persona": {
+        "name": "TODO: parent name",
+        "relationship": "TODO: relationship to student",
+        "personality": "TODO: personality",
+        "speaking_style": "TODO: how they talk",
+        "knows": [
+          "TODO: what the parent knows"
+        ],
+        "hiding": [
+          "TODO: what the parent is hiding or hasn't said"
+        ],
+        "likely_claim": "TODO: the claim document F contradicts",
+        "softens_when": [
+          "TODO: what calms them down"
+        ],
+        "escalates_when": [
+          "TODO: what sets them off"
+        ]
+      },
+      "student_persona": {
+        "name": "TODO: student name",
+        "age": 14,
+        "personality": "TODO: personality",
+        "speaking_style": "TODO: how they talk",
+        "knows": [
+          "TODO: what the student knows"
+        ],
+        "hiding": [
+          "TODO: what the student is hiding or hasn't said"
+        ],
+        "likely_claim": "TODO: the student's version",
+        "speaks_up_when": [
+          "TODO: when the student jumps in"
+        ]
+      },
+      "support_contacts": {
+        "counselor": {
+          "name": "TODO: counselor name",
+          "title": "TODO: counselor title",
+          "knows": "TODO: what the counselor knows about this student",
+          "can_share": null
+        },
+        "nurse": {
+          "name": "TODO: nurse name",
+          "title": "TODO: nurse title",
+          "knows": "TODO: what the nurse knows about this student",
+          "can_share": null
+        },
+        "principal": {
+          "name": "TODO: principal name",
+          "title": "TODO: principal title",
+          "knows": "TODO: what the principal knows about this student",
+          "can_share": null
+        },
+        "colleague": {
+          "name": "TODO: colleague name",
+          "title": "TODO: colleague title",
+          "knows": "TODO: what the colleague knows about this student",
+          "can_share": null
+        }
+      }
+    },
+    {
+      "id": "10",
+      "status": "ready",
+      "title": "Asleep in Class: Andre",
+      "topic": "Student falls asleep or is disruptive in class",
+      "research": {
+        "prevalence": {
+          "text": "In 2025, only \"about 1 in 4 high school students got at least 8 hours of sleep\" on an average school night.",
+          "source": "CDC YRBS"
+        },
+        "why_address_it": {
+          "text": "Insufficient sleep in youth is associated with \"attention and behavior problems, and poor academic performance.\"",
+          "source": "CDC MMWR"
+        },
+        "massachusetts": {
+          "text": "Only 23.6% of MA high school students reported sleeping 8+ hours on an average school night in 2023.",
+          "source": "MA YHS/YRBS 2023 Joint Report"
+        }
+      },
+      "raised_by": "teacher",
+      "student_name": "Andre Thompson",
+      "grade": 10,
+      "setting": {
+        "school": "Pemberton Falls High School",
+        "teacher_role": "Grade 10 English teacher",
+        "meeting_context": "Teacher-requested conference, Thursday December 11, 2025, 2:45 PM, Room 118. Ms. Thompson came straight from her shift; Andre came with her. You've been meaning to check in with the school nurse and with Coach Bell about Andre. They may know things you don't. Dr. Castellanos, the principal, said she's in her office and can step in if you need her."
+      },
+      "teacher_concern": "Andre has fallen asleep in period 1 English on 11 of the last 16 mornings. When he's woken he gets short with classmates and sometimes puts his head back down. His in-class reading quizzes have dropped to a 64, pulling his grade from a B to a C-.",
+      "student_strength": "BUT I notice that Andre's take-home essays are some of the most thoughtful in the class. His personal narrative about cooking with his grandmother earned a 92. When he's awake he asks the questions nobody else thinks of.",
+      "documents": {
+        "A": {
+          "title": "Period 1 Classroom Notes",
+          "file": "10A-classroom-notes.html",
+          "source": "Teacher's classroom log",
+          "summary": "Andre was asleep or had his head down on 11 of 16 mornings between Nov 12 and Dec 10: 0 of 3 Mondays, 4 of 4 Tuesdays, 1 of 3 Wednesdays, 3 of 3 Thursdays, 3 of 3 Fridays. Three redirections for snapping at classmates after being woken."
+        },
+        "B": {
+          "title": "English 10 Progress Report",
+          "file": "10B-progress-report.html",
+          "source": "PFPS Classroom",
+          "summary": "Current grade 72 (C-), down from 85 (B) in October. Homework 90% complete. Take-home essays average 88. In-class reading quizzes (all period 1) average 64."
+        },
+        "C": {
+          "title": "Grade 10 Team Check-In Notes",
+          "file": "10C-team-notes.html",
+          "source": "Grade 10 teacher team meeting, Dec 3",
+          "summary": "Other teachers see the same pattern only in the morning: drowsy in period 2 Geometry, alert and energetic in period 7 PE. Team agreed someone should talk with the family; no referral made yet."
+        },
+        "D": {
+          "title": "Youth Employment Permits and Work Hours",
+          "file": "10D-work-permit-guidance.html",
+          "source": "PFPS Student Services",
+          "citation": "PFPS Student Services Guidance; M.G.L. c. 149",
+          "summary": "Students under 18 need a youth employment permit, issued through the school. Under Massachusetts law, 16- and 17-year-olds may not work past 10 PM on a night before a school day. The school can revisit a permit if work is affecting school, and the goal is to help families keep jobs that work."
+        },
+        "E": {
+          "title": "Sports Physical Follow-Up (Nurse's Office)",
+          "file": "10E-physical-follow-up.html",
+          "source": "Nurse's Office",
+          "summary": "Andre's August 18 sports physical, filed with the nurse's office, noted loud snoring and daytime sleepiness and recommended a sleep evaluation with his pediatrician. The follow-up letter to the family is marked 'not sent'. Nobody told the family or his teachers.",
+          "delivery": {
+            "channel": "chat",
+            "app": "PFPS Chat",
+            "from": "Patricia Lindqvist, School Nurse",
+            "subject": "Andre T. physical form",
+            "body": "Found it. His physician flagged possible sleep apnea in August and our follow-up letter never went out. That's on us. I'm so sorry. I can call Ms. Thompson today.",
+            "attachment_name": "Physical_FollowUp_Thompson_A.pdf",
+            "notification": "New message from the Nurse's Office · 1 attachment"
+          }
+        },
+        "F": {
+          "title": "Youth Employment Permit: Andre Thompson",
+          "file": "10F-employment-permit.html",
+          "source": "PFPS Main Office",
+          "summary": "Permit approved September 12, 2025 for work at Thompson's Kitchen (employer: Darnell Thompson, uncle). Scheduled hours: Monday, Wednesday and Thursday 5–10 PM. Parent signature: Monique Thompson. The permit shows Andre works three school nights a week, the nights before the mornings he sleeps in class.",
+          "delivery": {
+            "channel": "email",
+            "app": "PFPS Mail",
+            "from": "Dr. Renée Castellanos, Principal",
+            "subject": "Andre Thompson work permit",
+            "body": "You asked whether we have anything on file. Here's the permit his mom signed in September. Note the school-night hours.",
+            "attachment_name": "Work_Permit_Thompson_A.pdf",
+            "notification": "New message from Dr. Castellanos · 1 attachment"
+          }
+        }
+      },
+      "parent_persona": {
+        "name": "Monique Thompson",
+        "relationship": "mother",
+        "personality": "Hardworking, proud and a little guarded. A certified nursing assistant who works days at Pemberton Falls Rehab. She and Andre's father separated in September, and money has been tight since. She loves Andre fiercely and hates feeling judged. She warms up when she senses the teacher actually likes her son.",
+        "speaking_style": "Brisk and practical. Short sentences, occasional dry humor. Calls her son 'Dre'. Says 'I hear you' when she doesn't fully agree.",
+        "knows": [
+          "Andre stays up late. She thinks it's his phone and video games.",
+          "She takes his phone at 10 PM on school nights, or tries to.",
+          "Andre works at his uncle Darnell's restaurant, Thompson's Kitchen, a few nights a week. She signed his work permit in September.",
+          "Andre snores loudly; you can hear it through the wall.",
+          "His essays have always been good. English is his best subject."
+        ],
+        "hiding": [
+          "Since the separation, Andre gives her most of his paycheck for groceries. She's embarrassed the family needs it.",
+          "She thinks Andre gets home by 10:15, but she's usually asleep by then and hasn't checked.",
+          "She and Andre's father separated in September. She hasn't told the school."
+        ],
+        "likely_claim": "It's the phone. Teenagers stay up on their phones. She takes it at ten, and first period is just too early for any kid.",
+        "softens_when": [
+          "The teacher says something specific and genuine about Andre's writing.",
+          "The teacher treats his tiredness as a health or scheduling problem, not a character flaw.",
+          "The school owns a mistake.",
+          "The teacher offers practical help that doesn't cost the family his job."
+        ],
+        "escalates_when": [
+          "She feels judged for letting him work, or like the teacher is implying she can't provide.",
+          "Anyone suggests Andre is lazy or disrespectful.",
+          "The teacher threatens consequences or discipline for sleeping."
+        ]
+      },
+      "student_persona": {
+        "name": "Andre Thompson",
+        "age": 16,
+        "personality": "Quiet, observant, funny once he trusts you. Tired in a bone-deep way. Protective of his mom. Loves cooking and basketball; takes pride in working the grill at his uncle's place.",
+        "speaking_style": "Low voice, short answers, 'I'm good' or 'it's whatever' at first. Talks more, and more warmly, about cooking or basketball.",
+        "knows": [
+          "His uncle keeps him until closing, around 11:30 PM, on busy nights, and pays the extra in cash.",
+          "He gets home around midnight on work nights and still has to shower and wind down.",
+          "He wakes up with headaches most mornings, even after sleeping in on weekends.",
+          "He likes English and is proud of his essays."
+        ],
+        "hiding": [
+          "That he works past 10 PM. He's afraid the school will cancel his permit and his mom will lose the money.",
+          "That he gives most of his pay to his mom for groceries."
+        ],
+        "likely_claim": "He's just tired. It's not a big deal.",
+        "speaks_up_when": [
+          "The teacher asks him directly.",
+          "Someone mentions cooking, the restaurant, or basketball.",
+          "His mom is being judged or blamed."
+        ]
+      },
+      "support_contacts": {
+        "counselor": {
+          "name": "Daniel Okafor",
+          "title": "School Counselor",
+          "knows": "Andre stopped by in October, upset, and said his parents had split up. He asked Mr. Okafor not to tell anyone, so Mr. Okafor won't share details, but he'll say there has been a big change at home and that asking gently about how things are going would help. He can offer weekly check-ins and sign Andre up for the free breakfast program before period 1.",
+          "can_share": null
+        },
+        "nurse": {
+          "name": "Patricia Lindqvist",
+          "title": "School Nurse",
+          "knows": "Andre has come in five mornings since October with headaches, saying he was tired and skipped breakfast. When asked, she digs up his August sports physical: the doctor noted loud snoring and daytime sleepiness and recommended a sleep evaluation for possible sleep apnea. The nurse's office never sent the follow-up letter home. She's upset about it and can call the family and help get a pediatrician appointment.",
+          "can_share": "E"
+        },
+        "principal": {
+          "name": "Dr. Renée Castellanos",
+          "title": "Principal",
+          "knows": "Work permits for students are issued through the school, and Andre's is on file. Massachusetts law doesn't allow 16- and 17-year-olds to work past 10 PM on a night before a school day. She wants to help the family keep the job, with hours that fit the law and his health, and can talk with the employer if needed. She can also approve a later-start study hall in place of period 1 for next semester if a doctor recommends it. If the teacher asks her to come in, she walks down from her office with the permit folder and can explain the rules and options to the family in person.",
+          "can_share": "F",
+          "can_join": true
+        },
+        "colleague": {
+          "name": "Marcus Bell",
+          "title": "PE teacher and JV basketball coach",
+          "knows": "Andre is alert, funny and a natural leader in period 7 PE and at Saturday practice. Last week Andre joked that he 'closes the kitchen' at his uncle's restaurant and was out the door at 11:30 on a Wednesday. Coach Bell didn't think much of it until now.",
+          "can_share": null
+        }
+      }
+    },
+    {
+      "id": "11",
+      "status": "stub",
+      "title": "Cheating",
+      "topic": "Student cheats on tests or written assignments",
+      "research": {
+        "prevalence": {
+          "text": "\"60 to 70 percent of students report having engaged in at least one cheating behavior\" in the previous month.",
+          "source": "Stanford GSE"
+        },
+        "why_address_it": {
+          "text": "Top reasons students give for cheating include \"struggling to grasp subject material, not having enough time to do homework\" and pressure to perform.",
+          "source": "CNN"
+        },
+        "massachusetts": {
+          "text": "59% of MA K-12 parents said their child has used AI for schoolwork; 65% said AI use is sometimes cheating and 19% said it is always cheating (MassINC/EdTrust poll, fall 2025).",
+          "source": "WWLP/SHNS"
+        }
+      },
+      "raised_by": "teacher",
+      "student_name": "TODO: student name",
+      "grade": 9,
+      "setting": {
+        "school": "Pemberton Falls High School",
+        "teacher_role": "TODO: who the teacher is",
+        "meeting_context": "TODO: when, where, and why the meeting is happening"
+      },
+      "teacher_concern": "TODO: the teacher's opening concern",
+      "student_strength": "TODO: BUT I notice...",
+      "documents": {
+        "A": {
+          "title": "TODO: internal record title",
+          "file": "11A-todo.html",
+          "source": "TODO: where this record lives",
+          "summary": "TODO: what this document shows"
+        },
+        "B": {
+          "title": "TODO: internal record title",
+          "file": "11B-todo.html",
+          "source": "TODO: where this record lives",
+          "summary": "TODO: what this document shows"
+        },
+        "C": {
+          "title": "TODO: internal record title",
+          "file": "11C-todo.html",
+          "source": "TODO: where this record lives",
+          "summary": "TODO: what this document shows"
+        },
+        "D": {
+          "title": "TODO: cited policy title",
+          "file": "11D-todo.html",
+          "source": "TODO: where this record lives",
+          "summary": "TODO: what this document shows",
+          "citation": "TODO: policy citation"
+        },
+        "E": {
+          "title": "TODO: school-dropped-the-ball document title",
+          "file": "11E-todo.html",
+          "source": "TODO: where this record lives",
+          "summary": "TODO: what this document shows",
+          "delivery": {
+            "channel": "email",
+            "app": "PFPS Mail",
+            "from": "TODO: sender name, office",
+            "subject": "TODO: subject line",
+            "body": "TODO: message body",
+            "attachment_name": "TODO: Attachment_Name.pdf",
+            "notification": "TODO: New message from ... · 1 attachment"
+          }
+        },
+        "F": {
+          "title": "TODO: document contradicting the family's claim title",
+          "file": "11F-todo.html",
+          "source": "TODO: where this record lives",
+          "summary": "TODO: what this document shows",
+          "delivery": {
+            "channel": "email",
+            "app": "PFPS Mail",
+            "from": "TODO: sender name, office",
+            "subject": "TODO: subject line",
+            "body": "TODO: message body",
+            "attachment_name": "TODO: Attachment_Name.pdf",
+            "notification": "TODO: New message from ... · 1 attachment"
+          }
+        }
+      },
+      "parent_persona": {
+        "name": "TODO: parent name",
+        "relationship": "TODO: relationship to student",
+        "personality": "TODO: personality",
+        "speaking_style": "TODO: how they talk",
+        "knows": [
+          "TODO: what the parent knows"
+        ],
+        "hiding": [
+          "TODO: what the parent is hiding or hasn't said"
+        ],
+        "likely_claim": "TODO: the claim document F contradicts",
+        "softens_when": [
+          "TODO: what calms them down"
+        ],
+        "escalates_when": [
+          "TODO: what sets them off"
+        ]
+      },
+      "student_persona": {
+        "name": "TODO: student name",
+        "age": 14,
+        "personality": "TODO: personality",
+        "speaking_style": "TODO: how they talk",
+        "knows": [
+          "TODO: what the student knows"
+        ],
+        "hiding": [
+          "TODO: what the student is hiding or hasn't said"
+        ],
+        "likely_claim": "TODO: the student's version",
+        "speaks_up_when": [
+          "TODO: when the student jumps in"
+        ]
+      },
+      "support_contacts": {
+        "counselor": {
+          "name": "TODO: counselor name",
+          "title": "TODO: counselor title",
+          "knows": "TODO: what the counselor knows about this student",
+          "can_share": null
+        },
+        "nurse": {
+          "name": "TODO: nurse name",
+          "title": "TODO: nurse title",
+          "knows": "TODO: what the nurse knows about this student",
+          "can_share": null
+        },
+        "principal": {
+          "name": "TODO: principal name",
+          "title": "TODO: principal title",
+          "knows": "TODO: what the principal knows about this student",
+          "can_share": null
+        },
+        "colleague": {
+          "name": "TODO: colleague name",
+          "title": "TODO: colleague title",
+          "knows": "TODO: what the colleague knows about this student",
+          "can_share": null
+        }
+      }
+    }
+  ]
+}

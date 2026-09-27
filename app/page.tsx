@@ -4,6 +4,7 @@ import { FallingStrings } from '@/components/falling-strings'
 import { Hero } from '@/components/hero'
 import { StorySection } from '@/components/story-section'
 import { StatsSection } from '@/components/stats-section'
+import { FeaturesSection } from '@/components/features-section'
 import { FinalSection } from '@/components/final-section'
 
 export default function Page() {
@@ -19,7 +20,7 @@ export default function Page() {
             Building Bridges
           </span>
           <a
-            href="#"
+            href="/practice"
             data-cursor="hover"
             className="rounded-full border border-ghost/20 px-5 py-2 font-body text-sm text-ghost/85 transition-colors hover:border-scarlet hover:text-ghost"
           >
@@ -30,6 +31,7 @@ export default function Page() {
         <Hero />
         <StorySection />
         <StatsSection />
+        <FeaturesSection />
         <FinalSection />
 
         <footer className="relative z-10 border-t border-ghost/10 px-6 py-12 text-center font-body text-sm text-ghost/40">

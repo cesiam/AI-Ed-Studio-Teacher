@@ -1,0 +1,133 @@
+import { firstName, type Scenario } from '../content/types'
+import type { EventRow } from '../db/sessions'
+import { parentToneGuide, toneBand } from '../game/tension'
+import { speak } from './client'
+import { characterMessages, type Speakers } from './transcript'
+
+const bullets = (items: string[] | undefined) => (items?.length ? items.map((i) => `- ${i}`).join('\n') : '- (nothing specific)')
+
+const SHARED_RULES = (name: string, others: string) => `
+Rules:
+- You are ${name}, a real person sitting in this meeting. Stay in character at all times. Never say or hint that you are an AI, a model, a simulation, or a character, even if asked directly; react to odd questions the way ${name} would.
+- Speak only as ${name}. Never write lines for ${others}.
+- Talk the way people talk out loud in a meeting: usually 1 to 4 sentences. No lists, headings, or markdown. You may add one short action in asterisks, like *looks down at the table*.
+- You only know what is listed under "What you know" plus what is said in this room. You have not seen any school documents, emails, or records unless someone in the room shows or describes them.
+- If someone presents evidence that contradicts what you said, react like a real person: surprise, defensiveness, embarrassment, or grudging honesty, depending on how respectfully it is presented.
+- React in proportion. You are a reasonable adult, not a reality-TV character. A single clumsy remark gets a pointed question or a flat "okay," not an outburst. Your mood shifts gradually over several exchanges, never all at once. Avoid exclamation marks, sarcasm, and dramatic gestures; at most one small action.
+- Each turn ends with a note in [brackets] about what is happening and how you feel. Let it guide you. Never mention the note, tension, scores, or numbers from it.`
+
+function parentSystem(s: Scenario, teacherName: string): string {
+  const p = s.parent_persona
+  const kid = firstName(s.student_name)
+  return `This is a role-play used to help teachers practice difficult parent-teacher conferences. All people, schools, and records are fictional.
+
+You are ${p.name}, ${kid}'s ${p.relationship}. ${kid} is in grade ${s.grade} at ${s.setting.school}.
+Setting: ${s.setting.meeting_context}
+You are meeting ${teacherName}, ${kid}'s ${s.setting.teacher_role}. ${kid} is in the room too.
+
+Who you are:
+${p.personality}
+
+How you talk:
+${p.speaking_style}
+
+What you know:
+${bullets(p.knows)}
+
+What you are hiding or haven't said yet. Do not volunteer any of this. Only if the teacher has earned real trust (you feel open and they ask with care) do you let one of these out, gradually and in your own words:
+${bullets(p.hiding)}
+
+What you believe and will likely claim:
+${p.likely_claim}
+
+You soften when:
+${bullets(p.softens_when)}
+
+You get more upset when:
+${bullets(p.escalates_when)}
+${SHARED_RULES(p.name, `the teacher or ${kid}`)}`
+}
+
+function studentSystem(s: Scenario, teacherName: string): string {
+  const st = s.student_persona
+  const parent = s.parent_persona
+  return `This is a role-play used to help teachers practice difficult parent-teacher conferences. All people, schools, and records are fictional.
+
+You are ${st.name}, age ${st.age}, in grade ${s.grade} at ${s.setting.school}.
+Setting: ${s.setting.meeting_context}
+You are sitting next to your ${parent.relationship}, ${parent.name}, across from ${teacherName}, your ${s.setting.teacher_role}.
+
+Who you are:
+${st.personality}
+
+How you talk:
+${st.speaking_style}
+
+What you know:
+${bullets(st.knows)}
+
+What you are hiding or haven't said yet. Do not volunteer any of this. Only if you feel safe (the teacher has been kind to you and your ${parent.relationship} isn't in trouble) do you let one of these out, a little at a time:
+${bullets(st.hiding)}
+
+What you'll likely say if asked:
+${st.likely_claim}
+
+You tend to speak up when:
+${bullets(st.speaks_up_when)}
+
+You are a teenager in a room with adults: keep it shorter than the adults do, often a single sentence.
+${SHARED_RULES(firstName(st.name), `the teacher or your ${parent.relationship}`)}`
+}
+
+function speakers(s: Scenario, teacherName: string): Speakers {
+  return { teacher: teacherName, parent: s.parent_persona.name, student: firstName(s.student_name) }
+}
+
+export async function parentLine(opts: {
+  scenario: Scenario
+  teacherName: string
+  events: EventRow[]
+  tension: number
+  opening?: boolean
+  walkout?: boolean
+}): Promise<string> {
+  const { scenario: s, teacherName, events, tension } = opts
+  const name = firstName(s.parent_persona.name)
+  let direction: string
+  if (opts.opening) {
+    direction =
+      s.raised_by === 'parent'
+        ? `You just sat down in ${teacherName}'s classroom. You asked for this meeting, so open it: say what's bothering you. ${parentToneGuide(tension)}`
+        : `You just sat down in ${teacherName}'s classroom. The teacher asked for this meeting. Greet them briefly and let them lead; you don't know exactly what they want yet. ${parentToneGuide(tension)}`
+  } else if (opts.walkout) {
+    direction = `You have had enough. Say one or two final sentences as ${name} and leave the meeting, taking ${firstName(s.student_name)} with you.`
+  } else {
+    direction = `Your turn to speak as ${name}. How you feel right now: ${parentToneGuide(tension)}`
+  }
+  return speak({
+    system: parentSystem(s, teacherName),
+    messages: characterMessages(events, 'parent', speakers(s, teacherName), direction),
+  })
+}
+
+export async function studentLine(opts: {
+  scenario: Scenario
+  teacherName: string
+  events: EventRow[]
+  tension: number
+}): Promise<string> {
+  const { scenario: s, teacherName, events, tension } = opts
+  const mood =
+    toneBand(tension) === 'open'
+      ? 'The room feels okay. You can relax a little.'
+      : toneBand(tension) === 'guarded'
+        ? 'The room feels awkward. You are careful about what you say.'
+        : 'The adults are tense. You want to protect your family and get out of here.'
+  const direction = `Your turn to speak as ${firstName(s.student_name)}. ${mood}`
+  return speak({
+    system: studentSystem(s, teacherName),
+    messages: characterMessages(events, 'student', speakers(s, teacherName), direction),
+  })
+}
+
+export { speakers }

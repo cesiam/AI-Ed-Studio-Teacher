@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation'
 import type { SessionView } from '@/lib/api-types'
 import { api } from './api'
 import { tensionColor } from './tension-meter'
+import { SiteNav } from '../site-nav'
 
 export function SessionSummary({ session }: { session: SessionView }) {
   const router = useRouter()
@@ -23,14 +24,12 @@ export function SessionSummary({ session }: { session: SessionView }) {
   }
 
   return (
-    <main className="min-h-svh bg-coffee px-6 py-10 font-body text-ghost sm:px-10">
+    <main className="min-h-svh bg-coffee px-6 pb-10 pt-28 font-body text-ghost sm:px-10">
+      <SiteNav action={{ href: '/practice/history', label: 'Past conferences' }} />
       <div className="mx-auto max-w-3xl">
-        <a href="/" className="font-display text-lg font-bold tracking-tight">
-          Building Bridges
-        </a>
-        <p className="mt-12 text-xs uppercase tracking-[0.4em] text-glaucous">Session complete</p>
-        <h1 className="mt-3 font-display text-5xl font-bold leading-[0.95] tracking-tight">
-          You built <span className="text-scarlet">{session.plan.filter((p) => p.ended_reason !== 'walkout').length}</span>{' '}
+        <p className="kicker">Session complete</p>
+        <h1 className="mt-3 font-display text-5xl font-extrabold leading-[0.95] tracking-[-0.035em]">
+          You built <span className="marker-underline text-brand">{session.plan.filter((p) => p.ended_reason !== 'walkout').length}</span>{' '}
           of {session.plan.length} bridge{session.plan.length === 1 ? '' : 's'}.
         </h1>
 

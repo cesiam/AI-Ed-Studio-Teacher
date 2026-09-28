@@ -1,6 +1,7 @@
 import { SmoothScroll } from '@/components/smooth-scroll'
 import { CustomCursor } from '@/components/custom-cursor'
 import { FallingStrings } from '@/components/falling-strings'
+import { SiteNav } from '@/components/site-nav'
 import { Hero } from '@/components/hero'
 import { StorySection } from '@/components/story-section'
 import { StatsSection } from '@/components/stats-section'
@@ -12,21 +13,9 @@ export default function Page() {
     <>
       <SmoothScroll />
       <CustomCursor />
-      <FallingStrings />
-
       <main className="relative">
-        <header className="fixed left-0 top-0 z-50 flex w-full items-center justify-between px-6 py-6 sm:px-10">
-          <span className="font-display text-lg font-bold tracking-tight text-ghost">
-            Building Bridges
-          </span>
-          <a
-            href="/practice"
-            data-cursor="hover"
-            className="rounded-full border border-ghost/20 px-5 py-2 font-body text-sm text-ghost/85 transition-colors hover:border-scarlet hover:text-ghost"
-          >
-            Get started
-          </a>
-        </header>
+        <FallingStrings />
+        <SiteNav />
 
         <Hero />
         <StorySection />

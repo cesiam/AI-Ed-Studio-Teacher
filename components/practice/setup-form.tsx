@@ -14,12 +14,29 @@ const TEMPERATURES: { value: Temperature; label: string; blurb: string }[] = [
 ]
 
 const MOODS: { value: Mood; label: string; start: number }[] = [
-  { value: 'calm', label: 'Guarded', start: 35 },
+  // Guarded starts at the top of its band, on alert but still listening.
+  { value: 'calm', label: 'Guarded', start: 50 },
   { value: 'tense', label: 'Frustrated', start: 60 },
   { value: 'heated', label: 'Heated', start: 80 },
 ]
 
 type RecentSession = Awaited<ReturnType<typeof api.recentSessions>>['sessions'][number]
+
+const PRACTICED_KEY = 'bb-practiced'
+
+function hasPracticed() {
+  try {
+    return localStorage.getItem(PRACTICED_KEY) === '1'
+  } catch {
+    return false
+  }
+}
+
+function markPracticed() {
+  try {
+    localStorage.setItem(PRACTICED_KEY, '1')
+  } catch {}
+}
 
 export function SetupForm() {
   const router = useRouter()
@@ -34,8 +51,9 @@ export function SetupForm() {
   const [count, setCount] = useState(2)
   const [temperature, setTemperature] = useState<Temperature>('low')
   const [surpriseType, setSurpriseType] = useState<'E' | 'F'>('F')
-  const [mood, setMood] = useState<Mood>('tense')
-  const [tension, setTension] = useState({ start: 35, min: FLOOR, max: 100 })
+  // Default: Guarded, at the top of its band.
+  const [mood, setMood] = useState<Mood>('calm')
+  const [tension, setTension] = useState({ start: GUARDED_MAX, min: FLOOR, max: 100 })
   const [picked, setPicked] = useState<string[]>([])
   const [seed, setSeed] = useState('')
 
@@ -43,26 +61,27 @@ export function SetupForm() {
   const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
+    // "New here" is per browser: session history lives on the server and is
+    // shared, so it can't tell whether this visitor has practiced before.
+    const isNew = !hasPracticed()
+    setFirstVisit(isNew)
+    if (isNew) {
+      // Start newcomers on the easy tutorial: same Guarded start, but capped
+      // well below 100 so the parent can never walk out.
+      setTension({ start: GUARDED_MAX, min: FLOOR, max: 60 })
+    }
     api
       .scenarios()
       .then((r) => {
         setScenarios(r.scenarios)
-        const firstReady = r.scenarios.find((s) => s.status === 'ready' && !s.tutorial) ?? r.scenarios.find((s) => s.status === 'ready')
-        // (A first visit may already have picked the tutorial.)
-        if (firstReady) setPicked((cur) => (cur.length ? cur : [firstReady.id]))
+        const tut = r.scenarios.find((s) => s.tutorial && s.status === 'ready')
+        const firstReady = r.scenarios.find((s) => s.status === 'ready' && !s.tutorial) ?? tut
+        const pick = isNew && tut ? tut : firstReady
+        if (pick) setPicked((cur) => (cur.length ? cur : [pick.id]))
       })
       .catch((e: Error) => setLoadError(e.message))
     api.recentSessions().then(
-      (r) => {
-        setRecent(r.sessions.slice(0, 5))
-        if (r.sessions.length === 0) {
-          setFirstVisit(true)
-          api.scenarios().then((s) => {
-            const tut = s.scenarios.find((x) => x.tutorial && x.status === 'ready')
-            if (tut) setPicked([tut.id])
-          }, () => {})
-        }
-      },
+      (r) => setRecent(r.sessions.slice(0, 5)),
       () => {},
     )
   }, [])
@@ -90,6 +109,7 @@ export function SetupForm() {
     setError(null)
     try {
       const session = await api.createSession(req)
+      markPracticed()
       router.push(`/practice/${session.id}`)
     } catch (e) {
       setError((e as Error).message)
@@ -299,7 +319,7 @@ export function SetupForm() {
         hint="Pick a mood or set the exact starting tension, then choose how low and high it can go. The parent only walks out if the top is 100."
       >
         <Segmented
-          value={MOODS.find((m) => m.start === tension.start)?.value ?? ('' as Mood)}
+          value={moodFor(tension.start)}
           onChange={(v) => {
             const start = MOODS.find((m) => m.value === v)!.start
             setMood(v)
@@ -311,7 +331,7 @@ export function SetupForm() {
           value={tension}
           onChange={(t) => {
             setTension(t)
-            setMood(t.start < 33 ? 'calm' : t.start < 58 ? 'tense' : 'heated')
+            setMood(moodFor(t.start))
           }}
         />
       </Field>
@@ -369,6 +389,13 @@ type Tension = { start: number; min: number; max: number }
 
 /** Tension never goes below guarded: a parent in a school meeting is always a little on alert. */
 const FLOOR = 26
+/** The top of the Guarded band (see TENSION_BANDS); the default starting tension. */
+const GUARDED_MAX = 50
+
+/** The mood whose band a starting tension falls in, so the mood buttons follow the meter. */
+function moodFor(start: number): Mood {
+  return start <= GUARDED_MAX ? 'calm' : start <= 75 ? 'tense' : 'heated'
+}
 
 /** What the parent sounds like in each part of the meter (matches the tone bands the parent is played with). */
 const TENSION_BANDS = [

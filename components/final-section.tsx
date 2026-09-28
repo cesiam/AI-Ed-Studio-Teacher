@@ -19,26 +19,33 @@ export function FinalSection() {
     [0, 0.25, 0.5, 0.75, 1],
     [0, -14, 0, -14, 0],
   )
-  // The headline fades with the walk; the buttons stay put so there's always a way in.
+  // The headline fades with the walk; the buttons stay so there's always a way in.
   const headlineOpacity = useTransform(scrollYProgress, [0, 0.25, 0.85, 1], [0, 1, 1, 0])
   const ctaY = useTransform(scrollYProgress, [0, 0.25], [40, 0])
+  // Buttons arrive with the headline, then stay once it fades. A function
+  // transform keeps this off the accelerated scroll timeline, which drops the
+  // value once the page scrolls past the section's end.
+  const buttonsOpacity = useTransform(scrollYProgress, (p) => Math.min(1, Math.max(0, p / 0.25)))
 
   return (
-    <section ref={ref} className="relative z-10 h-[260svh]">
+    <section ref={ref} data-strings-hang className="relative z-10 h-[260svh]">
       <div className="sticky top-0 flex h-[100svh] flex-col items-center justify-center overflow-hidden px-6">
         <div className="relative z-10 text-center">
           <motion.div style={{ opacity: headlineOpacity, y: ctaY }}>
-            <p className="font-body text-xs uppercase tracking-[0.4em] text-glaucous">
+            <p className="kicker">
               The bridge is built. Now cross it.
             </p>
-            <h2 className="mx-auto mt-6 max-w-4xl text-balance font-display text-5xl font-bold leading-[0.95] tracking-tight text-ghost sm:text-7xl md:text-8xl">
+            <h2 className="mx-auto mt-6 max-w-4xl text-balance font-display text-5xl font-extrabold leading-[0.95] tracking-[-0.035em] text-ghost sm:text-7xl md:text-8xl">
               How will you build
               <br />
-              <span className="text-scarlet">bridges</span> today?
+              <span className="marker-underline text-brand">bridges</span> today?
             </h2>
           </motion.div>
 
-          <div className="mt-12 flex flex-col items-center justify-center gap-4 sm:flex-row">
+          <motion.div
+            style={{ opacity: buttonsOpacity, y: ctaY }}
+            className="mt-12 flex flex-col items-center justify-center gap-4 sm:flex-row"
+          >
             <a
               href="/practice"
               data-cursor="hover"
@@ -49,11 +56,11 @@ export function FinalSection() {
             <a
               href="#features"
               data-cursor="hover"
-              className="rounded-full border border-glaucous/40 px-8 py-4 font-body text-base font-medium text-ghost/85 transition-colors hover:border-glaucous hover:text-ghost"
+              className="rounded-full border border-glaucous/40 px-8 py-4 font-body text-base font-semibold text-ghost/85 transition-colors hover:border-glaucous hover:text-ghost"
             >
               See how it works
             </a>
-          </div>
+          </motion.div>
         </div>
 
         {/* ground line the pair walks along */}

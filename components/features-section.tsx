@@ -38,11 +38,11 @@ const features = [
 /** What's in the practice room, in a sentence or two each. */
 export function FeaturesSection() {
   return (
-    <section id="features" className="relative z-10 mx-auto max-w-5xl scroll-mt-24 px-6 py-24 sm:py-32">
+    <section id="features" className="relative z-10 mx-auto max-w-6xl scroll-mt-24 px-6 py-24 sm:py-32">
       <Reveal>
-        <p className="font-body text-xs uppercase tracking-[0.4em] text-glaucous">Inside the practice room</p>
-        <h2 className="mt-5 max-w-3xl text-balance font-display text-4xl font-bold leading-tight text-ghost sm:text-5xl">
-          Practice the conversation <span className="text-scarlet">before</span> it matters.
+        <p className="kicker">Inside the practice room</p>
+        <h2 className="mt-5 max-w-3xl text-balance font-display text-4xl font-extrabold leading-[1.02] tracking-[-0.03em] text-ghost sm:text-5xl">
+          Practice the conversation <span className="marker-underline text-brand">before</span> it matters.
         </h2>
       </Reveal>
       <div className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
@@ -50,11 +50,11 @@ export function FeaturesSection() {
           <Reveal key={f.title} delay={(i % 3) * 0.1}>
             <article
               data-cursor="hover"
-              className="h-full rounded-3xl border border-glaucous/25 bg-royal/15 p-6 backdrop-blur-sm transition-colors hover:border-scarlet/60 hover:bg-royal/25"
+              className="h-full rounded-3xl border border-glaucous/25 bg-coffee/85 p-6 backdrop-blur-md transition-colors hover:border-scarlet/60"
             >
-              <span className="rounded-full bg-scarlet/15 px-3 py-1 font-body text-xs font-medium text-scarlet">{f.tag}</span>
+              <span className="rounded-full bg-scarlet/15 px-3 py-1 font-body text-xs font-semibold text-scarlet">{f.tag}</span>
               <h3 className="mt-4 font-display text-xl font-bold leading-snug text-ghost">{f.title}</h3>
-              <p className="mt-2 font-body text-sm leading-relaxed text-ghost/65">{f.body}</p>
+              <p className="mt-2 font-body text-[15px] leading-relaxed text-ghost/70">{f.body}</p>
             </article>
           </Reveal>
         ))}

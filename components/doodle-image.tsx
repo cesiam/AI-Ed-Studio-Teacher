@@ -1,4 +1,5 @@
 import Image from 'next/image'
+import { cn } from '@/lib/utils'
 
 type DoodleImageProps = {
   src: string
@@ -12,9 +13,9 @@ type DoodleImageProps = {
 
 /**
  * The source line-art is black strokes on a white/transparent field.
- * When `invert` is true (default) the black lines flip to Ghost White so they
- * read on the Coffee Bean background, and the white field blends away. Set
- * `invert={false}` to keep the original black-on-white artwork on a light field.
+ * When `invert` is true (default) the art follows the theme: black ink on the
+ * light ground, flipped to Ghost White on the dark one (see .doodle-art in
+ * globals.css). Set `invert={false}` to always keep the original artwork.
  */
 export function DoodleImage({
   src,
@@ -33,8 +34,7 @@ export function DoodleImage({
       height={height}
       priority={priority}
       aria-hidden={alt === '' ? true : undefined}
-      className={className}
-      style={invert ? { filter: 'invert(1)', mixBlendMode: 'screen' } : undefined}
+      className={cn(invert && 'doodle-art', className)}
     />
   )
 }

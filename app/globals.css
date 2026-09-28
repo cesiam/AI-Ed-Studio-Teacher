@@ -153,14 +153,33 @@
   }
 }
 
+/*
+ * Building Bridges themes. Light is the default; the nav toggle sets
+ * data-theme="dark" on <html>. Coffee is always the page ground and Ghost the
+ * ink, so the two palette colors swap places between themes.
+ */
+:root {
+  --bb-ground: #fbfbff;
+  --bb-ink: #0d0106;
+  /* Accent ink for labels and highlighted words: Royal reads on light,
+     Glaucous on dark. */
+  --bb-brand: #3626a7;
+}
+:root[data-theme='dark'] {
+  --bb-ground: #0d0106;
+  --bb-ink: #fbfbff;
+  --bb-brand: #657ed4;
+}
+
 @theme inline {
-  --color-coffee: #0d0106;
+  --color-coffee: var(--bb-ground);
   --color-royal: #3626a7;
   --color-glaucous: #657ed4;
   --color-scarlet: #ff331f;
-  --color-ghost: #fbfbff;
-  --font-display: var(--font-display);
-  --font-body: var(--font-body);
+  --color-ghost: var(--bb-ink);
+  --color-brand: var(--bb-brand);
+  --font-display: var(--font-outfit);
+  --font-body: var(--font-outfit);
 }
 
 @layer base {
@@ -169,9 +188,10 @@
   }
   body {
     @apply bg-background text-foreground;
-    background-color: #0d0106;
-    color: #fbfbff;
-    font-family: var(--font-body), system-ui, sans-serif;
+    background-color: var(--bb-ground);
+    color: var(--bb-ink);
+    transition: background-color 0.3s ease, color 0.3s ease;
+    font-family: var(--font-outfit), system-ui, sans-serif;
   }
 }
 
@@ -189,5 +209,92 @@
   html.has-custom-cursor,
   html.has-custom-cursor * {
     cursor: none !important;
+  }
+}
+
+/* Text on solid palette fills stays Ghost White in both themes. */
+:is(.bg-scarlet, .bg-royal, .bg-glaucous).text-ghost,
+:is(.bg-scarlet, .bg-royal, .bg-glaucous) .text-ghost {
+  color: #fbfbff;
+}
+
+/* Line-art PNGs are black on white: keep them as-is on the light ground,
+   flip them to Ghost White on the dark one. */
+.doodle-art {
+  mix-blend-mode: multiply;
+}
+:root[data-theme='dark'] .doodle-art {
+  filter: invert(1);
+  mix-blend-mode: screen;
+}
+
+/* Ruled notebook paper, translucent so the falling strings show through. */
+.notebook-paper {
+  background-color: color-mix(in srgb, #657ed4 7%, transparent);
+  background-image: repeating-linear-gradient(
+    to bottom,
+    transparent 0 39px,
+    color-mix(in srgb, #657ed4 20%, transparent) 39px 40px
+  );
+}
+
+/* Type roles, after the visuals: a small, wide-tracked semibold label… */
+@utility kicker {
+  font-family: var(--font-outfit);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--bb-brand);
+}
+
+/* …the red numbered disc that sits in front of a label… */
+@utility kicker-badge {
+  display: inline-grid;
+  place-items: center;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 9999px;
+  background: #ff331f;
+  color: #fbfbff;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0;
+}
+
+/* …a hand-drawn red underline under the phrase that matters… */
+@utility marker-underline {
+  text-decoration-line: underline;
+  text-decoration-color: #ff331f;
+  text-decoration-thickness: 0.09em;
+  text-underline-offset: 0.14em;
+  text-decoration-skip-ink: none;
+}
+
+/* …and a red block tag for the turn in a sentence ("BUT"). */
+@utility tag-flag {
+  display: inline-block;
+  padding: 0.05em 0.35em;
+  background: #ff331f;
+  color: #fbfbff;
+  font-weight: 700;
+  transform: rotate(-2deg);
+}
+
+/* The notebook's red margin line. The hero and the notebook section both use
+   this, so the two stay perfectly aligned at every screen size. */
+@utility margin-rule {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 1rem;
+  width: 2px;
+  background: #ff331f;
+  pointer-events: none;
+  @media (width >= 48rem) {
+    left: 2rem;
+  }
+  @media (width >= 64rem) {
+    left: 4rem;
   }
 }

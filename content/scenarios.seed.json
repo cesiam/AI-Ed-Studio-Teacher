@@ -27,7 +27,7 @@
       "setting": {
         "school": "Pemberton Falls Elementary School",
         "teacher_role": "Grade 3 classroom teacher",
-        "meeting_context": "A short, teacher-requested check-in after school on a Thursday in Room 108. Ms. Martins came straight from work and brought Leo with her. She seems glad to be here."
+        "meeting_context": "A short, teacher-requested check-in after school on a Thursday in Room 108. Ms. Martins came straight from work and brought Leo with her."
       },
       "teacher_concern": "Leo's weekly reading log has come back blank or half-filled for three of the last four weeks, so he's missing the reading-log points on his report card. You'd like to agree on a simple routine at home.",
       "student_strength": "BUT I notice Leo is one of the most enthusiastic readers in the room. He's always the first to volunteer during read-aloud, and last week he explained the ending of our chapter book to his whole table.",
@@ -48,7 +48,7 @@
       "parent_persona": {
         "name": "Sofia Martins",
         "relationship": "mother",
-        "personality": "Warm, friendly and a little apologetic. She works as a dental hygienist and evenings are busy with Leo and his baby sister. She's proud of Leo and happy the teacher asked to meet. She wants to help and is easy to talk to.",
+        "personality": "Warm, friendly and a little apologetic. She works as a dental hygienist and evenings are busy with Leo and his baby sister. She's proud of Leo and wants to help. When she feels the teacher is on Leo's side, she's easy to talk to.",
         "speaking_style": "Friendly and chatty, laughs easily, says 'oh, I know' and 'that's so him'. Asks practical questions.",
         "knows": [
           "Leo loves to read, especially comics and dragon books.",
@@ -307,9 +307,9 @@
       },
       "raised_by": "teacher",
       "student_name": "TODO: student name",
-      "grade": 9,
+      "grade": 4,
       "setting": {
-        "school": "Pemberton Falls High School",
+        "school": "Pemberton Falls Elementary School",
         "teacher_role": "TODO: who the teacher is",
         "meeting_context": "TODO: when, where, and why the meeting is happening"
       },
@@ -455,9 +455,9 @@
       },
       "raised_by": "parent",
       "student_name": "TODO: student name",
-      "grade": 9,
+      "grade": 7,
       "setting": {
-        "school": "Pemberton Falls High School",
+        "school": "Pemberton Falls Middle School",
         "teacher_role": "TODO: who the teacher is",
         "meeting_context": "TODO: when, where, and why the meeting is happening"
       },
@@ -603,7 +603,7 @@
       },
       "raised_by": "teacher",
       "student_name": "TODO: student name",
-      "grade": 9,
+      "grade": 11,
       "setting": {
         "school": "Pemberton Falls High School",
         "teacher_role": "TODO: who the teacher is",
@@ -751,9 +751,9 @@
       },
       "raised_by": "teacher",
       "student_name": "TODO: student name",
-      "grade": 9,
+      "grade": 6,
       "setting": {
-        "school": "Pemberton Falls High School",
+        "school": "Pemberton Falls Middle School",
         "teacher_role": "TODO: who the teacher is",
         "meeting_context": "TODO: when, where, and why the meeting is happening"
       },
@@ -899,9 +899,9 @@
       },
       "raised_by": "parent",
       "student_name": "TODO: student name",
-      "grade": 9,
+      "grade": 8,
       "setting": {
-        "school": "Pemberton Falls High School",
+        "school": "Pemberton Falls Middle School",
         "teacher_role": "TODO: who the teacher is",
         "meeting_context": "TODO: when, where, and why the meeting is happening"
       },
@@ -1047,7 +1047,7 @@
       },
       "raised_by": "parent",
       "student_name": "TODO: student name",
-      "grade": 9,
+      "grade": 10,
       "setting": {
         "school": "Pemberton Falls High School",
         "teacher_role": "TODO: who the teacher is",
@@ -1195,9 +1195,9 @@
       },
       "raised_by": "parent",
       "student_name": "TODO: student name",
-      "grade": 9,
+      "grade": 2,
       "setting": {
-        "school": "Pemberton Falls High School",
+        "school": "Pemberton Falls Elementary School",
         "teacher_role": "TODO: who the teacher is",
         "meeting_context": "TODO: when, where, and why the meeting is happening"
       },
@@ -1343,9 +1343,9 @@
       },
       "raised_by": "teacher",
       "student_name": "TODO: student name",
-      "grade": 9,
+      "grade": 8,
       "setting": {
-        "school": "Pemberton Falls High School",
+        "school": "Pemberton Falls Middle School",
         "teacher_role": "TODO: who the teacher is",
         "meeting_context": "TODO: when, where, and why the meeting is happening"
       },
@@ -1657,7 +1657,7 @@
       },
       "raised_by": "teacher",
       "student_name": "TODO: student name",
-      "grade": 9,
+      "grade": 11,
       "setting": {
         "school": "Pemberton Falls High School",
         "teacher_role": "TODO: who the teacher is",

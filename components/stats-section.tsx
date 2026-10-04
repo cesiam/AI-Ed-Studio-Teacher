@@ -40,63 +40,82 @@ function CountUp({ to, suffix = '', decimals = 0 }: { to: number; suffix?: strin
   )
 }
 
-// From the project's Stats sheet ("Student is repeatedly absent and missing content").
 // Year ranges use a word joiner (\u2060) around the dash so they never break across lines.
-const stats = [
-  {
-    value: 28,
-    decimals: 0,
-    label: 'of U.S. students were chronically absent in the 2022\u2060–\u206023 school year.',
-    source: 'U.S. Department of Education',
-  },
-  {
-    value: 17.1,
-    decimals: 1,
-    label: 'of Massachusetts students were chronically absent in 2025\u2060–\u206026, down from 22.2% in 2022\u2060–\u206023.',
-    source: 'Massachusetts DESE, 2026 release',
-  },
-]
-
 export function StatsSection() {
   return (
     <section className="relative z-10 border-y border-ghost/10 bg-coffee/60 px-6 py-28 backdrop-blur-sm sm:py-40">
-      <div className="mx-auto max-w-6xl">
-        <Reveal>
-          <h2 className="max-w-3xl text-balance font-display text-3xl font-extrabold leading-[1.02] tracking-[-0.03em] text-ghost sm:text-5xl">
-            Missed days add up — and it&apos;s{' '}
-            <span className="marker-underline text-brand">measurable</span>.
-          </h2>
-        </Reveal>
+      <div className="mx-auto grid max-w-6xl gap-20 lg:grid-cols-2 lg:gap-16">
+        {/* Left: why teachers need a place to practice. */}
+        <div>
+          <Reveal>
+            <p className="kicker text-brand">Why practice matters</p>
+            <h2 className="mt-5 text-balance font-display text-3xl font-extrabold leading-[1.02] tracking-[-0.03em] text-ghost sm:text-5xl">
+              The hardest part of teaching often isn&apos;t the{' '}
+              <span className="marker-underline text-brand">lesson</span>.
+            </h2>
+          </Reveal>
 
-        <div className="mt-16 grid gap-12 sm:grid-cols-2">
-          {stats.map((s, i) => (
-            <Reveal key={s.value} delay={i * 0.15}>
-              <div>
-                <motion.p className="font-display text-7xl font-extrabold leading-none tracking-[-0.04em] text-scarlet sm:text-8xl">
-                  <CountUp to={s.value} decimals={s.decimals} suffix="%" />
-                </motion.p>
-                <p className="mt-5 max-w-sm font-body text-lg text-ghost/75">
-                  {s.label}
-                </p>
-                <p className="mt-2 font-body text-xs font-semibold uppercase tracking-[0.18em] text-ghost/40">
-                  {s.source}
-                </p>
-              </div>
-            </Reveal>
-          ))}
+          <Reveal delay={0.15}>
+            <div className="mt-14">
+              <motion.p className="font-display text-7xl font-extrabold leading-none tracking-[-0.04em] text-scarlet sm:text-8xl">
+                <CountUp to={31} suffix="%" />
+              </motion.p>
+              <p className="mt-5 max-w-md font-body text-lg text-ghost/75">
+                of new teachers say communicating with and involving parents is their single greatest challenge,
+                ahead of classroom discipline (20%).
+              </p>
+              <p className="mt-2 font-body text-xs font-semibold uppercase tracking-[0.18em] text-ghost/60">
+                MetLife Survey of the American Teacher, 2005
+              </p>
+            </div>
+          </Reveal>
+
+          <Reveal delay={0.25}>
+            <p className="mt-10 max-w-md font-body text-lg leading-relaxed text-ghost/75">
+              It&apos;s also the area they felt least prepared for in their first year. Teachers rehearse lessons,
+              but the first time most practice a hard conference is with a real family, where a misstep costs
+              trust.
+            </p>
+          </Reveal>
         </div>
 
-        <Reveal delay={0.2}>
-          <blockquote className="mt-20 max-w-3xl border-l-4 border-scarlet pl-6">
-            <p className="font-display text-2xl font-bold leading-snug tracking-[-0.01em] text-ghost sm:text-3xl">
-              “Chronic absenteeism is the single strongest predictor of dropping out before graduation.”
-            </p>
-            <footer className="mt-4 font-body text-sm text-ghost/50">
-              New Jersey Department of Education. The conversation with a family is where turning it around
-              starts.
-            </footer>
-          </blockquote>
-        </Reveal>
+        {/* Right: what's at stake in Maya's case. */}
+        <div className="lg:border-l lg:border-ghost/10 lg:pl-16">
+          <Reveal>
+            <p className="kicker text-scarlet">Case 01 · Why Maya matters</p>
+            <h3 className="mt-5 text-balance font-display text-3xl font-extrabold leading-[1.02] tracking-[-0.03em] text-ghost sm:text-5xl">
+              Missed days add up, and it&apos;s{' '}
+              <span className="marker-underline text-brand">measurable</span>.
+            </h3>
+          </Reveal>
+
+          <Reveal delay={0.15}>
+            <div className="mt-14">
+              <motion.p className="font-display text-7xl font-extrabold leading-none tracking-[-0.04em] text-scarlet sm:text-8xl">
+                <CountUp to={28} suffix="%" />
+              </motion.p>
+              <p className="mt-5 max-w-md font-body text-lg text-ghost/75">
+                of U.S. students were chronically absent in the {'2022\u2060–\u206023'} school year. Maya, at 76%
+                attendance, is one of them.
+              </p>
+              <p className="mt-2 font-body text-xs font-semibold uppercase tracking-[0.18em] text-ghost/60">
+                U.S. Department of Education
+              </p>
+            </div>
+          </Reveal>
+
+          <Reveal delay={0.25}>
+            <blockquote className="mt-10 max-w-md border-l-4 border-scarlet pl-6">
+              <p className="font-display text-2xl font-bold leading-snug tracking-[-0.01em] text-ghost">
+                “Chronic absenteeism is the single strongest predictor of dropping out before graduation.”
+              </p>
+              <footer className="mt-4 font-body text-sm text-ghost/60">
+                New Jersey Department of Education. The conversation with Maya&apos;s family is where turning it
+                around starts.
+              </footer>
+            </blockquote>
+          </Reveal>
+        </div>
       </div>
     </section>
   )

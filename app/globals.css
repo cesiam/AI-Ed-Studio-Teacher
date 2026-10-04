@@ -164,11 +164,15 @@
   /* Accent ink for labels and highlighted words: Royal reads on light,
      Glaucous on dark. */
   --bb-brand: #3626a7;
+  /* The same accent for surfaces painted in the ink color (laptop windows,
+     speech bubbles, the debrief card), which are dark when the page is light. */
+  --bb-brand-inverse: #657ed4;
 }
 :root[data-theme='dark'] {
   --bb-ground: #0d0106;
   --bb-ink: #fbfbff;
   --bb-brand: #657ed4;
+  --bb-brand-inverse: #3626a7;
 }
 
 @theme inline {
@@ -178,6 +182,7 @@
   --color-scarlet: #ff331f;
   --color-ghost: var(--bb-ink);
   --color-brand: var(--bb-brand);
+  --color-brand-inverse: var(--bb-brand-inverse);
   --font-display: var(--font-outfit);
   --font-body: var(--font-outfit);
 }
@@ -281,20 +286,56 @@
   transform: rotate(-2deg);
 }
 
-/* The notebook's red margin line. The hero and the notebook section both use
-   this, so the two stay perfectly aligned at every screen size. */
+/* The notebook's margin line, a soft grey. The hero and the notebook section both
+   use this, so the two stay perfectly aligned at every screen size; the notebook
+   section turns it red (bg-scarlet!). */
 @utility margin-rule {
   position: absolute;
   top: 0;
   bottom: 0;
-  left: 1rem;
+  left: 1.25rem;
   width: 2px;
-  background: #ff331f;
+  background: color-mix(in srgb, var(--color-ghost) 18%, transparent);
   pointer-events: none;
   @media (width >= 48rem) {
-    left: 2rem;
+    left: 3.5rem;
   }
   @media (width >= 64rem) {
-    left: 4rem;
+    left: 6rem;
+  }
+}
+
+/* A soft scarlet ring that breathes outward; marks the place to start. */
+@keyframes pulse-ring {
+  0% {
+    box-shadow: 0 0 0 0 color-mix(in srgb, #ff331f 55%, transparent);
+  }
+  70% {
+    box-shadow: 0 0 0 10px color-mix(in srgb, #ff331f 0%, transparent);
+  }
+  100% {
+    box-shadow: 0 0 0 0 color-mix(in srgb, #ff331f 0%, transparent);
+  }
+}
+.pulse-ring {
+  border-color: #ff331f;
+  animation: pulse-ring 1.8s ease-out infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  .pulse-ring {
+    animation: none;
+    box-shadow: 0 0 0 2px color-mix(in srgb, #ff331f 60%, transparent);
+  }
+}
+
+/* The typing caret on /start: blinks a few times once the sentence is done, then goes. */
+@keyframes caret {
+  0%,
+  49% {
+    opacity: 1;
+  }
+  50%,
+  100% {
+    opacity: 0;
   }
 }

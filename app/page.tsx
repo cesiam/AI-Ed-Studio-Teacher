@@ -23,7 +23,7 @@ export default function Page() {
         <FeaturesSection />
         <FinalSection />
 
-        <footer className="relative z-10 border-t border-ghost/10 px-6 py-12 text-center font-body text-sm text-ghost/40">
+        <footer className="relative z-10 border-t border-ghost/10 px-6 py-12 text-center font-body text-sm text-ghost/60">
           Building Bridges — helping teachers and families have the
           conversations that matter.
         </footer>

@@ -47,7 +47,7 @@ export function FinalSection() {
             className="mt-12 flex flex-col items-center justify-center gap-4 sm:flex-row"
           >
             <a
-              href="/practice"
+              href="/start"
               data-cursor="hover"
               className="rounded-full bg-scarlet px-8 py-4 font-body text-base font-semibold text-ghost transition-transform hover:scale-[1.03]"
             >

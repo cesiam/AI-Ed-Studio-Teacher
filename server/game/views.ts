@@ -19,7 +19,7 @@ import {
   type SessionRow,
   type SessionScenarioRow,
 } from '../db/sessions'
-import { tensionRange } from './tension'
+import { arrivalNote, demeanorFor, tensionRange } from './tension'
 
 export function scenarioSummary(s: Scenario): ScenarioSummary {
   return {
@@ -113,6 +113,8 @@ export function scenarioView(session: SessionRow, row: SessionScenarioRow): Scen
     school: s.setting.school,
     teacher_role: s.setting.teacher_role,
     meeting_context: s.setting.meeting_context,
+    arrival: arrivalNote(s.parent_persona, s.raised_by, tensionRange(session.config).start),
+    demeanor: demeanorFor(s),
     teacher_concern: s.teacher_concern,
     student_strength: s.student_strength,
     parent: { name: s.parent_persona.name, relationship: s.parent_persona.relationship },

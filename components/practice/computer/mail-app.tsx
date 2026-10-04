@@ -82,9 +82,9 @@ export function MailApp({
               m.id === open.id ? (m.highlight ? 'bg-scarlet/15' : 'bg-coffee/5') : 'hover:bg-coffee/5',
             )}
           >
-            <Mail className={cn('mt-0.5 size-4 flex-none', m.highlight ? 'text-scarlet' : 'text-coffee/50')} />
+            <Mail className={cn('mt-0.5 size-4 flex-none', m.highlight ? 'text-scarlet' : 'text-coffee/60')} />
             <span className="min-w-0 flex-1">
-              <span className="flex justify-between gap-2 text-xs text-coffee/50">
+              <span className="flex justify-between gap-2 text-xs text-coffee/60">
                 <span className="truncate font-semibold text-coffee">{m.from}</span>
                 <span className="flex-none">{m.time}</span>
               </span>

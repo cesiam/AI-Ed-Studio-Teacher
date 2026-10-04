@@ -365,6 +365,12 @@ export function endConference(sessionId: string) {
   return withLock(sessionId, async () => {
     const { session, row, scenario } = current(sessionId)
     requireStatus(row, 'conference', 'end the conference')
+    const agreed = agreedSteps(getEvents(sessionId, row.idx)).length > 0
+    if (!agreed && row.turn_count < GAME.endWithoutPlanAfterTurns) {
+      throw conflict(
+        `You can end the conference once you and the parent agree on at least one next step (or after ${GAME.endWithoutPlanAfterTurns} exchanges if you're stuck).`,
+      )
+    }
     await finishScenario(session, row, scenario, 'teacher_ended')
   })
 }

@@ -101,9 +101,9 @@ export function Computer({
       {/* menu bar */}
       <div className="flex h-8 flex-none items-center justify-between bg-coffee/85 px-4 font-body text-xs text-ghost/85">
         <span className="font-semibold">
-          PFPS <span className="font-normal text-ghost/55">· {current.name}</span>
+          PFPS <span className="font-normal text-ghost/60">· {current.name}</span>
         </span>
-        <span className="text-ghost/55">
+        <span className="text-ghost/60">
           {scenario.school}
           {room && ` · ${room}`}
         </span>
@@ -164,6 +164,7 @@ export function Computer({
             <button
               key={id}
               type="button"
+              data-tour={`app-${id}`}
               onClick={() => open(id)}
               title={name}
               className={cn(
@@ -174,7 +175,7 @@ export function Computer({
               <span
                 className={cn(
                   'grid size-9 place-items-center rounded-xl',
-                  id === 'mail' || id === 'chat' ? 'bg-coffee' : id === 'records' ? 'bg-glaucous' : 'bg-ghost text-royal',
+                  id === 'mail' || id === 'chat' ? 'bg-[#0d0106] text-[#fbfbff]' : id === 'records' ? 'bg-glaucous' : 'bg-ghost text-brand-inverse',
                 )}
               >
                 <Icon className="size-5" />

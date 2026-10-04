@@ -69,12 +69,12 @@ export function ScenarioUpload({ onAdded }: { onAdded: (added: ScenarioSummary[]
       <div className="flex items-start justify-between gap-4">
         <div>
           <h3 className="font-display text-base font-bold">Add your own scenario</h3>
-          <p className="mt-0.5 text-sm text-ghost/55">
+          <p className="mt-0.5 text-sm text-ghost/60">
             Describe a conference you want to practice: the student, the concern, what the parent believes, and anything
             the family isn’t saying. Claude writes the parent, student, colleagues and six documents. Use made-up names.
           </p>
         </div>
-        <button type="button" onClick={() => setOpen(false)} className="text-sm text-ghost/50 hover:text-ghost">
+        <button type="button" onClick={() => setOpen(false)} className="text-sm text-ghost/60 hover:text-ghost">
           Close
         </button>
       </div>
@@ -86,7 +86,7 @@ export function ScenarioUpload({ onAdded }: { onAdded: (added: ScenarioSummary[]
         maxLength={20000}
         disabled={busy}
         placeholder="e.g. Jordan, a 7th grader, has stopped turning in science labs since January. Dad thinks the teacher has it out for Jordan after a seating change. What Dad doesn't know: Jordan has been covering for a friend…"
-        className="mt-4 w-full resize-y rounded-xl border border-ghost/15 bg-coffee/60 px-4 py-3 text-[15px] text-ghost placeholder:text-ghost/35 focus:border-glaucous focus:outline-none"
+        className="mt-4 w-full resize-y rounded-xl border border-ghost/15 bg-coffee/60 px-4 py-3 text-[15px] text-ghost placeholder:text-ghost/55 focus:border-glaucous focus:outline-none"
       />
 
       <div className="mt-3 flex flex-wrap items-center gap-3">
@@ -119,7 +119,7 @@ export function ScenarioUpload({ onAdded }: { onAdded: (added: ScenarioSummary[]
       </div>
 
       {error && <p className="mt-3 whitespace-pre-line rounded-xl border border-scarlet/50 bg-scarlet/10 px-4 py-2 text-sm">{error}</p>}
-      {done && <p className="mt-3 text-sm text-glaucous">{done}</p>}
+      {done && <p className="mt-3 text-sm text-brand">{done}</p>}
     </div>
   )
 }

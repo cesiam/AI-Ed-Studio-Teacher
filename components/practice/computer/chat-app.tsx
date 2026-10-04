@@ -65,14 +65,14 @@ export function ChatApp({
             <span
               className={cn(
                 'grid size-8 flex-none place-items-center rounded-full font-display text-xs font-bold',
-                c.role === role ? 'bg-ghost text-royal' : 'bg-coffee text-ghost',
+                c.role === role ? 'bg-ghost text-brand-inverse' : 'bg-coffee text-ghost',
               )}
             >
               {initials(c.name)}
             </span>
             <span className="min-w-0">
               <span className="block truncate text-sm font-medium">{c.name}</span>
-              <span className={cn('block truncate text-xs', c.role === role ? 'text-ghost/70' : 'text-coffee/50')}>
+              <span className={cn('block truncate text-xs', c.role === role ? 'text-ghost/70' : 'text-coffee/60')}>
                 {c.title}
               </span>
             </span>
@@ -83,7 +83,7 @@ export function ChatApp({
       <section className="flex min-w-0 flex-1 flex-col">
         <div className="min-h-0 flex-1 space-y-2 overflow-y-auto px-5 py-4">
           {thread.length === 0 && !sending && (
-            <p className="text-sm text-coffee/50">
+            <p className="text-sm text-coffee/60">
               Ask {contact.name} what they know about {scenario.student_first_name}. They may be able to send you a
               record.
             </p>
@@ -118,7 +118,7 @@ export function ChatApp({
               <div className="flex justify-end">
                 <div className="max-w-[80%] rounded-2xl bg-royal/70 px-3.5 py-2 text-sm text-ghost">{sending}</div>
               </div>
-              <p className="text-xs text-coffee/50">{contact.name} is typing…</p>
+              <p className="text-xs text-coffee/60">{contact.name} is typing…</p>
             </>
           )}
         </div>

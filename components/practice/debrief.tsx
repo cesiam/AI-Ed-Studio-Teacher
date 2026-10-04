@@ -28,7 +28,7 @@ export function Debrief({
         animate={{ opacity: 1, y: 0 }}
         className="w-full max-w-2xl rounded-3xl bg-ghost p-6 font-body text-coffee shadow-2xl sm:p-8"
       >
-        <p className="text-[11px] font-semibold uppercase tracking-[0.35em] text-royal">
+        <p className="text-[11px] font-semibold uppercase tracking-[0.35em] text-brand-inverse">
           Debrief{session.plan.length > 1 && ` · Scenario ${s.idx + 1} of ${session.plan.length}`}
         </p>
         <h2 className="mt-1 font-display text-3xl font-bold leading-tight">
@@ -89,7 +89,7 @@ export function Debrief({
 function Stat({ label, value, color }: { label: string; value: string; color?: string }) {
   return (
     <div className="rounded-2xl border border-coffee/10 px-2 py-3">
-      <p className="text-[10px] font-semibold uppercase tracking-[0.25em] text-coffee/50">{label}</p>
+      <p className="text-[10px] font-semibold uppercase tracking-[0.25em] text-coffee/60">{label}</p>
       <p className="mt-1 font-display text-xl font-bold" style={color ? { color } : undefined}>
         {value}
       </p>
@@ -101,7 +101,7 @@ function Section({ title, items }: { title: string; items: string[] }) {
   if (items.length === 0) return null
   return (
     <section className="mt-5">
-      <h3 className="text-[11px] font-semibold uppercase tracking-[0.25em] text-coffee/55">{title}</h3>
+      <h3 className="text-[11px] font-semibold uppercase tracking-[0.25em] text-coffee/60">{title}</h3>
       <ul className="mt-2 space-y-2">
         {items.map((item, i) => (
           <li key={i} className="flex gap-2 leading-relaxed">

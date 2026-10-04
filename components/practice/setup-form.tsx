@@ -3,6 +3,8 @@
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import type { CreateSessionRequest, Mode, Mood, ScenarioSummary, Temperature } from '@/lib/api-types'
+import { COACH_STYLES, DEFAULT_COACH_STYLE, isCoachStyle, type CoachStyle } from '@/lib/coach-styles'
+import { gradeLabel, levelFor, SCHOOL_LEVELS, type SchoolLevel } from '@/lib/school-level'
 import { cn } from '@/lib/utils'
 import { api } from './api'
 import { ScenarioUpload } from './scenario-upload'
@@ -42,7 +44,7 @@ export function SetupForm() {
   const router = useRouter()
   const [scenarios, setScenarios] = useState<ScenarioSummary[]>([])
   const [recent, setRecent] = useState<RecentSession[]>([])
-  /** Nobody has played here yet: point them at the easy scenario. */
+  /** Nobody has practiced in this browser yet: point them at the easy scenario. */
   const [firstVisit, setFirstVisit] = useState(false)
   const [loadError, setLoadError] = useState<string | null>(null)
 
@@ -56,6 +58,10 @@ export function SetupForm() {
   const [tension, setTension] = useState({ start: GUARDED_MAX, min: FLOOR, max: 100 })
   const [picked, setPicked] = useState<string[]>([])
   const [seed, setSeed] = useState('')
+  // Coach tips: null until the teacher flips the switch, so the default can follow the pick.
+  const [coachChoice, setCoachChoice] = useState<boolean | null>(null)
+  const [coachDefault, setCoachDefault] = useState(false)
+  const [coachStyle, setCoachStyle] = useState<CoachStyle>(DEFAULT_COACH_STYLE)
 
   const [submitting, setSubmitting] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -64,6 +70,11 @@ export function SetupForm() {
     // "New here" is per browser: session history lives on the server and is
     // shared, so it can't tell whether this visitor has practiced before.
     const isNew = !hasPracticed()
+    try {
+      setCoachDefault(localStorage.getItem('bb-coach') === 'on')
+      const savedStyle = localStorage.getItem('bb-coach-style')
+      if (isCoachStyle(savedStyle)) setCoachStyle(savedStyle)
+    } catch {}
     setFirstVisit(isNew)
     if (isNew) {
       // Start newcomers on the easy tutorial: same Guarded start, but capped
@@ -74,9 +85,9 @@ export function SetupForm() {
       .scenarios()
       .then((r) => {
         setScenarios(r.scenarios)
-        const tut = r.scenarios.find((s) => s.tutorial && s.status === 'ready')
-        const firstReady = r.scenarios.find((s) => s.status === 'ready' && !s.tutorial) ?? tut
-        const pick = isNew && tut ? tut : firstReady
+        // Leo's tutorial is the default pick; fall back to the first ready scenario.
+        const pick =
+          r.scenarios.find((s) => s.tutorial && s.status === 'ready') ?? r.scenarios.find((s) => s.status === 'ready')
         if (pick) setPicked((cur) => (cur.length ? cur : [pick.id]))
       })
       .catch((e: Error) => setLoadError(e.message))
@@ -95,6 +106,19 @@ export function SetupForm() {
     setPicked((cur) => (needed === 1 ? ids.slice(0, 1) : [...cur.filter((id) => !ids.includes(id)), ...ids].slice(-needed)))
   }
   const handPicked = temperature !== 'high'
+  // Which U.S. school level to practice for; 'all' shows every scenario.
+  const [level, setLevel] = useState<SchoolLevel | 'all'>('all')
+  const inLevel = (s: ScenarioSummary) => level === 'all' || levelFor(s.grade) === level
+  const visible = scenarios.filter(inLevel)
+
+  function chooseLevel(next: SchoolLevel | 'all') {
+    setLevel(next)
+    // Drop picks that don't belong to the new level.
+    setPicked((cur) => cur.filter((id) => {
+      const s = scenarios.find((x) => x.id === id)
+      return s && (next === 'all' || levelFor(s.grade) === next)
+    }))
+  }
 
   function toggle(id: string) {
     setPicked((cur) => {
@@ -104,12 +128,27 @@ export function SetupForm() {
     })
   }
 
+  // Matches the laptop's default: on for the tutorial, otherwise this browser's last choice.
+  const tutorialOnly = handPicked && picked.length > 0 && picked.every((id) => scenarios.find((s) => s.id === id)?.tutorial)
+  const coachOn = coachChoice ?? (tutorialOnly || coachDefault)
+
+  /** Hand the choice to the briefing and conference (see useCoachSetting). */
+  function saveCoachChoice(sessionId: string) {
+    try {
+      localStorage.setItem(`bb-coach:${sessionId}`, coachOn ? 'on' : 'off')
+      localStorage.setItem(`bb-coach-style:${sessionId}`, coachStyle)
+      localStorage.setItem('bb-coach-style', coachStyle)
+      if (coachChoice !== null && !tutorialOnly) localStorage.setItem('bb-coach', coachOn ? 'on' : 'off')
+    } catch {}
+  }
+
   async function submit(req: CreateSessionRequest) {
     setSubmitting(true)
     setError(null)
     try {
       const session = await api.createSession(req)
       markPracticed()
+      saveCoachChoice(session.id)
       router.push(`/practice/${session.id}`)
     } catch (e) {
       setError((e as Error).message)
@@ -129,66 +168,20 @@ export function SetupForm() {
       surprise_type: temperature === 'low' ? surpriseType : undefined,
       teacher_name: teacherName || undefined,
       seed: seed.trim() ? Number(seed) : undefined,
+      level,
     })
   }
 
   const ready = !handPicked || picked.length === needed
-  const tutorial = scenarios.find((s) => s.tutorial && s.status === 'ready')
-
-  function startTutorial() {
-    if (!tutorial) return
-    submit({
-      mode: 'single',
-      temperature: 'low',
-      surprise_type: 'F',
-      starting_mood: 'calm',
-      tension: { start: 30, min: FLOOR, max: 60 },
-      scenario_ids: [tutorial.id],
-      teacher_name: teacherName || undefined,
-    })
-  }
-
   return (
     <form onSubmit={onSubmit} className="mt-12 flex flex-col gap-10 pb-20 font-body">
-      {tutorial && (
-        <div
-          className={cn(
-            'relative flex flex-wrap items-center justify-between gap-4 rounded-3xl border px-6 py-5',
-            firstVisit
-              ? 'border-scarlet bg-royal/50 shadow-[0_0_0_4px_rgba(255,51,31,0.18),0_0_60px_rgba(255,51,31,0.25)]'
-              : 'border-glaucous/40 bg-royal/30',
-          )}
-        >
-          {firstVisit && (
-            <span className="absolute -top-3 left-6 rounded-full bg-scarlet px-3 py-0.5 text-[11px] font-semibold uppercase tracking-[0.2em]">
-              First time? Start here
-            </span>
-          )}
-          <div className="max-w-xl">
-            <p className="text-[11px] font-semibold uppercase tracking-[0.3em] text-glaucous">New here? Start with the tutorial</p>
-            <p className="mt-1 font-display text-xl font-bold">A friendly check-in with {tutorial.student_name.split(' ')[0]}’s mom</p>
-            <p className="mt-1 text-sm text-ghost/65">
-              A short, low-stakes conference with two short documents and no surprises. Tips along the way show you how it works.
-            </p>
-          </div>
-          <button
-            type="button"
-            onClick={startTutorial}
-            disabled={submitting}
-            className="rounded-full bg-scarlet px-6 py-3 font-semibold text-ghost transition-transform enabled:hover:scale-[1.03] disabled:opacity-40"
-          >
-            {submitting ? 'Setting up…' : 'Start the tutorial'}
-          </button>
-        </div>
-      )}
-
       <Field label="What does the family call you?" hint="Used by the parent and student, e.g. “Ms. Rivera”.">
         <input
           value={teacherName}
           onChange={(e) => setTeacherName(e.target.value)}
           placeholder="Ms. Rivera"
           maxLength={60}
-          className="w-full max-w-sm rounded-xl border border-ghost/15 bg-ghost/5 px-4 py-3 text-ghost placeholder:text-ghost/35 focus:border-glaucous focus:outline-none"
+          className="w-full max-w-sm rounded-xl border border-ghost/15 bg-ghost/5 px-4 py-3 text-ghost placeholder:text-ghost/55 focus:border-glaucous focus:outline-none"
         />
       </Field>
 
@@ -251,6 +244,17 @@ export function SetupForm() {
         )}
       </Field>
 
+      <Field label="School level" hint="Scenarios are set in a PFPS school at that level, with grades and situations to match.">
+        <Segmented
+          value={level}
+          onChange={chooseLevel}
+          options={[
+            { value: 'all', label: 'All levels' },
+            ...SCHOOL_LEVELS.map((l) => ({ value: l.value, label: `${l.label} · ${l.grades}` })),
+          ]}
+        />
+      </Field>
+
       {handPicked ? (
         <Field
           label={needed === 1 ? 'Scenario' : `Scenarios (${picked.length} of ${needed})`}
@@ -264,7 +268,7 @@ export function SetupForm() {
         >
           {loadError && <p className="text-scarlet">{loadError}</p>}
           <ul className="grid gap-2 sm:grid-cols-2">
-            {scenarios.map((s) => {
+            {visible.map((s) => {
               const pos = picked.indexOf(s.id)
               const on = pos >= 0
               return (
@@ -275,13 +279,14 @@ export function SetupForm() {
                     className={cn(
                       'flex w-full items-center gap-3 rounded-xl border px-4 py-3 text-left transition-colors',
                       on ? 'border-glaucous bg-royal/40' : 'border-ghost/10 hover:border-ghost/30',
-                      firstVisit && s.tutorial && 'ring-2 ring-scarlet/70',
+                      // For newcomers the easy scenario pulses so it's the obvious place to start.
+                      firstVisit && s.tutorial && 'pulse-ring',
                     )}
                   >
                     <span
                       className={cn(
                         'grid size-7 flex-none place-items-center rounded-full font-display text-sm font-bold',
-                        on ? 'bg-scarlet text-ghost' : 'bg-ghost/10 text-ghost/50',
+                        on ? 'bg-scarlet text-ghost' : 'bg-ghost/10 text-ghost/60',
                       )}
                     >
                       {on ? (temperature === 'low' && needed > 1 ? pos + 1 : '✓') : s.id}
@@ -291,10 +296,10 @@ export function SetupForm() {
                         <span className="truncate font-medium">{s.title}</span>
                         {s.tutorial && <span className="flex-none rounded-full bg-glaucous/30 px-2 text-[10px] uppercase tracking-wider">Easy</span>}
                       </span>
-                      <span className="block truncate text-xs text-ghost/50">
+                      <span className="block truncate text-xs text-ghost/60">
                         {s.status === 'stub'
-                          ? `Draft · ${s.topic}`
-                          : `${s.student_name} · grade ${s.grade} · raised by ${s.raised_by}`}
+                          ? `Draft · ${gradeLabel(s.grade)} · ${s.topic}`
+                          : `${s.student_name} · ${gradeLabel(s.grade)} · raised by ${s.raised_by}`}
                       </span>
                     </span>
                   </button>
@@ -308,11 +313,48 @@ export function SetupForm() {
         <Field label="Scenarios">
           <p className="text-ghost/70">
             The system will draw {needed} scenario{needed === 1 ? '' : 's'} at random from the{' '}
-            {scenarios.filter((s) => s.status === 'ready' && !s.tutorial).length} ready ones.
+            {visible.filter((s) => s.status === 'ready' && !s.tutorial).length} ready ones
+            {level !== 'all' && ` at the ${SCHOOL_LEVELS.find((l) => l.value === level)?.label.toLowerCase()} level`}.
           </p>
           <ScenarioUpload onAdded={onAdded} />
         </Field>
       )}
+
+      <Field label="Coach tips" hint="After each exchange, a suggestion for where to steer next, in the style you pick. It never tells you what to say.">
+        <button
+          type="button"
+          role="switch"
+          aria-checked={coachOn}
+          onClick={() => setCoachChoice(!coachOn)}
+          className="flex items-center gap-3 text-sm text-ghost/75 hover:text-ghost"
+        >
+          <span aria-hidden className={cn('relative h-6 w-11 rounded-full transition-colors', coachOn ? 'bg-royal' : 'bg-ghost/45')}>
+            <span className={cn('absolute top-1 size-4 rounded-full bg-[#fbfbff] shadow transition-[left]', coachOn ? 'left-6' : 'left-1')} />
+          </span>
+          <span className="font-semibold text-ghost">{coachOn ? 'On' : 'Off'}</span>
+          <span>You can change this again at the laptop or during the conference.</span>
+        </button>
+        {coachOn && (
+          <div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-4" role="radiogroup" aria-label="Coach style">
+            {COACH_STYLES.map((c) => (
+              <button
+                type="button"
+                role="radio"
+                aria-checked={coachStyle === c.value}
+                key={c.value}
+                onClick={() => setCoachStyle(c.value)}
+                className={cn(
+                  'flex flex-col items-start rounded-2xl border p-4 text-left transition-colors',
+                  coachStyle === c.value ? 'border-scarlet bg-scarlet/10' : 'border-ghost/15 hover:border-glaucous',
+                )}
+              >
+                <span className="font-display text-lg font-bold">{c.label}</span>
+                <span className="mt-1 block text-sm leading-snug text-ghost/65">{c.blurb}</span>
+              </button>
+            ))}
+          </div>
+        )}
+      </Field>
 
       <Field
         label="How does the parent walk in?"
@@ -343,7 +385,7 @@ export function SetupForm() {
           onChange={(e) => setSeed(e.target.value.replace(/\D/g, ''))}
           placeholder="e.g. 2841937651"
           inputMode="numeric"
-          className="mt-3 w-full max-w-xs rounded-xl border border-ghost/15 bg-ghost/5 px-4 py-2 text-ghost placeholder:text-ghost/35 focus:border-glaucous focus:outline-none"
+          className="mt-3 w-full max-w-xs rounded-xl border border-ghost/15 bg-ghost/5 px-4 py-2 text-ghost placeholder:text-ghost/55 focus:border-glaucous focus:outline-none"
         />
       </details>
 
@@ -357,7 +399,7 @@ export function SetupForm() {
         >
           {submitting ? 'Setting up…' : 'Enter the classroom'}
         </button>
-        {!ready && <span className="text-sm text-ghost/50">Pick {needed - picked.length} more.</span>}
+        {!ready && <span className="text-sm text-ghost/60">Pick {needed - picked.length} more.</span>}
       </div>
 
       {recent.length > 0 && (
@@ -430,7 +472,7 @@ function TensionRange({ value, onChange }: { value: Tension; onChange: (t: Tensi
         <div className="absolute inset-y-0 rounded-full bg-gradient-to-r from-glaucous to-scarlet" style={{ left: `${pos(min)}%`, right: `${100 - pos(max)}%` }} />
         <div className="absolute top-1/2 size-5 -translate-x-1/2 -translate-y-1/2 rounded-full border-2 border-coffee bg-ghost" style={{ left: `${pos(start)}%` }} />
       </div>
-      <div className="mt-1 flex justify-between text-[11px] text-ghost/40">
+      <div className="mt-1 flex justify-between text-[11px] text-ghost/60">
         <span>{FLOOR} guarded (lowest)</span>
         <span>100 walks out</span>
       </div>
@@ -449,7 +491,7 @@ function TensionRange({ value, onChange }: { value: Tension; onChange: (t: Tensi
               )}
             >
               <span className="block font-semibold text-ghost">
-                {b.label} <span className="font-normal text-ghost/45">{from}–{b.upTo}</span>
+                {b.label} <span className="font-normal text-ghost/60">{from}–{b.upTo}</span>
               </span>
               <span className="mt-0.5 block text-ghost/60">{b.example}</span>
               {here && <span className="mt-1 block text-[10px] uppercase tracking-wider text-scarlet">Starts here</span>}
@@ -481,7 +523,7 @@ function Field({ label, hint, children }: { label: string; hint?: string; childr
   return (
     <div>
       <h2 className="font-display text-lg font-bold">{label}</h2>
-      {hint && <p className="mt-0.5 text-sm text-ghost/50">{hint}</p>}
+      {hint && <p className="mt-0.5 text-sm text-ghost/60">{hint}</p>}
       <div className="mt-3">{children}</div>
     </div>
   )

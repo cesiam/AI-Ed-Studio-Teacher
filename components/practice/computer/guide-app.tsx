@@ -52,14 +52,14 @@ const GUIDE_SECTIONS: { title: string; points: string[] }[] = [
 export function GuidePane() {
   return (
     <div className="h-full overflow-y-auto px-5 py-4 font-body">
-      <p className="text-[11px] font-semibold uppercase tracking-[0.25em] text-royal">Guide · {GUIDE.source}</p>
+      <p className="text-[11px] font-semibold uppercase tracking-[0.25em] text-brand-inverse">Guide · {GUIDE.source}</p>
       <h2 className="mt-1 font-display text-lg font-bold leading-snug">{GUIDE.title}</h2>
       <p className="mt-2 text-sm text-coffee/70">Use this for guidance while you talk. The notes form next to it follows the same steps.</p>
       <a
         href={GUIDE.url}
         target="_blank"
         rel="noreferrer"
-        className="mt-2 inline-flex items-center gap-1.5 text-sm font-semibold text-royal underline-offset-4 hover:underline"
+        className="mt-2 inline-flex items-center gap-1.5 text-sm font-semibold text-brand-inverse underline-offset-4 hover:underline"
       >
         Read the full article <ExternalLink className="size-3.5" />
       </a>
@@ -83,7 +83,7 @@ export function GuidePane() {
 }
 
 const cell =
-  'block w-full resize-none bg-transparent px-2 py-1.5 text-[13px] leading-snug text-coffee placeholder:text-coffee/25 focus:bg-glaucous/10 focus:outline-none'
+  'block w-full resize-none bg-transparent px-2 py-1.5 text-[13px] leading-snug text-coffee placeholder:text-coffee/55 focus:bg-glaucous/10 focus:outline-none'
 
 /** The fillable notes form. Values live in the conference room so they survive closing the laptop. */
 export function NotesFormPane({
@@ -102,13 +102,13 @@ export function NotesFormPane({
     <div className="h-full overflow-y-auto px-5 py-4 font-body">
       <div className="flex items-start justify-between gap-3">
         <div>
-          <p className="text-[11px] font-semibold uppercase tracking-[0.25em] text-royal">Optional · use it if it helps</p>
+          <p className="text-[11px] font-semibold uppercase tracking-[0.25em] text-brand-inverse">Optional · use it if it helps</p>
           <h2 className="font-display text-lg font-bold">{NOTES_FORM_TITLE}</h2>
         </div>
         <button
           type="button"
           onClick={() => printForm(value)}
-          className="flex flex-none items-center gap-2 rounded-full border border-royal/40 px-3 py-1.5 text-sm font-semibold text-royal hover:bg-royal/5"
+          className="flex flex-none items-center gap-2 rounded-full border border-brand-inverse/40 px-3 py-1.5 text-sm font-semibold text-brand-inverse hover:bg-royal/5"
         >
           <Printer className="size-4" /> Print
         </button>
@@ -184,7 +184,7 @@ export function NotesFormPane({
           )}
         </section>
       ))}
-      <p className="mt-5 text-[11px] text-coffee/45">
+      <p className="mt-5 text-[11px] text-coffee/60">
         Sections follow parts 4 to 7 of “{GUIDE.title}” ({GUIDE.source}), rewritten for the teacher’s side. Saved automatically.
       </p>
     </div>

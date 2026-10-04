@@ -76,7 +76,7 @@ export function GlassSheet({
             <header className="flex items-center justify-between gap-4 px-3 pb-3 pt-1 font-body text-ghost">
               <div className="min-w-0">
                 <h2 className="truncate font-display text-lg font-bold">{title}</h2>
-                {subtitle && <p className="truncate text-xs text-ghost/55">{subtitle}</p>}
+                {subtitle && <p className="truncate text-xs text-ghost/60">{subtitle}</p>}
               </div>
               <button
                 type="button"

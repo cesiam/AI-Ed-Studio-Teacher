@@ -1,3 +1,4 @@
+import { isSchoolLevel, levelFor } from '@/lib/school-level'
 import { GAME } from '../config'
 import type { SurpriseLetter } from '../content/types'
 import { badRequest } from '../errors'
@@ -73,7 +74,7 @@ export function buildPlan(config: SessionConfig, seed: number): PlannedScenario[
 /** Validates a raw setup request into a SessionConfig. Throws 400 on bad input. */
 export function parseConfig(
   body: Record<string, unknown>,
-  scenarios: { id: string; status: 'ready' | 'stub'; tutorial?: boolean }[],
+  scenarios: { id: string; status: 'ready' | 'stub'; tutorial?: boolean; grade: number }[],
 ): SessionConfig {
   const mode = oneOf(body.mode, ['single', 'sequence'] as const, 'mode')
   const temperature = oneOf(body.temperature, ['low', 'medium', 'high'] as const, 'temperature')
@@ -90,14 +91,19 @@ export function parseConfig(
   }
 
   const known = new Set(scenarios.map((s) => s.id))
+  // Optional school level: random draws stay within it.
+  const level = body.level === undefined || body.level === null || body.level === 'all' ? null : body.level
+  if (level !== null && !isSchoolLevel(level)) throw badRequest('level must be elementary, middle, high or all.')
   // The tutorial is only played on purpose, never drawn at random.
-  const pool = scenarios.filter((s) => s.status === 'ready' && !s.tutorial).map((s) => s.id)
+  const pool = scenarios
+    .filter((s) => s.status === 'ready' && !s.tutorial && (level === null || levelFor(s.grade) === level))
+    .map((s) => s.id)
 
   let scenario_ids: string[] = []
   if (temperature === 'high') {
     if (pool.length < count) {
       throw badRequest(
-        `High temperature draws from ready scenarios, but only ${pool.length} ${pool.length === 1 ? 'is' : 'are'} ready and this session needs ${count}. Fill in more scenarios in content/scenarios.seed.json (and set status to "ready"), or use low/medium temperature.`,
+        `High temperature draws from ready scenarios${level ? ` at the ${level} school level` : ''}, but only ${pool.length} ${pool.length === 1 ? 'is' : 'are'} ready and this session needs ${count}. Fill in more scenarios in content/scenarios.seed.json (and set status to "ready"), or use low/medium temperature.`,
       )
     }
   } else {

@@ -5,15 +5,18 @@ import { agreedSteps } from './agreement'
 import { speakers } from './characters'
 import { decide } from './client'
 import { roomTranscript } from './transcript'
+import { COACH_STYLES, DEFAULT_COACH_STYLE, type CoachStyle } from '@/lib/coach-styles'
 import { FORM_TABLES } from '@/lib/notes-form'
 
 const Tip = z.object({
-  tip: z.string().describe('One suggestion for the teacher’s next move, under 35 words, tied to what was just said.'),
+  tip: z.string().describe('One suggestion for the teacher’s next move, under 35 words, tied to what was just said. Names the move, never scripts the words.'),
 })
 
 const SYSTEM = `You are a quiet coach sitting beside a teacher during a practice parent-teacher conference. After each exchange, suggest the teacher's single best next move. Your job is to help the teacher reach a shared plan and wrap up well, following the guide "Parent–Teacher Conferences Without the Panic" (Manhattan Psychology Group).
 
-Anchor every tip in the conversation: react to what the parent or student just said (quote a few words when it helps) and offer a sentence the teacher could say.
+Anchor every tip in the conversation: react to what the parent or student just said (quote a few of THEIR words when it helps), then name the move and briefly why it matters now.
+
+Never script the teacher. Don't write lines for them to say, don't put their words in quotation marks, and don't use "You could say…" or "Try saying…". Describe what to do ("acknowledge her frustration before going on", "ask what mornings look like at home", "invite the student to share their side") and leave the wording to the teacher. This is practice: finding their own words is the point.
 
 Keep the meeting moving toward a finish:
 1. Opening (first exchange or two): start with the child's strengths.
@@ -22,7 +25,14 @@ Keep the meeting moving toward a finish:
 4. Staying in touch: ask how and how often they want to hear from you and one number you'll both track (section 4 of the form), and set a check-in date.
 5. Wrap-up: once there's a plan and a way to stay in touch, suggest summarizing the plan out loud and ending the conference.
 
-Don't linger: if the conversation has gone several exchanges without moving toward a plan, steer there, kindly. Don't jump ahead if the parent is upset: acknowledge feelings first. If a colleague on the list could clearly help and hasn't been asked, you may suggest messaging them. The notes form is optional; mention it as a help, not a requirement. Never reveal anything the teacher doesn't know. Warm, plain, second person ("Try…", "You could say…"). No preamble.`
+Don't linger: if the conversation has gone several exchanges without moving toward a plan, steer there, kindly. Don't jump ahead if the parent is upset: acknowledge feelings first. If a colleague on the list could clearly help and hasn't been asked, you may suggest messaging them. The notes form is optional; mention it as a help, not a requirement. Never reveal anything the teacher doesn't know. Plain, second person. No preamble.`
+
+function systemFor(style: CoachStyle) {
+  const voice = COACH_STYLES.find((c) => c.value === style)?.voice ?? ''
+  return `${SYSTEM}
+
+Your voice: ${voice} Whatever the voice, you still never script the teacher's words.`
+}
 
 // One tip per exchange: the same state never costs a second model call.
 const cache = new Map<string, string>()
@@ -35,9 +45,10 @@ export async function coachTip(opts: {
   /** The teacher's notes form so far and how many times they've spoken. */
   form: Record<string, string>
   turn: number
+  style?: CoachStyle
 }): Promise<string> {
-  const { sessionId, scenario: s, teacherName, events, form, turn } = opts
-  const key = `${sessionId}:${events.at(-1)?.id ?? 0}`
+  const { sessionId, scenario: s, teacherName, events, form, turn, style = DEFAULT_COACH_STYLE } = opts
+  const key = `${sessionId}:${events.at(-1)?.id ?? 0}:${style}`
   const hit = cache.get(key)
   if (hit) return hit
 
@@ -59,7 +70,7 @@ Notes form (optional) sections with something written: ${filledSections(form)}
 Conversation so far:
 ${roomTranscript(events, speakers(s, teacherName))}`
 
-  const { tip } = await decide(Tip, { system: SYSTEM, messages: [{ role: 'user', content }] })
+  const { tip } = await decide(Tip, { system: systemFor(style), messages: [{ role: 'user', content }] })
   cache.set(key, tip)
   if (cache.size > 500) cache.delete(cache.keys().next().value!)
   return tip

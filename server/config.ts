@@ -26,4 +26,10 @@ export const GAME = {
   /** Turns of transcript the judge sees (the whole thing goes to characters). */
   judgeWindow: 16,
   maxTeacherMessageLength: 2000,
+  /**
+   * A conference ends once the teacher and family agree on next steps. If the
+   * conversation is truly stuck, ending without a plan unlocks after this many
+   * teacher turns (never before the teacher has said anything).
+   */
+  endWithoutPlanAfterTurns: 8,
 }

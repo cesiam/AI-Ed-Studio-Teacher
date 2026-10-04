@@ -24,9 +24,9 @@ export function NotesApp({
 
   return (
     <div className="h-full overflow-y-auto px-6 py-5 font-body">
-      <p className="text-[11px] font-semibold uppercase tracking-[0.3em] text-coffee/50">Conference notes</p>
+      <p className="text-[11px] font-semibold uppercase tracking-[0.3em] text-coffee/60">Conference notes</p>
       {room.length === 0 && !pendingTeacherLine && (
-        <p className="mt-3 text-sm text-coffee/50">Nothing yet. Notes appear here once the family sits down.</p>
+        <p className="mt-3 text-sm text-coffee/60">Nothing yet. Notes appear here once the family sits down.</p>
       )}
       <ol className="mt-3 space-y-3">
         {room.map((e) => {
@@ -43,7 +43,7 @@ export function NotesApp({
                   {change > 0 ? `+${change}` : change}
                 </span>
                 <span>
-                  {e.content} <span className="text-coffee/40">(now {String(e.meta?.after)})</span>
+                  {e.content} <span className="text-coffee/60">(now {String(e.meta?.after)})</span>
                 </span>
               </li>
             )
@@ -58,7 +58,7 @@ export function NotesApp({
           if (e.kind === 'agreement') {
             return (
               <li key={e.id} className="rounded-lg border border-royal/30 bg-royal/5 px-3 py-2 text-xs">
-                <span className="font-semibold uppercase tracking-wider text-royal">Agreed</span>
+                <span className="font-semibold uppercase tracking-wider text-brand-inverse">Agreed</span>
                 <ul className="mt-1 list-disc pl-4">
                   {((e.meta?.steps as string[]) ?? []).map((step) => (
                     <li key={step}>{step}</li>
@@ -80,7 +80,7 @@ export function NotesApp({
               <span
                 className={cn(
                   'text-xs font-semibold uppercase tracking-wider',
-                  e.kind === 'teacher' ? 'text-royal' : e.kind === 'student' ? 'text-glaucous' : 'text-coffee',
+                  e.kind === 'teacher' ? 'text-brand-inverse' : e.kind === 'student' ? 'text-coffee/70' : 'text-coffee',
                 )}
               >
                 {who}
@@ -91,7 +91,7 @@ export function NotesApp({
         })}
         {pendingTeacherLine && (
           <li className="opacity-60">
-            <span className="text-xs font-semibold uppercase tracking-wider text-royal">You ({teacherName})</span>
+            <span className="text-xs font-semibold uppercase tracking-wider text-brand-inverse">You ({teacherName})</span>
             <p className="leading-relaxed">{pendingTeacherLine}</p>
           </li>
         )}

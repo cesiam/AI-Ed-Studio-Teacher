@@ -56,3 +56,59 @@ export function parentToneGuide(tension: number): string {
       return 'You are upset and running low on patience. You speak firmly and briefly, not hysterically. You might say this is not going well or that you want to talk to someone else, but you are still here for your child. You reveal nothing you are hiding.'
   }
 }
+
+/**
+ * One line for the case file on how the parent seems as they arrive, so the
+ * briefing always matches the starting tension the teacher picked.
+ */
+export function arrivalNote(parent: { name: string; relationship: string }, raisedBy: 'teacher' | 'parent', startTension: number): string {
+  const last = parent.name.trim().split(/\s+/).at(-1) ?? parent.name
+  const who =
+    parent.relationship === 'mother' ? `Ms. ${last}` : parent.relationship === 'father' ? `Mr. ${last}` : parent.name
+  switch (toneBand(startTension)) {
+    case 'open':
+      return `${who} seems at ease and ready to work with you.`
+    case 'guarded':
+      return raisedBy === 'parent'
+        ? `${who} is polite but reserved, and has something specific to raise.`
+        : `${who} is polite but reserved, waiting to hear why you asked to meet.`
+    case 'frustrated':
+      return raisedBy === 'parent'
+        ? `${who} looks tense and short on time, and wants answers.`
+        : `${who} looks tense and short on time, and isn't sure this meeting is necessary.`
+    case 'heated':
+      return `${who} arrives upset, arms crossed, ready to push back.`
+  }
+}
+
+type FaceOffset = { brow: number; smile: number }
+
+/**
+ * The family's resting expressions for a scenario, layered on top of what the
+ * tension does to their faces. brow: + knits (angry), - lifts (worried).
+ */
+export function demeanorFor(s: { raised_by: 'teacher' | 'parent'; grade: number; tutorial?: boolean }): {
+  parent: FaceOffset
+  student: FaceOffset
+} {
+  const parent: FaceOffset = { brow: 0, smile: 0 }
+  const student: FaceOffset = { brow: 0, smile: 0 }
+  if (s.raised_by === 'parent') {
+    // They asked for this meeting because something is wrong.
+    parent.brow += 0.25
+    parent.smile -= 0.25
+    // The student sits through their parent's complaint: a little embarrassed.
+    student.smile -= 0.1
+  } else {
+    // The student is the reason they were called in.
+    student.brow -= 0.3
+    student.smile -= 0.2
+  }
+  if (s.grade <= 5) student.smile += 0.15 // young kids stay more open
+  else if (s.grade >= 9) student.smile -= 0.1 // teens keep a flatter face
+  if (s.tutorial) {
+    parent.brow -= 0.1
+    parent.smile += 0.2
+  }
+  return { parent, student }
+}

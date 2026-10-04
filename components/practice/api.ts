@@ -1,4 +1,5 @@
 import type { CreateSessionRequest, ContactRole, DocLetter, HistoryDetail, HistoryItem, ScenarioSummary, SessionView } from '@/lib/api-types'
+import type { CoachStyle } from '@/lib/coach-styles'
 
 async function call<T>(url: string, init?: RequestInit): Promise<T> {
   const res = await fetch(url, {
@@ -34,7 +35,7 @@ export const api = {
     post<SessionView>(`/api/sessions/${id}/contacts`, { role, message }),
   end: (id: string) => post<SessionView>(`/api/sessions/${id}/end`),
   advance: (id: string) => post<SessionView>(`/api/sessions/${id}/advance`),
-  coach: (id: string) => call<{ tip: string; after_event: number }>(`/api/sessions/${id}/coach`),
+  coach: (id: string, style: CoachStyle) => call<{ tip: string; after_event: number }>(`/api/sessions/${id}/coach?style=${style}`),
   saveForm: (id: string, idx: number, form: Record<string, string>) =>
     call<{ ok: true }>(`/api/sessions/${id}/form`, { method: 'PUT', body: JSON.stringify({ idx, form }) }),
   transcribe: async (audio: Blob) => {

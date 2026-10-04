@@ -36,10 +36,10 @@ export function SessionSummary({ session }: { session: SessionView }) {
         <ol className="mt-10 space-y-3">
           {session.plan.map((p) => (
             <li key={p.idx} className="flex items-center gap-4 rounded-2xl border border-ghost/10 px-5 py-4">
-              <span className="font-display text-2xl font-bold text-ghost/40">{p.idx + 1}</span>
+              <span className="font-display text-2xl font-bold text-ghost/60">{p.idx + 1}</span>
               <span className="min-w-0 flex-1">
                 <span className="block font-medium">{p.title}</span>
-                <span className="block text-sm text-ghost/55">
+                <span className="block text-sm text-ghost/60">
                   {p.ended_reason === 'walkout' ? 'Parent walked out' : 'Conference completed'}
                   {p.surprise_plan && ` · surprise ${p.surprise_plan.type} at turn ${p.surprise_plan.turn}`}
                 </span>
@@ -51,7 +51,7 @@ export function SessionSummary({ session }: { session: SessionView }) {
           ))}
         </ol>
 
-        <p className="mt-8 text-sm text-ghost/50">
+        <p className="mt-8 text-sm text-ghost/60">
           {session.mode} · {session.temperature} temperature · started {({ calm: 'open', tense: 'guarded', heated: 'frustrated' } as const)[session.starting_mood]} · seed{' '}
           <span className="font-mono text-ghost/80">{session.seed}</span>
         </p>

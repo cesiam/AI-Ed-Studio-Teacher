@@ -55,8 +55,11 @@ export function FamilyStage({
   conferring,
   staff,
   staffEntering = false,
+  demeanor = { parent: { brow: 0, smile: 0 }, student: { brow: 0, smile: 0 } },
 }: {
   tension: number
+  /** The scenario's resting expressions, layered on top of what tension does. */
+  demeanor?: { parent: { brow: number; smile: number }; student: { brow: number; smile: number } }
   pose: Pose
   talking: Speaker | null
   lines: Lines
@@ -73,14 +76,16 @@ export function FamilyStage({
 }) {
   const t = tension / 100
   // Parent: relaxed and smiling when calm, knitted brows and a frown when heated.
-  const parentBrow = Math.max(-0.15, Math.min(1, (tension - 40) / 50))
-  const parentSmile = Math.max(-0.9, Math.min(0.8, 0.9 - t * 1.6))
+  // The scenario sets where each face rests (see demeanorFor); tension moves it from there.
+  const { parent: pd, student: sd } = demeanor
+  const parentBrow = clamp(Math.max(-0.15, Math.min(1, (tension - 40) / 50)) + pd.brow, -0.4, 1)
+  const parentSmile = clamp(Math.max(-0.9, Math.min(0.8, 0.9 - t * 1.6)) + pd.smile, -1, 0.85)
   // Student: gets worried (inner brows up), not angry, as things heat up.
-  const studentBrow = -Math.max(0, Math.min(0.9, (tension - 35) / 55))
-  const studentSmile = Math.max(-0.6, Math.min(0.5, 0.55 - t * 1.2))
+  const studentBrow = clamp(-Math.max(0, Math.min(0.9, (tension - 35) / 55)) + sd.brow, -1, 0.3)
+  const studentSmile = clamp(Math.max(-0.6, Math.min(0.5, 0.55 - t * 1.2)) + sd.smile, -0.8, 0.6)
   // Looking at each other they're family first: a softer version of the same mood.
-  const parentGlance = Math.max(-0.35, Math.min(0.45, 0.5 - t * 0.9))
-  const studentGlance = Math.max(-0.3, Math.min(0.4, 0.45 - t * 0.8))
+  const parentGlance = clamp(Math.max(-0.35, Math.min(0.45, 0.5 - t * 0.9)) + pd.smile / 2, -0.5, 0.5)
+  const studentGlance = clamp(Math.max(-0.3, Math.min(0.4, 0.45 - t * 0.8)) + sd.smile / 2, -0.45, 0.45)
 
   const facing = pose === 'teacher'
   const reading = pose === 'docs'
@@ -272,7 +277,7 @@ function Bubble({
               : { left: `${anchor.left}%`, top: `${anchor.top}%` }
           }
         >
-          <p className="flex items-center gap-2 text-[10px] font-semibold uppercase tracking-[0.25em] text-royal">
+          <p className="flex items-center gap-2 text-[10px] font-semibold uppercase tracking-[0.25em] text-brand-inverse">
             {name}
             {speaking && <span className="size-1.5 animate-pulse rounded-full bg-scarlet" aria-hidden />}
           </p>
@@ -287,11 +292,15 @@ function Bubble({
 function renderStageDirections(text: string) {
   return text.split(/(\*[^*]+\*)/g).map((part, i) =>
     part.startsWith('*') && part.endsWith('*') ? (
-      <em key={i} className="text-coffee/50">
+      <em key={i} className="text-coffee/60">
         {part.slice(1, -1)}
       </em>
     ) : (
       <span key={i}>{part}</span>
     ),
   )
+}
+
+function clamp(v: number, min: number, max: number) {
+  return Math.max(min, Math.min(max, v))
 }

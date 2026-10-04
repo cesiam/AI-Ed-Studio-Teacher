@@ -4,8 +4,10 @@ import { useEffect, useRef, useState } from 'react'
 import { AnimatePresence, motion } from 'motion/react'
 import { ClipboardList, Clock, DoorOpen, FileText, Loader2, Mail, Mic, NotebookPen, Printer, Square, Timer } from 'lucide-react'
 import type { ContactRole, DocLetter, ScenarioView, SessionView } from '@/lib/api-types'
+import { COACH_STYLES, DEFAULT_COACH_STYLE, isCoachStyle, type CoachStyle } from '@/lib/coach-styles'
 import { cn } from '@/lib/utils'
 import { api } from './api'
+import { BriefingTour, tourDone } from './briefing-tour'
 import { Computer, type AppId } from './computer/computer'
 import { Debrief } from './debrief'
 import { glass, GlassButton } from './glass'
@@ -39,14 +41,59 @@ export function ConferenceRoom(props: Props) {
   // The family walks in as soon as the teacher invites them, before the first line comes back.
   const entering = props.busy === 'start'
   const notesForm = useNotesForm(props.session, props.scenario)
+  const coach = useCoachSetting(props.session.id, props.scenario.tutorial)
   return props.scenario.status === 'briefing' && !entering ? (
-    <Briefing {...props} notesForm={notesForm} />
+    <Briefing {...props} notesForm={notesForm} coach={coach} />
   ) : (
-    <Conference {...props} notesForm={notesForm} />
+    <Conference {...props} notesForm={notesForm} coach={coach} />
   )
 }
 
+/** Mirrors GAME.endWithoutPlanAfterTurns on the server, which enforces it. */
+const END_WITHOUT_PLAN_AFTER = 8
+
 type NotesForm = ReturnType<typeof useNotesForm>
+type CoachSetting = ReturnType<typeof useCoachSetting>
+
+/**
+ * Coach tips on or off. Set at the laptop before the family arrives and carried
+ * into the conference. On by default in the tutorial; everywhere else it's
+ * opt-in. The choice sticks for this session, and outside the tutorial it also
+ * becomes this browser's default.
+ */
+function useCoachSetting(sessionId: string, tutorial: boolean) {
+  const [on, setOn] = useState(tutorial)
+  const [style, setStyleState] = useState<CoachStyle>(DEFAULT_COACH_STYLE)
+  const sessionKey = `bb-coach:${sessionId}`
+  const styleKey = `bb-coach-style:${sessionId}`
+
+  useEffect(() => {
+    try {
+      const forSession = localStorage.getItem(sessionKey)
+      if (forSession) setOn(forSession === 'on')
+      else if (!tutorial) setOn(localStorage.getItem('bb-coach') === 'on')
+      const savedStyle = localStorage.getItem(styleKey) ?? localStorage.getItem('bb-coach-style')
+      if (isCoachStyle(savedStyle)) setStyleState(savedStyle)
+    } catch {}
+  }, [sessionKey, styleKey, tutorial])
+
+  const setStyle = (next: CoachStyle) => {
+    setStyleState(next)
+    try {
+      localStorage.setItem(styleKey, next)
+      localStorage.setItem('bb-coach-style', next)
+    } catch {}
+  }
+
+  const set = (next: boolean) => {
+    setOn(next)
+    try {
+      localStorage.setItem(sessionKey, next ? 'on' : 'off')
+      if (!tutorial) localStorage.setItem('bb-coach', next ? 'on' : 'off')
+    } catch {}
+  }
+  return { on, set, style, setStyle }
+}
 
 /** The teacher's notes form for this conference: kept here so it survives the laptop closing, saved as they type. */
 function useNotesForm(session: SessionView, scenario: ScenarioView) {
@@ -82,21 +129,38 @@ function useNotesForm(session: SessionView, scenario: ScenarioView) {
 // Briefing: the teacher at their laptop before the family arrives.
 // ---------------------------------------------------------------------------
 
-function Briefing({ session, scenario, busy, pendingLine, error, onDismissError, actions, notesForm }: Props & { notesForm: NotesForm }) {
+function Briefing({
+  session,
+  scenario,
+  busy,
+  pendingLine,
+  error,
+  onDismissError,
+  actions,
+  notesForm,
+  coach,
+}: Props & { notesForm: NotesForm; coach: CoachSetting }) {
+  // First-timers get a walkthrough of the laptop; anyone can replay it from the footer.
+  const [touring, setTouring] = useState(false)
+  useEffect(() => setTouring(!tourDone()), [])
+
   return (
     <main className="relative flex h-svh flex-col overflow-hidden bg-coffee font-body text-ghost">
       <Ambient tension={20} />
-      <TopBar session={session} scenario={scenario} right={<span className="text-xs uppercase tracking-[0.3em] text-glaucous">Briefing</span>} />
+      <TopBar session={session} scenario={scenario} right={<span className="text-xs uppercase tracking-[0.3em] text-brand">Briefing</span>} />
 
       <div className="relative z-10 px-6 pt-2 text-center">
-        <p className="text-[11px] uppercase tracking-[0.4em] text-glaucous">Before they arrive</p>
+        <p className="text-[11px] uppercase tracking-[0.4em] text-brand">Before they arrive</p>
         <p className="mx-auto mt-2 max-w-3xl text-balance font-display text-2xl font-bold sm:text-3xl">
           Review the records. <span className="text-scarlet">{scenario.parent.name}</span> and{' '}
           {scenario.student_first_name} are on their way.
         </p>
       </div>
 
-      <div className="relative z-10 mx-auto mt-5 min-h-0 w-[min(1180px,94%)] flex-1 rounded-t-[28px] bg-coffee px-3 pt-3 ring-1 ring-ghost/10 shadow-[0_-12px_60px_rgba(54,38,167,0.35)]">
+      <div
+        data-tour="laptop"
+        className="relative z-10 mx-auto mt-5 min-h-0 w-[min(1180px,94%)] flex-1 rounded-t-[28px] bg-coffee px-3 pt-3 ring-1 ring-ghost/10 shadow-[0_-12px_60px_rgba(54,38,167,0.35)]"
+      >
         <Computer
           key={scenario.idx}
           scenario={scenario}
@@ -110,22 +174,47 @@ function Briefing({ session, scenario, busy, pendingLine, error, onDismissError,
 
       <footer className="relative z-10 flex-none border-t border-ghost/10 bg-coffee px-4 py-3 sm:px-6">
         <div className="mx-auto flex max-w-[1180px] flex-wrap items-center justify-between gap-3">
-          <p className="text-sm text-ghost/60">
-            Read the records in StudentView, skim the guide in Guide &amp; Notes Form, and message colleagues in PFPS Chat. They may know
-            things you don’t.
+          <p className="min-w-0 flex-1 basis-[26rem] text-sm text-ghost/60">
+            Read the records in StudentView, skim the guide in Guide &amp; Notes Form, and message a colleague in PFPS Chat if you want
+            quick advice.{' '}
+            <button type="button" onClick={() => setTouring(true)} className="text-brand underline-offset-4 hover:underline">
+              Show me around
+            </button>
           </p>
-          <button
-            type="button"
-            disabled={!!busy}
-            onClick={actions.start}
-            className="rounded-full bg-scarlet px-6 py-2.5 font-semibold text-ghost transition-transform enabled:hover:scale-[1.03] disabled:opacity-50"
-          >
-            {busy === 'start' ? 'They’re sitting down…' : 'Invite them in'}
-          </button>
+          <div className="flex flex-none items-center gap-4">
+            <CoachSwitch coach={coach} />
+            {coach.on && (
+              <label className="flex items-center gap-2 text-sm text-ghost/75">
+                <span className="sr-only">Coach style</span>
+                <select
+                  value={coach.style}
+                  onChange={(e) => coach.setStyle(e.target.value as CoachStyle)}
+                  title={COACH_STYLES.find((c) => c.value === coach.style)?.blurb}
+                  className="rounded-full border border-ghost/20 bg-coffee px-3 py-1.5 text-sm font-semibold text-ghost focus:border-glaucous focus:outline-none"
+                >
+                  {COACH_STYLES.map((c) => (
+                    <option key={c.value} value={c.value}>
+                      {c.label}
+                    </option>
+                  ))}
+                </select>
+              </label>
+            )}
+            <button
+              type="button"
+              data-tour="invite"
+              disabled={!!busy}
+              onClick={actions.start}
+              className="rounded-full bg-scarlet px-6 py-2.5 font-semibold text-ghost transition-transform enabled:hover:scale-[1.03] disabled:opacity-50"
+            >
+              {busy === 'start' ? 'They’re sitting down…' : 'Invite them in'}
+            </button>
+          </div>
         </div>
       </footer>
 
       <ErrorToast error={error} onDismiss={onDismissError} />
+      <BriefingTour open={touring} onClose={() => setTouring(false)} />
     </main>
   )
 }
@@ -152,7 +241,17 @@ type View =
   | { kind: 'laptop'; app: AppId; doc?: DocLetter; role?: ContactRole; key: number }
   | { kind: 'showing'; letter: DocLetter }
 
-function Conference({ session, scenario, busy, pendingLine, error, onDismissError, actions, notesForm }: Props & { notesForm: NotesForm }) {
+function Conference({
+  session,
+  scenario,
+  busy,
+  pendingLine,
+  error,
+  onDismissError,
+  actions,
+  notesForm,
+  coach,
+}: Props & { notesForm: NotesForm; coach: CoachSetting }) {
   const waiting = busy === 'speak' || busy === 'start'
   const live = scenario.status === 'conference' || busy === 'start'
   const [view, setView] = useState<View>({ kind: 'room' })
@@ -163,6 +262,9 @@ function Conference({ session, scenario, busy, pendingLine, error, onDismissErro
   const onLaptop = view.kind === 'laptop'
   const actionPlan = scenario.events.filter((e) => e.kind === 'agreement').flatMap((e) => (e.meta?.steps as string[]) ?? [])
   const [needPlan, setNeedPlan] = useState(false)
+  // Ending needs an agreed next step. A truly stuck conversation can end without one after a while.
+  const stuck = scenario.turn_count >= END_WITHOUT_PLAN_AFTER
+  const canEnd = actionPlan.length > 0 || stuck
 
   // Someone walking in: they stand in the doorway for a moment before joining.
   const staff = scenario.in_room
@@ -240,7 +342,9 @@ function Conference({ session, scenario, busy, pendingLine, error, onDismissErro
                 <GlassButton
                   onClick={() => (actionPlan.length ? actions.end() : setNeedPlan(true))}
                   disabled={!!busy || !settled}
-                  className="hover:border-scarlet/70"
+                  aria-disabled={!canEnd}
+                  title={canEnd ? undefined : 'Reach an agreement with the parent first'}
+                  className={cn('hover:border-scarlet/70', !canEnd && 'opacity-60')}
                 >
                   {busy === 'end' ? 'Writing debrief…' : 'End conference'}
                 </GlassButton>
@@ -249,14 +353,6 @@ function Conference({ session, scenario, busy, pendingLine, error, onDismissErro
           ) : null
         }
       />
-
-      {/* coach and action plan stay in view on the laptop too */}
-      {live && view.kind !== 'showing' && (
-        <div className="absolute left-4 top-20 z-30 flex max-w-xs flex-col gap-2 sm:left-6">
-          <CoachTip sessionId={session.id} scenario={scenario} ready={settled && !busy} />
-          <ActionPlan steps={actionPlan} parent={parentFirst} nudge={needPlan} onEndAnyway={actions.end} busy={!!busy} />
-        </div>
-      )}
 
       {/* the family, across the desk. On the laptop, they slide up and peek over the screen. */}
       <section className="relative z-10 flex min-h-0 flex-1 items-end justify-center px-4">
@@ -268,6 +364,7 @@ function Conference({ session, scenario, busy, pendingLine, error, onDismissErro
         >
           <FamilyStage
             tension={scenario.tension}
+            demeanor={scenario.demeanor}
             pose={pose}
             talking={talking}
             lines={lines}
@@ -293,7 +390,7 @@ function Conference({ session, scenario, busy, pendingLine, error, onDismissErro
               transition={{ type: 'spring', stiffness: 160, damping: 26 }}
             >
               <div className="flex flex-none items-center justify-between gap-3 px-2 pb-2">
-                <p className="truncate text-xs text-ghost/55">
+                <p className="truncate text-xs text-ghost/60">
                   {present ? `${parentFirst} and ${scenario.student_first_name} are watching you. You can keep talking while you look.` : 'Your laptop'}
                 </p>
                 <GlassButton onClick={() => setView({ kind: 'room' })} className="flex-none py-1.5">
@@ -372,6 +469,25 @@ function Conference({ session, scenario, busy, pendingLine, error, onDismissErro
             </nav>
           )}
 
+          {/* The coach sits with the controls, below the desk line, so it never
+              covers what the family is saying. */}
+          {/* Coach and action plan share one fixed-height row below the desk line, so
+              they never cover what the family says and never push the controls around.
+              It stays while the laptop is open too. */}
+          {live && view.kind !== 'showing' && (
+            <div className="mx-auto flex h-24 w-full max-w-5xl gap-3">
+              <CoachTip sessionId={session.id} scenario={scenario} ready={settled && !busy} coach={coach} />
+              <ActionPlan
+                steps={actionPlan}
+                parent={parentFirst}
+                nudge={needPlan}
+                onEndAnyway={stuck ? actions.end : undefined}
+                turnsLeft={END_WITHOUT_PLAN_AFTER - scenario.turn_count}
+                busy={!!busy}
+              />
+            </div>
+          )}
+
           {live ? (
             view.kind === 'showing' ? (
               <Composer
@@ -416,7 +532,7 @@ function Conference({ session, scenario, busy, pendingLine, error, onDismissErro
               />
             )
           ) : (
-            <p className="text-center text-sm text-ghost/55">
+            <p className="text-center text-sm text-ghost/60">
               {present ? 'The conference is over.' : `${scenario.parent.name} left the meeting.`}
             </p>
           )}
@@ -440,7 +556,7 @@ function Conference({ session, scenario, busy, pendingLine, error, onDismissErro
             </span>
             <span>
               <span className="block text-sm font-medium leading-snug">{toast.text}</span>
-              <span className="block text-xs text-ghost/55">Tap to open</span>
+              <span className="block text-xs text-ghost/60">Tap to open</span>
             </span>
           </motion.button>
         )}
@@ -505,7 +621,7 @@ function MeetingClock({ scenario }: { scenario: ScenarioView }) {
       title={mode === 'clock' ? 'Meeting clock. Tap for a timer.' : 'Time since the family sat down. Tap for the clock.'}
       className={cn(glass, 'flex items-center gap-2 rounded-full px-3.5 py-2.5 font-body text-sm tabular-nums text-ghost/90')}
     >
-      {mode === 'clock' ? <Clock className="size-4 text-glaucous" /> : <Timer className="size-4 text-glaucous" />}
+      {mode === 'clock' ? <Clock className="size-4 text-brand" /> : <Timer className="size-4 text-brand" />}
       {label}
     </button>
   )
@@ -520,12 +636,15 @@ function ActionPlan({
   parent,
   nudge,
   onEndAnyway,
+  turnsLeft,
   busy,
 }: {
   steps: string[]
   parent: string
   nudge: boolean
-  onEndAnyway: () => void
+  /** Only offered once the conversation has run long without a plan. */
+  onEndAnyway?: () => void
+  turnsLeft: number
   busy: boolean
 }) {
   if (steps.length === 0 && !nudge) return null
@@ -533,9 +652,9 @@ function ActionPlan({
     <motion.div
       initial={{ opacity: 0, y: -6 }}
       animate={{ opacity: 1, y: 0, scale: nudge ? [1, 1.03, 1] : 1 }}
-      className={cn(glass, 'rounded-2xl px-4 py-3 text-sm', nudge && 'ring-1 ring-scarlet/70')}
+      className={cn(glass, 'h-full w-96 flex-none overflow-y-auto rounded-2xl px-4 py-2.5 text-sm', nudge && 'ring-1 ring-scarlet/70')}
     >
-      <p className="text-[10px] font-semibold uppercase tracking-[0.25em] text-glaucous">Action plan</p>
+      <p className="text-[10px] font-semibold uppercase tracking-[0.25em] text-brand">Action plan</p>
       {steps.length ? (
         <ul className="mt-1.5 space-y-1">
           {steps.map((step) => (
@@ -548,17 +667,24 @@ function ActionPlan({
       ) : (
         <>
           <p className="mt-1 leading-snug text-ghost/80">
-            No next steps yet. Agreeing with {parent} on who will do what usually means you won’t need another conference
-            about this.
+            End once you and {parent} agree on a next step: who does what, by when.
           </p>
-          <button
-            type="button"
-            onClick={onEndAnyway}
-            disabled={busy}
-            className="mt-2 rounded-full border border-ghost/25 px-3 py-1 text-xs text-ghost/80 hover:border-scarlet hover:text-ghost disabled:opacity-40"
-          >
-            End anyway
-          </button>
+          {onEndAnyway ? (
+            <button
+              type="button"
+              onClick={onEndAnyway}
+              disabled={busy}
+              className="mt-2 rounded-full border border-ghost/25 px-3 py-1 text-xs text-ghost/80 hover:border-scarlet hover:text-ghost disabled:opacity-40"
+            >
+              End without a plan
+            </button>
+          ) : (
+            turnsLeft > 0 && (
+              <p className="mt-1 text-xs text-ghost/60">
+                Stuck? You can end without one after {turnsLeft} more exchange{turnsLeft === 1 ? '' : 's'}.
+              </p>
+            )
+          )}
         </>
       )}
     </motion.div>
@@ -567,72 +693,93 @@ function ActionPlan({
 
 /**
  * Coach tips: after each exchange, one suggestion tied to what was just said,
- * nudging toward the guide's steps. On by default in the tutorial; everywhere
- * else it's opt-in (remembered in this browser).
+ * nudging toward the guide's steps. It names the move; the words are the
+ * teacher's. On/off lives in useCoachSetting.
  */
-function CoachTip({ sessionId, scenario, ready }: { sessionId: string; scenario: ScenarioView; ready: boolean }) {
-  const [on, setOn] = useState(scenario.tutorial)
-  const [tip, setTip] = useState<{ text: string; after: number } | null>(null)
+function CoachTip({ sessionId, scenario, ready, coach }: { sessionId: string; scenario: ScenarioView; ready: boolean; coach: CoachSetting }) {
+  const { on, set: toggle, style } = coach
+  const [tip, setTip] = useState<{ text: string; after: number; style: CoachStyle } | null>(null)
   const [loading, setLoading] = useState(false)
   const lastEvent = scenario.events.at(-1)?.id ?? 0
 
-  useEffect(() => {
-    if (scenario.tutorial) return
-    try {
-      if (localStorage.getItem('bb-coach') === 'on') setOn(true)
-    } catch {}
-  }, [scenario.tutorial])
-
-  const toggle = (next: boolean) => {
-    setOn(next)
-    if (!scenario.tutorial) {
-      try {
-        localStorage.setItem('bb-coach', next ? 'on' : 'off')
-      } catch {}
-    }
-  }
-
   // Ask for a fresh tip once the family has finished answering.
   useEffect(() => {
-    if (!on || !ready || tip?.after === lastEvent) return
+    if (!on || !ready || (tip?.after === lastEvent && tip.style === style)) return
     let alive = true
     setLoading(true)
     api
-      .coach(sessionId)
-      .then((r) => alive && setTip({ text: r.tip, after: r.after_event }))
+      .coach(sessionId, style)
+      .then((r) => alive && setTip({ text: r.tip, after: r.after_event, style }))
       .catch(() => {})
       .finally(() => alive && setLoading(false))
     return () => {
       alive = false
     }
-  }, [on, ready, lastEvent, sessionId, tip?.after])
+  }, [on, ready, lastEvent, sessionId, style, tip?.after, tip?.style])
 
-  if (!on) {
-    return (
-      <button
-        type="button"
-        onClick={() => toggle(true)}
-        className={cn(glass, 'self-start rounded-full px-3.5 py-1.5 text-xs text-ghost/75 hover:text-ghost')}
-      >
-        Coach tips: off · turn on
-      </button>
-    )
-  }
+  // A fixed-height slot whatever the state (off, thinking, tip), so a tip
+  // arriving never pushes the controls above it around.
   return (
-    <motion.div
-      key={tip?.text ?? 'loading'}
-      initial={{ opacity: 0, y: -6 }}
-      animate={{ opacity: 1, y: 0 }}
-      className={cn(glass, 'flex items-start gap-3 rounded-2xl px-4 py-3 text-sm')}
+    <div className="flex h-full min-w-0 flex-1 items-center justify-center">
+      {!on ? (
+        <button
+          type="button"
+          onClick={() => toggle(true)}
+          className={cn(glass, 'rounded-full px-3.5 py-1.5 text-xs text-ghost/75 hover:text-ghost')}
+        >
+          Coach tips: off · turn on
+        </button>
+      ) : (
+        <div className={cn(glass, 'flex h-full w-full items-start gap-3 overflow-hidden rounded-2xl px-4 py-2.5 text-sm')}>
+          <span className="mt-0.5 flex-none text-[10px] font-semibold uppercase tracking-[0.25em] text-brand">
+            Coach · {COACH_STYLES.find((c) => c.value === style)?.label}
+          </span>
+          <motion.span
+            key={tip?.text ?? 'loading'}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: loading || !ready ? 0.6 : 1 }}
+            transition={{ duration: 0.3 }}
+            className="line-clamp-3 min-w-0 flex-1 leading-snug"
+          >
+            {tip?.text ?? 'Thinking about your next move…'}
+          </motion.span>
+          <button type="button" onClick={() => toggle(false)} aria-label="Turn off coach tips" className="flex-none text-ghost/60 hover:text-ghost">
+            ×
+          </button>
+        </div>
+      )}
+    </div>
+  )
+}
+
+/** The coach on/off switch on the briefing footer, so it can be set before the family arrives. */
+function CoachSwitch({ coach }: { coach: CoachSetting }) {
+  return (
+    <button
+      type="button"
+      role="switch"
+      aria-checked={coach.on}
+      data-tour="coach"
+      onClick={() => coach.set(!coach.on)}
+      className="flex items-center gap-2.5 rounded-full py-1 text-sm text-ghost/75 hover:text-ghost"
     >
-      <span className="mt-0.5 flex-none text-[10px] font-semibold uppercase tracking-[0.25em] text-glaucous">Coach</span>
-      <span className={cn('leading-snug', (loading || !ready) && 'opacity-60')}>
-        {tip?.text ?? 'Thinking about your next move…'}
+      Coach tips
+      <span
+        aria-hidden
+        className={cn(
+          'relative h-6 w-11 rounded-full transition-colors',
+          coach.on ? 'bg-royal' : 'bg-ghost/45',
+        )}
+      >
+        <span
+          className={cn(
+            'absolute top-1 size-4 rounded-full bg-[#fbfbff] shadow transition-[left]',
+            coach.on ? 'left-6' : 'left-1',
+          )}
+        />
       </span>
-      <button type="button" onClick={() => toggle(false)} aria-label="Turn off coach tips" className="flex-none text-ghost/50 hover:text-ghost">
-        ×
-      </button>
-    </motion.div>
+      <span className="w-6 text-left font-semibold text-ghost">{coach.on ? 'On' : 'Off'}</span>
+    </button>
   )
 }
 
@@ -681,7 +828,7 @@ function TopBar({
         <a href="/practice" className="font-display text-base font-bold tracking-tight">
           Building Bridges
         </a>
-        <p className="truncate text-xs text-ghost/50">
+        <p className="truncate text-xs text-ghost/60">
           {session.plan.length > 1 && <>Scenario {scenario.idx + 1} of {session.plan.length} · </>}
           {scenario.title}
           {scenario.status === 'conference' && <> · Turn {scenario.turn_count}</>}
@@ -820,8 +967,8 @@ function Composer({
       {attachment && (
         <div className="flex justify-center">
           <span className="flex items-center gap-2 rounded-full bg-ghost px-3 py-1 text-xs font-medium text-coffee">
-            <Printer className="size-3.5 text-royal" /> {attachment.label}
-            <button type="button" onClick={attachment.onClear} aria-label="Don't hand it over" className="text-coffee/50 hover:text-coffee">
+            <Printer className="size-3.5 text-brand-inverse" /> {attachment.label}
+            <button type="button" onClick={attachment.onClear} aria-label="Don't hand it over" className="text-coffee/60 hover:text-coffee">
               ×
             </button>
           </span>
@@ -869,7 +1016,7 @@ function Composer({
                 : (mic.error ?? status ?? placeholder)
           }
           aria-label="What you say"
-          className="block min-w-0 flex-1 resize-none bg-transparent px-3 py-2 text-[15px] text-ghost placeholder:text-ghost/45 focus:outline-none"
+          className="block min-w-0 flex-1 resize-none bg-transparent px-3 py-2 text-[15px] text-ghost placeholder:text-ghost/55 focus:outline-none"
         />
         {onCancel && (
           <button

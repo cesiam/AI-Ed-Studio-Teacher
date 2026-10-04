@@ -54,11 +54,11 @@ export function History() {
                 selected === s.id ? 'border-glaucous bg-royal/40' : 'border-ghost/10 hover:border-ghost/30',
               )}
             >
-              <span className="block text-xs text-ghost/50">{new Date(s.created_at).toLocaleString()}</span>
+              <span className="block text-xs text-ghost/60">{new Date(s.created_at).toLocaleString()}</span>
               {s.conferences.map((c) => (
                 <span key={c.idx} className="mt-1 flex items-baseline justify-between gap-2">
                   <span className="truncate font-medium">{c.title}</span>
-                  <span className={cn('flex-none text-xs', c.ended_reason === 'walkout' ? 'text-scarlet' : 'text-ghost/55')}>
+                  <span className={cn('flex-none text-xs', c.ended_reason === 'walkout' ? 'text-scarlet' : 'text-ghost/60')}>
                     {c.status === 'pending' || c.status === 'briefing'
                       ? 'not played'
                       : c.ended_reason === 'walkout'
@@ -112,12 +112,12 @@ function Conference({ scenario: s, teacherName }: { scenario: ScenarioView; teac
       <header className="flex flex-wrap items-baseline justify-between gap-2 border-b border-ghost/10 pb-4">
         <div>
           <h2 className="font-display text-2xl font-bold">{s.title}</h2>
-          <p className="text-sm text-ghost/55">
+          <p className="text-sm text-ghost/60">
             {s.parent.name} ({s.parent.relationship}) and {s.student_first_name} · grade {s.grade}
           </p>
         </div>
         <p className="text-sm text-ghost/70">
-          Tension {s.starting_tension} → <span className={s.tension > 50 ? 'text-scarlet' : 'text-glaucous'}>{s.tension}</span>
+          Tension {s.starting_tension} → <span className={s.tension > 50 ? 'text-scarlet' : 'text-brand'}>{s.tension}</span>
           {' · '}
           {s.turn_count} turn{s.turn_count === 1 ? '' : 's'}
           {s.ended_reason === 'walkout' && <span className="text-scarlet"> · walked out</span>}
@@ -132,11 +132,11 @@ function Conference({ scenario: s, teacherName }: { scenario: ScenarioView; teac
 
       {filledAnswers(s.notes_form).length > 0 && (
         <div className="mt-6 rounded-2xl border border-ghost/10 p-5 text-sm">
-          <p className="text-[11px] font-semibold uppercase tracking-[0.3em] text-glaucous">{NOTES_FORM_TITLE}</p>
+          <p className="text-[11px] font-semibold uppercase tracking-[0.3em] text-brand">{NOTES_FORM_TITLE}</p>
           <dl className="mt-2 grid gap-2">
             {filledAnswers(s.notes_form).map((a) => (
               <div key={a.label}>
-                <dt className="text-xs text-ghost/50">{a.label}</dt>
+                <dt className="text-xs text-ghost/60">{a.label}</dt>
                 <dd className="whitespace-pre-line">{a.value}</dd>
               </div>
             ))}
@@ -146,7 +146,7 @@ function Conference({ scenario: s, teacherName }: { scenario: ScenarioView; teac
 
       {s.debrief && (
         <div className="mt-6 rounded-2xl bg-royal/30 p-5 text-sm leading-relaxed">
-          <p className="text-[11px] font-semibold uppercase tracking-[0.3em] text-glaucous">Debrief</p>
+          <p className="text-[11px] font-semibold uppercase tracking-[0.3em] text-brand">Debrief</p>
           <p className="mt-2">{s.debrief.summary}</p>
           {s.debrief.went_well.length > 0 && <List title="Went well" items={s.debrief.went_well} />}
           {s.debrief.try_next.length > 0 && <List title="Try next time" items={s.debrief.try_next} />}
@@ -183,7 +183,7 @@ function Line({ event: e, teacherName }: { event: EventView; teacherName: string
     case 'staff':
       return (
         <li className="max-w-[85%] rounded-2xl rounded-tl-md bg-ghost px-4 py-2.5 text-coffee">
-          <p className={cn('text-[10px] font-semibold uppercase tracking-[0.25em]', e.kind === 'parent' ? 'text-royal' : e.kind === 'staff' ? 'text-scarlet' : 'text-glaucous')}>
+          <p className={cn('text-[10px] font-semibold uppercase tracking-[0.25em]', e.kind === 'parent' ? 'text-brand-inverse' : e.kind === 'staff' ? 'text-scarlet' : 'text-coffee/70')}>
             {e.speaker}
           </p>
           <p className="mt-0.5">{e.content}</p>
@@ -209,7 +209,7 @@ function Line({ event: e, teacherName }: { event: EventView; teacherName: string
     case 'agreement':
       return (
         <li className="self-center rounded-2xl border border-glaucous/50 px-4 py-2 text-sm">
-          <span className="text-[10px] font-semibold uppercase tracking-[0.25em] text-glaucous">Agreed</span>
+          <span className="text-[10px] font-semibold uppercase tracking-[0.25em] text-brand">Agreed</span>
           <ul className="mt-1 list-disc pl-4 text-ghost/85">
             {((e.meta?.steps as string[]) ?? []).map((step) => (
               <li key={step}>{step}</li>
@@ -220,12 +220,12 @@ function Line({ event: e, teacherName }: { event: EventView; teacherName: string
     case 'contact_question':
     case 'contact_reply':
       return (
-        <li className="max-w-[85%] self-center text-xs italic text-ghost/50">
+        <li className="max-w-[85%] self-center text-xs italic text-ghost/60">
           Private chat · {e.speaker}: {e.content}
         </li>
       )
     default:
-      return <li className="self-center text-xs italic text-ghost/55">{e.content}</li>
+      return <li className="self-center text-xs italic text-ghost/60">{e.content}</li>
   }
 }
 

@@ -40,6 +40,8 @@ export interface CreateSessionRequest {
   teacher_name?: string
   /** Optional: exact starting tension and the band it may move in (0-100). Overrides starting_mood. */
   tension?: { start: number; min: number; max: number }
+  /** Optional: keep random draws to one U.S. school level. */
+  level?: 'elementary' | 'middle' | 'high' | 'all'
   /** Optional: reuse a seed. */
   seed?: number
   /** Optional: replay another session exactly (same config and seed). Other fields are ignored. */
@@ -99,6 +101,10 @@ export interface ScenarioView {
   school: string
   teacher_role: string
   meeting_context: string
+  /** How the parent seems on arrival, matched to the starting tension. */
+  arrival: string
+  /** Resting facial expressions for this scenario, added on top of tension. brow: + angry, - worried. */
+  demeanor: { parent: { brow: number; smile: number }; student: { brow: number; smile: number } }
   teacher_concern: string
   student_strength: string
   parent: { name: string; relationship: string }

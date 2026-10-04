@@ -28,20 +28,22 @@ export function CaseFileApp({
 
   return (
     <div className="h-full overflow-y-auto px-6 py-5 font-body">
-      <p className="text-[11px] font-semibold uppercase tracking-[0.3em] text-royal">
+      <p className="text-[11px] font-semibold uppercase tracking-[0.3em] text-brand-inverse">
         Scenario {s.scenario_id} · Raised by {s.raised_by}
       </p>
       <h2 className="mt-1 font-display text-2xl font-bold leading-tight">{s.title}</h2>
-      <p className="mt-0.5 font-medium text-royal">{s.topic}</p>
+      <p className="mt-0.5 font-medium text-brand-inverse">{s.topic}</p>
       <p className="mt-1 text-sm text-coffee/60">
         {s.student_name}, grade {s.grade} · Parent: {s.parent.name} ({s.parent.relationship}) · You: {s.teacher_role}
       </p>
-      <p className="mt-3 text-sm text-coffee/75">{s.meeting_context}</p>
+      <p className="mt-3 text-sm text-coffee/75">
+        {s.meeting_context} <span className="font-medium text-coffee">{s.arrival}</span>
+      </p>
 
       {onOpenGuide && (
         <div className="mt-4 flex flex-wrap items-center justify-between gap-3 rounded-xl border border-royal/25 bg-royal/[0.06] p-4">
           <div className="min-w-0 max-w-xl">
-            <p className="text-[11px] font-semibold uppercase tracking-[0.25em] text-royal">Suggested reading · use it for guidance</p>
+            <p className="text-[11px] font-semibold uppercase tracking-[0.25em] text-brand-inverse">Suggested reading · use it for guidance</p>
             <p className="mt-1 font-semibold leading-snug">“{GUIDE.title}”</p>
             <p className="text-sm text-coffee/60">
               {GUIDE.source}. If it helps, keep it open next to the optional notes form during the conference.
@@ -59,15 +61,15 @@ export function CaseFileApp({
 
       <div className="mt-5 grid gap-4 md:grid-cols-2">
         <section className="rounded-xl border border-coffee/10 p-4">
-          <h3 className="text-[11px] font-semibold uppercase tracking-[0.25em] text-coffee/55">Your concern</h3>
+          <h3 className="text-[11px] font-semibold uppercase tracking-[0.25em] text-coffee/60">Your concern</h3>
           <p className="mt-2 leading-relaxed">{s.teacher_concern}</p>
         </section>
         <section className="rounded-xl bg-royal/10 p-4">
-          <h3 className="text-[11px] font-semibold uppercase tracking-[0.25em] text-royal">What you notice</h3>
+          <h3 className="text-[11px] font-semibold uppercase tracking-[0.25em] text-brand-inverse">What you notice</h3>
           <p className="mt-2 leading-relaxed">
             {hasBut ? (
               <>
-                <span className="font-bold text-royal">BUT</span> {rest.join(' ')}
+                <span className="font-bold text-brand-inverse">BUT</span> {rest.join(' ')}
               </>
             ) : (
               s.student_strength
@@ -78,7 +80,7 @@ export function CaseFileApp({
 
       {s.tutorial ? (
         <>
-          <h3 className="mt-6 text-[11px] font-semibold uppercase tracking-[0.25em] text-coffee/55">How this works</h3>
+          <h3 className="mt-6 text-[11px] font-semibold uppercase tracking-[0.25em] text-coffee/60">How this works</h3>
           <ol className="mt-2 grid gap-3 md:grid-cols-3">
             {TUTORIAL_STEPS.map((step, i) => (
               <li key={i} className="rounded-xl border border-coffee/10 p-3 text-sm leading-snug">
@@ -90,7 +92,7 @@ export function CaseFileApp({
         </>
       ) : (
         <>
-          <h3 className="mt-6 text-[11px] font-semibold uppercase tracking-[0.25em] text-coffee/55">
+          <h3 className="mt-6 text-[11px] font-semibold uppercase tracking-[0.25em] text-coffee/60">
             Why this conversation matters
           </h3>
           <dl className="mt-2 grid gap-3 md:grid-cols-3">
@@ -98,14 +100,14 @@ export function CaseFileApp({
               <div key={key} className="rounded-xl border border-coffee/10 p-3">
                 <dt className="text-[10px] font-semibold uppercase tracking-[0.2em] text-scarlet">{label}</dt>
                 <dd className="mt-1 text-sm leading-snug">{s.research[key].text}</dd>
-                <dd className="mt-1 text-xs text-coffee/50">{s.research[key].source}</dd>
+                <dd className="mt-1 text-xs text-coffee/60">{s.research[key].source}</dd>
               </div>
             ))}
           </dl>
         </>
       )}
 
-      <h3 className="mt-6 text-[11px] font-semibold uppercase tracking-[0.25em] text-coffee/55">Records on file</h3>
+      <h3 className="mt-6 text-[11px] font-semibold uppercase tracking-[0.25em] text-coffee/60">Records on file</h3>
       <ul className="mt-2 grid gap-2 sm:grid-cols-2">
         {s.documents.map((d) => (
           <li key={d.letter}>
@@ -119,7 +121,7 @@ export function CaseFileApp({
               </span>
               <span className="min-w-0">
                 <span className="block truncate font-medium">{d.title}</span>
-                <span className="block truncate text-xs text-coffee/55">{d.citation ?? d.source}</span>
+                <span className="block truncate text-xs text-coffee/60">{d.citation ?? d.source}</span>
               </span>
             </button>
           </li>

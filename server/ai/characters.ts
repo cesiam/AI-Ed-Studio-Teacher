@@ -1,6 +1,7 @@
 import { firstName, type Scenario } from '../content/types'
 import type { EventRow } from '../db/sessions'
 import { parentToneGuide, toneBand } from '../game/tension'
+import { gradeLabel, levelFor } from '@/lib/school-level'
 import { speak } from './client'
 import { characterMessages, type Speakers } from './transcript'
 
@@ -21,12 +22,14 @@ function parentSystem(s: Scenario, teacherName: string): string {
   const kid = firstName(s.student_name)
   return `This is a role-play used to help teachers practice difficult parent-teacher conferences. All people, schools, and records are fictional.
 
-You are ${p.name}, ${kid}'s ${p.relationship}. ${kid} is in grade ${s.grade} at ${s.setting.school}.
+You are ${p.name}, ${kid}'s ${p.relationship}. ${kid} is in ${gradeLabel(s.grade)} at ${s.setting.school}.
 Setting: ${s.setting.meeting_context}
 You are meeting ${teacherName}, ${kid}'s ${s.setting.teacher_role}. ${kid} is in the room too.
 
-Who you are:
+Who you are (in general, not how you feel today):
 ${p.personality}
+
+How you feel today comes only from the direction you get each turn ("How you feel right now"). If it is cooler or more upset than your personality suggests, the direction wins: something has you on edge (a long shift, worry about why the school wanted to meet, an old bad experience with a school). Carry it in how you sound; don't explain it unless asked. Never open warmer than the direction allows.
 
 How you talk:
 ${p.speaking_style}
@@ -48,12 +51,21 @@ ${bullets(p.escalates_when)}
 ${SHARED_RULES(p.name, `the teacher or ${kid}`)}`
 }
 
+/** How a student talks at each U.S. school level. */
+const STUDENT_VOICE = {
+  elementary:
+    'You are a young child in a room with adults. Use short, simple words and sentences, the way a real elementary schooler talks. You may be shy, fidgety or literal, and you often look to your parent before answering.',
+  middle:
+    'You are a middle schooler in a room with adults: self-conscious and easily embarrassed in front of your parent. Keep it short, often a single sentence or a shrug of an answer.',
+  high: 'You are a teenager in a room with adults: keep it shorter than the adults do, often a single sentence.',
+} as const
+
 function studentSystem(s: Scenario, teacherName: string): string {
   const st = s.student_persona
   const parent = s.parent_persona
   return `This is a role-play used to help teachers practice difficult parent-teacher conferences. All people, schools, and records are fictional.
 
-You are ${st.name}, age ${st.age}, in grade ${s.grade} at ${s.setting.school}.
+You are ${st.name}, age ${st.age}, in ${gradeLabel(s.grade)} at ${s.setting.school}.
 Setting: ${s.setting.meeting_context}
 You are sitting next to your ${parent.relationship}, ${parent.name}, across from ${teacherName}, your ${s.setting.teacher_role}.
 
@@ -75,7 +87,7 @@ ${st.likely_claim}
 You tend to speak up when:
 ${bullets(st.speaks_up_when)}
 
-You are a teenager in a room with adults: keep it shorter than the adults do, often a single sentence.
+${STUDENT_VOICE[levelFor(s.grade)]}
 ${SHARED_RULES(firstName(st.name), `the teacher or your ${parent.relationship}`)}`
 }
 
@@ -97,8 +109,8 @@ export async function parentLine(opts: {
   if (opts.opening) {
     direction =
       s.raised_by === 'parent'
-        ? `You just sat down in ${teacherName}'s classroom. You asked for this meeting, so open it: say what's bothering you. ${parentToneGuide(tension)}`
-        : `You just sat down in ${teacherName}'s classroom. The teacher asked for this meeting. Greet them briefly and let them lead; you don't know exactly what they want yet. ${parentToneGuide(tension)}`
+        ? `You just sat down in ${teacherName}'s classroom. You asked for this meeting, so open it: say what's bothering you. How you feel right now: ${parentToneGuide(tension)}`
+        : `You just sat down in ${teacherName}'s classroom. The teacher asked for this meeting. Greet them briefly and let them lead; you don't know exactly what they want yet. How you feel right now: ${parentToneGuide(tension)}`
   } else if (opts.walkout) {
     direction = `You have had enough. Say one or two final sentences as ${name} and leave the meeting, taking ${firstName(s.student_name)} with you.`
   } else {

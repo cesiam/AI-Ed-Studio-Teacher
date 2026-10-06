@@ -8,7 +8,7 @@ type SiteNavProps = {
 export function SiteNav({ action = { href: '/start', label: 'Get started' } }: SiteNavProps) {
   return (
     <header className="fixed left-0 top-0 z-50 flex w-full items-center justify-between bg-coffee/70 px-6 py-4 backdrop-blur-md sm:px-10">
-      <a href="/" data-cursor="hover" className="font-display text-lg font-extrabold tracking-[-0.02em] text-ghost">
+      <a href="/" data-cursor="hover" className="font-brand text-lg font-bold tracking-[-0.02em] text-ghost">
         Building Bridges
       </a>
       <div className="flex items-center gap-3">

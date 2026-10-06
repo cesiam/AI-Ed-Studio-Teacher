@@ -15,7 +15,7 @@ function delayAfter(ch: string) {
 
 /**
  * The /start intro types itself out as if written just now; the steps and the
- * button follow once it's done. Click the sentence to finish it at once.
+ * button follow once it's done. It always plays in full; Skip intro goes straight to setup.
  */
 export function StartIntro({ steps }: { steps: { title: string; body: string }[] }) {
   const reduce = useReducedMotion()
@@ -33,7 +33,6 @@ export function StartIntro({ steps }: { steps: { title: string; body: string }[]
     <>
       <p
         aria-label={INTRO}
-        onClick={() => setTyped(INTRO.length)}
         className="mt-10 text-center font-body text-lg leading-relaxed text-ghost/80 sm:text-xl sm:leading-relaxed"
       >
         {/* The whole sentence is laid out from the start (the untyped part is
@@ -48,6 +47,17 @@ export function StartIntro({ steps }: { steps: { title: string; body: string }[]
           <span className="text-transparent">{INTRO.slice(shown)}</span>
         </span>
       </p>
+
+      {/* Fades out once the steps appear, but keeps its space so nothing jumps. */}
+      <a
+        href="/practice"
+        data-cursor="hover"
+        aria-hidden={done}
+        tabIndex={done ? -1 : 0}
+        className={`mt-6 rounded-full border border-ghost/20 px-5 py-2 font-body text-sm font-semibold text-ghost/80 transition-[opacity,color,border-color] duration-500 hover:border-glaucous hover:text-ghost ${done ? 'pointer-events-none opacity-0' : ''}`}
+      >
+        Skip intro
+      </a>
 
       <ol className="mt-12 w-full space-y-8">
         {steps.map((s, i) => (

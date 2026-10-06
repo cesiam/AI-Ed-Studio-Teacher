@@ -63,14 +63,14 @@ export function FinalSection() {
           </motion.div>
         </div>
 
-        {/* ground line the pair walks along */}
-        <div className="pointer-events-none absolute bottom-[18svh] left-0 h-px w-full bg-ghost/15" />
+        {/* ground line the pair walks along; lower on phones, where the buttons stack */}
+        <div className="pointer-events-none absolute bottom-[9svh] left-0 h-px w-full bg-ghost/15 sm:bottom-[18svh]" />
 
         {/* the walking parent + child */}
         <motion.div
           aria-hidden
           style={{ x: doodleX, y: doodleY }}
-          className="pointer-events-none absolute bottom-[15svh] left-0 w-[clamp(200px,30vw,380px)]"
+          className="pointer-events-none absolute bottom-[6svh] left-0 w-[clamp(150px,30vw,380px)] sm:bottom-[15svh] sm:w-[clamp(200px,30vw,380px)]"
         >
           <DoodleImage
             src="/walking-forward.png"

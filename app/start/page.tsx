@@ -25,7 +25,7 @@ const steps = [
 /** Orientation before setup: what the session involves, in the order it happens. */
 export default function StartPage() {
   return (
-    <main className="relative min-h-svh bg-coffee px-6 pb-16 pt-28 text-ghost sm:px-10">
+    <main className="relative min-h-svh bg-coffee px-6 pb-16 pt-28 text-ghost sm:px-10 md:px-20 lg:px-32">
       <SiteNav action={{ href: '/practice', label: 'Skip to setup' }} />
       <div aria-hidden className="margin-rule" />
 

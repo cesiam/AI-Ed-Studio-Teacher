@@ -64,8 +64,9 @@ export function StorySection() {
           <InvitationCopy />
         </Reveal>
 
-        <div className="grid gap-14 md:grid-cols-12 md:gap-10 lg:gap-16">
-          <div className="md:col-span-7">
+        {/* Two columns from laptop width up; below that the words need the full width. */}
+        <div className="grid gap-14 lg:grid-cols-12 lg:gap-16">
+          <div className="lg:col-span-7">
             <Reveal>
               <h2 className="font-display text-4xl font-extrabold leading-[1.02] tracking-[-0.03em] text-ghost sm:text-5xl lg:text-6xl xl:text-[4.25rem]">
                 Every teacher eventually sits across from a parent to talk about something{' '}
@@ -81,7 +82,7 @@ export function StorySection() {
           </div>
 
           {/* Starts level with the headline. */}
-          <div className="flex flex-col gap-6 font-body text-lg leading-relaxed text-ghost/75 md:col-span-5 md:pt-3 lg:text-xl lg:leading-relaxed">
+          <div className="flex flex-col gap-6 font-body text-lg leading-relaxed text-ghost/75 md:max-w-2xl lg:col-span-5 lg:max-w-none lg:pt-3 lg:text-xl lg:leading-relaxed">
             <div className="space-y-6">
               <Reveal delay={0.1}>
                 <p>These conversations shape whether a family trusts the school and whether a student gets support.</p>

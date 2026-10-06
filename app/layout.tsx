@@ -1,13 +1,19 @@
 import { Analytics } from '@vercel/analytics/next'
 import type { Metadata, Viewport } from 'next'
-import { Outfit } from 'next/font/google'
+import { Outfit, Space_Grotesk } from 'next/font/google'
 import './globals.css'
 
-// One geometric family, as in the visuals: weight carries the hierarchy
-// (800 headlines, 700 titles, 600 labels and buttons, 400 reading text).
+// Outfit carries reading text, labels and buttons (600 labels/buttons, 400 text).
 const outfit = Outfit({
   subsets: ['latin'],
   variable: '--font-outfit',
+})
+
+// Space Grotesk for the wordmark and every headline; Outfit for reading text, labels and buttons.
+const wordmark = Space_Grotesk({
+  subsets: ['latin'],
+  weight: ['500', '600', '700'],
+  variable: '--font-wordmark',
 })
 
 export const metadata: Metadata = {
@@ -34,7 +40,7 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="en" className={outfit.variable} suppressHydrationWarning>
+    <html lang="en" className={`${outfit.variable} ${wordmark.variable}`} suppressHydrationWarning>
       <head>
         <script dangerouslySetInnerHTML={{ __html: themeScript }} />
       </head>

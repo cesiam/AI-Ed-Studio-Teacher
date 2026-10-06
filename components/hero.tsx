@@ -210,14 +210,13 @@ function MayaCase() {
   return (
     <>
       <p className="kicker">Case 01 · Chronic absence</p>
-      {/* Facts match scenario 01 (content/scenarios.seed.json): 14 absences, a 76% attendance rate, B+ to D. */}
+      {/* Facts match scenario 01 (content/scenarios.seed.json): 12 absences (5 unexcused), 88% in class, 64% overall. */}
       <p className="mt-5 text-lg leading-relaxed text-ghost/75 lg:text-xl">
-        Maya has missed <strong className="font-semibold text-ghost">14 days</strong> since September. At{' '}
-        <strong className="font-semibold text-ghost">76% attendance</strong> she&apos;s well under the 90% line
-        for chronic absence, and her Algebra grade has slid from a B+ to a D.{' '}
-        <strong className="font-semibold text-ghost">But</strong> when she&apos;s here, she&apos;s the first to
-        finish the warm-up, and she mentioned walking her little brother to school since her mom started early
-        shifts.
+        Maya has missed <strong className="font-semibold text-ghost">12 days</strong> since September,{' '}
+        <strong className="font-semibold text-ghost">5 of them unexcused</strong>. She averages 88% on her
+        in-class work, but missed quizzes and homework have pulled her Algebra grade down to a 64.{' '}
+        <strong className="font-semibold text-ghost">But</strong> when she&apos;s here, she aces the warm-up, and
+        she mentioned walking her little brother Jayden to school in the mornings.
       </p>
       <p className="mt-8 font-display text-2xl font-bold leading-snug tracking-[-0.01em] text-ghost lg:text-[1.7rem]">
         How would you share what you see with Maya&apos;s parent?
@@ -307,7 +306,7 @@ export function Hero() {
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2, duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
-            className="flex flex-col items-center pb-[0.12em] font-display text-[length:var(--wm)] font-extrabold leading-[0.84] tracking-[-0.045em] text-ghost md:flex-row md:items-baseline md:justify-center"
+            className="flex flex-col items-center pb-[0.12em] font-brand text-[length:var(--wm)] font-bold leading-[0.84] tracking-[-0.04em] text-ghost md:flex-row md:items-baseline md:justify-center"
           >
             <span>Building</span>
             <span className="sr-only"> </span>
@@ -317,9 +316,9 @@ export function Hero() {
         </motion.div>
 
         {/* On phones the grid dissolves (contents) so everything stacks: wordmark, drawing, case. */}
-        <div className="contents md:mt-6 md:grid md:flex-1 md:grid-cols-[auto_minmax(0,24rem)] md:items-center md:justify-center md:gap-12">
+        <div className="contents md:mt-6 md:grid md:flex-1 md:grid-cols-[auto_minmax(0,19rem)] md:items-center lg:grid-cols-[auto_minmax(0,24rem)] md:justify-center md:gap-12">
           {/* The drawing stays put (no parallax) so the strings stay attached to it. */}
-          <div className="order-2 mx-auto mt-8 w-full max-w-xl md:order-none md:mx-0 md:mt-0 md:w-[min(58vw,calc(100vw-35rem),calc((100svh-var(--wm)*1.75-9rem)*1.46))] md:max-w-none">
+          <div className="order-2 mx-auto mt-8 w-full max-w-xl md:order-none md:mx-0 md:mt-0 md:w-[min(58vw,calc(100vw-28rem),calc((100svh-var(--wm)*1.75-9rem)*1.46))] lg:w-[min(58vw,calc(100vw-35rem),calc((100svh-var(--wm)*1.75-9rem)*1.46))] md:max-w-none">
             <UnravelingArt progress={progress} />
           </div>
 

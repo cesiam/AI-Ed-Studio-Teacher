@@ -183,8 +183,9 @@
   --color-ghost: var(--bb-ink);
   --color-brand: var(--bb-brand);
   --color-brand-inverse: var(--bb-brand-inverse);
-  --font-display: var(--font-outfit);
+  --font-display: var(--font-wordmark);
   --font-body: var(--font-outfit);
+  --font-brand: var(--font-wordmark);
 }
 
 @layer base {

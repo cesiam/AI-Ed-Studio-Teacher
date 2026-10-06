@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react'
 import { AnimatePresence, motion } from 'motion/react'
-import { ClipboardList, Clock, DoorOpen, FileText, Loader2, Mail, Mic, NotebookPen, Printer, Square, Timer } from 'lucide-react'
+import { ClipboardList, Clock, DoorOpen, FileText, Loader2, Mail, Mic, NotebookPen, Maximize2, Minimize2, Printer, Square, StickyNote, Timer } from 'lucide-react'
 import type { ContactRole, DocLetter, ScenarioView, SessionView } from '@/lib/api-types'
 import { COACH_STYLES, DEFAULT_COACH_STYLE, isCoachStyle, type CoachStyle } from '@/lib/coach-styles'
 import { cn } from '@/lib/utils'
@@ -258,13 +258,21 @@ function Conference({
   const { pose, talking, lines, settled } = useChoreography(scenario.events, waiting, view.kind === 'showing', scenario.student_first_name)
   const present = scenario.ended_reason !== 'walkout'
   const lastTension = [...scenario.events].reverse().find((e) => e.kind === 'tension')
-  const parentFirst = scenario.parent.name.split(' ')[0]
+  // First name, skipping a title ("Dr. Lakshmi Natarajan" -> "Lakshmi").
+  const parentFirst = scenario.parent.name.split(' ').find((w) => !/^(Dr|Mr|Mrs|Ms|Mx)\.?$/i.test(w)) ?? scenario.parent.name
   const onLaptop = view.kind === 'laptop'
+  // Stays as the teacher left it the next time they open the laptop.
+  const [laptopExpanded, setLaptopExpanded] = useState(false)
   const actionPlan = scenario.events.filter((e) => e.kind === 'agreement').flatMap((e) => (e.meta?.steps as string[]) ?? [])
   const [needPlan, setNeedPlan] = useState(false)
   // Ending needs an agreed next step. A truly stuck conversation can end without one after a while.
   const stuck = scenario.turn_count >= END_WITHOUT_PLAN_AFTER
   const canEnd = actionPlan.length > 0 || stuck
+  // The teacher closed the meeting out loud and a plan is agreed: offer to end it once the family has answered.
+  const lastTeacher = scenario.events.filter((e) => e.kind === 'teacher').at(-1)
+  const [declinedWrapUp, setDeclinedWrapUp] = useState<number | null>(null)
+  const offerEnd =
+    live && settled && !busy && actionPlan.length > 0 && !!lastTeacher?.meta?.wrap_up && declinedWrapUp !== lastTeacher.id
 
   // Someone walking in: they stand in the doorway for a moment before joining.
   const staff = scenario.in_room
@@ -355,7 +363,8 @@ function Conference({
       />
 
       {/* the family, across the desk. On the laptop, they slide up and peek over the screen. */}
-      <section className="relative z-10 flex min-h-0 flex-1 items-end justify-center px-4">
+      <div className="relative z-10 flex min-h-0 flex-1">
+      <section className="relative flex min-h-0 min-w-0 flex-1 items-end justify-center px-4">
         <motion.div
           className="flex h-full items-end justify-center"
           initial={false}
@@ -383,7 +392,11 @@ function Conference({
           {view.kind === 'laptop' && (
             <motion.div
               key="laptop"
-              className="absolute inset-x-0 bottom-0 z-20 mx-auto flex h-[60%] w-[min(1180px,96%)] flex-col rounded-t-[28px] bg-coffee px-3 pt-2 ring-1 ring-ghost/10 shadow-[0_-12px_60px_rgba(54,38,167,0.35)]"
+              className={cn(
+                'absolute inset-x-0 bottom-0 z-20 mx-auto flex w-[min(1180px,96%)] flex-col rounded-t-[28px] bg-coffee px-3 pt-2 ring-1 ring-ghost/10 shadow-[0_-12px_60px_rgba(54,38,167,0.35)] transition-[height] duration-300',
+                // Expanded, the laptop fills the room so documents are easy to read.
+                laptopExpanded ? 'h-full' : 'h-[60%]',
+              )}
               initial={{ y: '100%' }}
               animate={{ y: 0 }}
               exit={{ y: '100%' }}
@@ -393,9 +406,19 @@ function Conference({
                 <p className="truncate text-xs text-ghost/60">
                   {present ? `${parentFirst} and ${scenario.student_first_name} are watching you. You can keep talking while you look.` : 'Your laptop'}
                 </p>
-                <GlassButton onClick={() => setView({ kind: 'room' })} className="flex-none py-1.5">
-                  Close laptop
-                </GlassButton>
+                <div className="flex flex-none items-center gap-2">
+                  <GlassButton
+                    onClick={() => setLaptopExpanded((x) => !x)}
+                    aria-pressed={laptopExpanded}
+                    className="flex items-center gap-1.5 py-1.5"
+                  >
+                    {laptopExpanded ? <Minimize2 className="size-3.5" /> : <Maximize2 className="size-3.5" />}
+                    {laptopExpanded ? 'Shrink' : 'Expand'}
+                  </GlassButton>
+                  <GlassButton onClick={() => setView({ kind: 'room' })} className="py-1.5">
+                    Close laptop
+                  </GlassButton>
+                </div>
               </div>
               <div className="min-h-0 flex-1">
                 <Computer
@@ -419,6 +442,60 @@ function Conference({
         </AnimatePresence>
       </section>
 
+      <AnimatePresence>
+        {offerEnd && view.kind === 'room' && (
+          <motion.div
+            role="dialog"
+            aria-label="End the conference?"
+            initial={{ opacity: 0, y: -8 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -8 }}
+            className={cn(
+              glass,
+              'absolute left-1/2 top-2 z-40 flex w-[min(24rem,calc(100vw-2rem))] -translate-x-1/2 flex-col gap-3 rounded-2xl px-4 py-3 text-sm',
+            )}
+          >
+            <p className="leading-snug">
+              Sounds like you&apos;ve wrapped up with {parentFirst}. End the conference?
+            </p>
+            <div className="flex justify-end gap-2">
+              <GlassButton onClick={() => setDeclinedWrapUp(lastTeacher!.id)} className="py-1.5">
+                Keep talking
+              </GlassButton>
+              <button
+                type="button"
+                onClick={actions.end}
+                className="rounded-full bg-scarlet px-4 py-1.5 font-semibold text-[#fbfbff] transition-transform hover:scale-[1.03]"
+              >
+                End conference
+              </button>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* On wide screens the coach and action plan float in the top-right corner while the
+          family stays centered. Speech bubbles steer around this panel (see Bubble's fit). */}
+      {live && view.kind !== 'showing' && (coach.on || actionPlan.length > 0 || needPlan) && (
+        <aside
+          data-avoid-bubbles
+          className="absolute right-6 top-2 z-30 hidden w-72 flex-col gap-3 lg:flex xl:w-80"
+          aria-label="Coach and action plan"
+        >
+          {coach.on && <CoachTip sessionId={session.id} scenario={scenario} ready={settled && !busy} coach={coach} layout="panel" />}
+          <ActionPlan
+            steps={actionPlan}
+            parent={parentFirst}
+            nudge={needPlan}
+            onEndAnyway={stuck ? actions.end : undefined}
+            turnsLeft={END_WITHOUT_PLAN_AFTER - scenario.turn_count}
+            busy={!!busy}
+            className="max-h-72 w-full"
+          />
+        </aside>
+      )}
+      </div>
+
       {/* glass controls. On the laptop only the text box stays: the teacher can keep talking while they look. */}
       <footer className="relative z-20 flex-none px-4 pb-4 pt-3 sm:px-6">
         <div className="mx-auto flex max-w-5xl flex-col gap-3">
@@ -428,7 +505,10 @@ function Conference({
               <span className="font-semibold text-ghost">{showing?.title}</span>.
             </p>
           ) : onLaptop ? null : (
-            <nav className="flex flex-wrap justify-center gap-2" aria-label="During the conference">
+            <nav
+              className="-mx-4 flex gap-2 overflow-x-auto px-4 pb-1 *:flex-none *:whitespace-nowrap sm:mx-0 sm:flex-wrap sm:justify-center sm:overflow-visible sm:px-0 sm:pb-0"
+              aria-label="During the conference"
+            >
               {scenario.contacts.map((c) => (
                 <GlassButton
                   key={c.role}
@@ -466,6 +546,9 @@ function Conference({
               <GlassButton onClick={() => openLaptop('notes')} className="flex items-center gap-2">
                 <NotebookPen className="size-4" /> Transcript
               </GlassButton>
+              <GlassButton onClick={() => openLaptop('mynotes')} className="flex items-center gap-2">
+                <StickyNote className="size-4" /> My notes
+              </GlassButton>
             </nav>
           )}
 
@@ -475,7 +558,7 @@ function Conference({
               they never cover what the family says and never push the controls around.
               It stays while the laptop is open too. */}
           {live && view.kind !== 'showing' && (
-            <div className="mx-auto flex h-24 w-full max-w-5xl gap-3">
+            <div className="mx-auto flex h-28 w-full max-w-5xl gap-3 sm:h-24 lg:hidden">
               <CoachTip sessionId={session.id} scenario={scenario} ready={settled && !busy} coach={coach} />
               <ActionPlan
                 steps={actionPlan}
@@ -485,6 +568,13 @@ function Conference({
                 turnsLeft={END_WITHOUT_PLAN_AFTER - scenario.turn_count}
                 busy={!!busy}
               />
+            </div>
+          )}
+
+          {/* Wide screens with the coach off: just the small "turn on" pill, above the text box. */}
+          {live && view.kind !== 'showing' && !coach.on && (
+            <div className="hidden justify-center lg:flex">
+              <CoachTip sessionId={session.id} scenario={scenario} ready={settled && !busy} coach={coach} />
             </div>
           )}
 
@@ -638,6 +728,7 @@ function ActionPlan({
   onEndAnyway,
   turnsLeft,
   busy,
+  className,
 }: {
   steps: string[]
   parent: string
@@ -646,13 +737,15 @@ function ActionPlan({
   onEndAnyway?: () => void
   turnsLeft: number
   busy: boolean
+  /** Size for where it sits: the bottom row (default) or the right-hand column. */
+  className?: string
 }) {
   if (steps.length === 0 && !nudge) return null
   return (
     <motion.div
       initial={{ opacity: 0, y: -6 }}
       animate={{ opacity: 1, y: 0, scale: nudge ? [1, 1.03, 1] : 1 }}
-      className={cn(glass, 'h-full w-96 flex-none overflow-y-auto rounded-2xl px-4 py-2.5 text-sm', nudge && 'ring-1 ring-scarlet/70')}
+      className={cn(glass, 'flex-none overflow-y-auto rounded-2xl px-4 py-2.5 text-sm', className ?? 'h-full w-40 sm:w-72 md:w-96', nudge && 'ring-1 ring-scarlet/70')}
     >
       <p className="text-[10px] font-semibold uppercase tracking-[0.25em] text-brand">Action plan</p>
       {steps.length ? (
@@ -696,7 +789,21 @@ function ActionPlan({
  * nudging toward the guide's steps. It names the move; the words are the
  * teacher's. On/off lives in useCoachSetting.
  */
-function CoachTip({ sessionId, scenario, ready, coach }: { sessionId: string; scenario: ScenarioView; ready: boolean; coach: CoachSetting }) {
+function CoachTip({
+  sessionId,
+  scenario,
+  ready,
+  coach,
+  layout = 'row',
+}: {
+  sessionId: string
+  scenario: ScenarioView
+  ready: boolean
+  coach: CoachSetting
+  /** 'row' sits beside the action plan above the composer; 'panel' stacks in the right-hand column. */
+  layout?: 'row' | 'panel'
+}) {
+  const panel = layout === 'panel'
   const { on, set: toggle, style } = coach
   const [tip, setTip] = useState<{ text: string; after: number; style: CoachStyle } | null>(null)
   const [loading, setLoading] = useState(false)
@@ -720,7 +827,7 @@ function CoachTip({ sessionId, scenario, ready, coach }: { sessionId: string; sc
   // A fixed-height slot whatever the state (off, thinking, tip), so a tip
   // arriving never pushes the controls above it around.
   return (
-    <div className="flex h-full min-w-0 flex-1 items-center justify-center">
+    <div className={cn('flex min-w-0 items-center justify-center', panel ? 'min-h-48 w-full flex-none' : 'h-full flex-1')}>
       {!on ? (
         <button
           type="button"
@@ -730,8 +837,18 @@ function CoachTip({ sessionId, scenario, ready, coach }: { sessionId: string; sc
           Coach tips: off · turn on
         </button>
       ) : (
-        <div className={cn(glass, 'flex h-full w-full items-start gap-3 overflow-hidden rounded-2xl px-4 py-2.5 text-sm')}>
-          <span className="mt-0.5 flex-none text-[10px] font-semibold uppercase tracking-[0.25em] text-brand">
+        <div
+          className={cn(
+            glass,
+            'grid h-full w-full gap-x-3 overflow-hidden rounded-2xl px-4 py-2.5 text-sm',
+            // Row: label | tip | close. Panel: label and close on top, the tip below.
+            // Phones stack the label over the tip in the row layout too, so the tip gets the full width.
+            panel
+              ? 'grid-cols-[1fr_auto] grid-rows-[auto_1fr] gap-y-2 py-3.5'
+              : 'grid-cols-[1fr_auto] grid-rows-[auto_1fr] gap-y-1 sm:grid-cols-[auto_1fr_auto] sm:grid-rows-1 sm:items-start',
+          )}
+        >
+          <span className="mt-0.5 text-[10px] font-semibold uppercase tracking-[0.25em] text-brand">
             Coach · {COACH_STYLES.find((c) => c.value === style)?.label}
           </span>
           <motion.span
@@ -739,11 +856,19 @@ function CoachTip({ sessionId, scenario, ready, coach }: { sessionId: string; sc
             initial={{ opacity: 0 }}
             animate={{ opacity: loading || !ready ? 0.6 : 1 }}
             transition={{ duration: 0.3 }}
-            className="line-clamp-3 min-w-0 flex-1 leading-snug"
+            className={cn(
+              'min-w-0 leading-snug',
+              panel ? 'col-span-2 row-start-2 line-clamp-[10]' : 'col-span-2 row-start-2 line-clamp-3 sm:col-span-1 sm:col-start-2 sm:row-start-1',
+            )}
           >
             {tip?.text ?? 'Thinking about your next move…'}
           </motion.span>
-          <button type="button" onClick={() => toggle(false)} aria-label="Turn off coach tips" className="flex-none text-ghost/60 hover:text-ghost">
+          <button
+            type="button"
+            onClick={() => toggle(false)}
+            aria-label="Turn off coach tips"
+            className={cn('text-ghost/60 hover:text-ghost', panel ? 'col-start-2 row-start-1' : 'col-start-2 row-start-1 sm:col-start-3')}
+          >
             ×
           </button>
         </div>
@@ -823,9 +948,9 @@ function TopBar({
   right?: React.ReactNode
 }) {
   return (
-    <header className="relative z-30 grid flex-none grid-cols-[1fr_auto_1fr] items-start gap-4 px-4 pt-4 sm:px-6">
+    <header className="relative z-30 grid flex-none grid-cols-[minmax(0,1fr)_auto] items-start gap-x-4 gap-y-2 px-4 pt-4 sm:grid-cols-[1fr_auto_1fr] sm:px-6">
       <div className="min-w-0">
-        <a href="/practice" className="font-display text-base font-bold tracking-tight">
+        <a href="/practice" className="font-brand text-base font-bold tracking-tight">
           Building Bridges
         </a>
         <p className="truncate text-xs text-ghost/60">
@@ -834,8 +959,9 @@ function TopBar({
           {scenario.status === 'conference' && <> · Turn {scenario.turn_count}</>}
         </p>
       </div>
-      <div>{center}</div>
-      <div className="flex justify-end">{right}</div>
+      {/* Phones: the meter drops to its own centered row under the title. */}
+      <div className="col-span-2 row-start-2 justify-self-center sm:col-span-1 sm:col-start-2 sm:row-start-1">{center}</div>
+      <div className="col-start-2 row-start-1 flex justify-end sm:col-start-3">{right}</div>
     </header>
   )
 }
@@ -853,10 +979,10 @@ function GlassTension({
 }) {
   const limited = range.min > 0 || range.max < 100
   return (
-    <div className={cn(glass, 'w-[min(360px,40vw)] rounded-2xl px-4 py-2.5')}>
+    <div className={cn(glass, 'w-[min(360px,calc(100vw-2rem))] rounded-2xl px-4 py-2.5 sm:w-[min(360px,40vw)]')}>
       <div className="flex items-baseline justify-between">
         <span className="text-[10px] font-semibold uppercase tracking-[0.3em] text-ghost/60">Tension</span>
-        <span className="font-display text-sm font-bold">
+        <span className="whitespace-nowrap font-display text-sm font-bold">
           {tensionLabel(value)} · {value}
         </span>
       </div>

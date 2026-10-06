@@ -130,6 +130,13 @@ function Conference({ scenario: s, teacherName }: { scenario: ScenarioView; teac
         ))}
       </ol>
 
+      {s.notes_form.my_notes && (
+        <div className="mt-6 rounded-2xl border border-ghost/10 p-5 text-sm">
+          <p className="text-[11px] font-semibold uppercase tracking-[0.3em] text-brand">Your notes</p>
+          <p className="mt-2 whitespace-pre-line leading-relaxed">{s.notes_form.my_notes}</p>
+        </div>
+      )}
+
       {filledAnswers(s.notes_form).length > 0 && (
         <div className="mt-6 rounded-2xl border border-ghost/10 p-5 text-sm">
           <p className="text-[11px] font-semibold uppercase tracking-[0.3em] text-brand">{NOTES_FORM_TITLE}</p>
@@ -173,8 +180,8 @@ function Line({ event: e, teacherName }: { event: EventView; teacherName: string
   switch (e.kind) {
     case 'teacher':
       return (
-        <li className="ml-auto max-w-[85%] rounded-2xl rounded-tr-md bg-royal px-4 py-2.5">
-          <p className="text-[10px] font-semibold uppercase tracking-[0.25em] text-ghost/60">{teacherName} (you)</p>
+        <li className="ml-auto max-w-[85%] rounded-2xl rounded-tr-md bg-royal px-4 py-2.5 text-[#fbfbff]">
+          <p className="text-[10px] font-semibold uppercase tracking-[0.25em] text-[#fbfbff]/75">{teacherName} (you)</p>
           <p className="mt-0.5">{e.content}</p>
         </li>
       )

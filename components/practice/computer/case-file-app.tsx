@@ -116,7 +116,7 @@ export function CaseFileApp({
               onClick={() => onOpenDocument(d.letter)}
               className="flex w-full items-center gap-3 rounded-lg border border-coffee/10 px-3 py-2 text-left text-sm hover:border-royal"
             >
-              <span className="grid size-7 flex-none place-items-center rounded-md bg-coffee font-display text-xs font-bold text-ghost">
+              <span className="grid size-7 flex-none place-items-center rounded-md bg-coffee/10 font-display text-xs font-bold text-coffee">
                 {d.letter}
               </span>
               <span className="min-w-0">

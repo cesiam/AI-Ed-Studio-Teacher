@@ -8,7 +8,7 @@ export const metadata: Metadata = {
 
 export default function HistoryPage() {
   return (
-    <main className="min-h-svh bg-coffee px-6 pb-10 pt-28 font-body text-ghost sm:px-10">
+    <main className="min-h-svh bg-coffee px-6 pb-10 pt-28 font-body text-ghost sm:px-10 md:px-20 lg:px-32">
       <SiteNav action={{ href: '/practice', label: 'New conference' }} />
       <section className="mx-auto max-w-6xl">
         <p className="kicker">Your transcripts</p>

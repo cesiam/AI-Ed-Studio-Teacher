@@ -120,5 +120,7 @@ export function docLetters(scenario: Scenario): DocLetter[] {
 }
 
 export function firstName(fullName: string): string {
-  return fullName.split(/\s+/)[0]
+  const parts = fullName.trim().split(/\s+/)
+  // Skip a title so "Dr. Lakshmi Natarajan" is "Lakshmi", not "Dr.".
+  return (/^(Dr|Mr|Mrs|Ms|Mx)\.?$/i.test(parts[0]) && parts.length > 1 ? parts[1] : parts[0]) ?? fullName
 }

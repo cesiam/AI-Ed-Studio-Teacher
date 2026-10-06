@@ -62,9 +62,13 @@ export function parentToneGuide(tension: number): string {
  * briefing always matches the starting tension the teacher picked.
  */
 export function arrivalNote(parent: { name: string; relationship: string }, raisedBy: 'teacher' | 'parent', startTension: number): string {
-  const last = parent.name.trim().split(/\s+/).at(-1) ?? parent.name
-  const who =
-    parent.relationship === 'mother' ? `Ms. ${last}` : parent.relationship === 'father' ? `Mr. ${last}` : parent.name
+  const parts = parent.name.trim().split(/\s+/)
+  const last = parts.at(-1) ?? parent.name
+  // Use the parent's own title ("Dr. Natarajan") when the name has one.
+  const title = /^(Dr|Mr|Ms|Mrs|Mx)\.?$/i.test(parts[0]) ? parts[0].replace(/\.?$/, '.') : null
+  const female = /^(mother|grandmother|aunt|stepmother)$/i.test(parent.relationship)
+  const male = /^(father|grandfather|uncle|stepfather)$/i.test(parent.relationship)
+  const who = title ? `${title} ${last}` : female ? `Ms. ${last}` : male ? `Mr. ${last}` : parent.name
   switch (toneBand(startTension)) {
     case 'open':
       return `${who} seems at ease and ready to work with you.`

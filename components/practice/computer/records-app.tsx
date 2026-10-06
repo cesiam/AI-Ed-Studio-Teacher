@@ -36,13 +36,13 @@ export function RecordsApp({
             onClick={() => onSelect(d.letter)}
             className={cn(
               'mb-1 flex w-full items-start gap-2 rounded-lg px-2 py-2 text-left text-sm',
-              d.letter === doc.letter ? 'bg-royal text-ghost' : 'hover:bg-coffee/5',
+              d.letter === doc.letter ? 'bg-royal text-[#fbfbff]' : 'hover:bg-coffee/5',
             )}
           >
             <span className="font-display font-bold">{d.letter}</span>
             <span className="min-w-0">
               <span className="block leading-snug">{d.title}</span>
-              <span className={cn('block text-xs', d.letter === doc.letter ? 'text-ghost/70' : 'text-coffee/60')}>
+              <span className={cn('block text-xs', d.letter === doc.letter ? 'text-[#fbfbff]/75' : 'text-coffee/60')}>
                 {d.received_from ? `from ${d.received_from}` : d.source}
               </span>
             </span>

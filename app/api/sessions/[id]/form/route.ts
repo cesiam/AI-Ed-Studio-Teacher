@@ -17,7 +17,8 @@ export const PUT = handle(async (req: Request, ctx: { params: Promise<{ id: stri
   const form: Record<string, string> = {}
   for (const [key, value] of entries) {
     if (typeof value !== 'string' || key.length > 60) throw badRequest('Form fields must be text.')
-    if (value.trim()) form[key] = value.slice(0, 2000)
+    // The teacher's free-form notes get more room than a form field.
+    if (value.trim()) form[key] = value.slice(0, key === 'my_notes' ? 8000 : 2000)
   }
   getSession(id)
   getSessionScenario(id, idx)

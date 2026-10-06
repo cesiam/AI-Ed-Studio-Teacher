@@ -2,17 +2,18 @@
 
 import { useEffect, useRef, useState } from 'react'
 import { AnimatePresence, motion } from 'motion/react'
-import { BookOpen, ClipboardList, FolderOpen, Mail, MessageCircle, NotebookPen } from 'lucide-react'
+import { BookOpen, ClipboardList, FolderOpen, Mail, MessageCircle, NotebookPen, StickyNote } from 'lucide-react'
 import type { ContactRole, DocLetter, ScenarioView } from '@/lib/api-types'
 import { cn } from '@/lib/utils'
 import { CaseFileApp } from './case-file-app'
 import { ChatApp } from './chat-app'
 import { GuidePane, NotesFormPane } from './guide-app'
 import { MailApp } from './mail-app'
+import { MY_NOTES_KEY, MyNotesApp } from './my-notes-app'
 import { NotesApp } from './notes-app'
 import { RecordsApp } from './records-app'
 
-export type AppId = 'case' | 'records' | 'guide' | 'mail' | 'chat' | 'notes'
+export type AppId = 'case' | 'records' | 'guide' | 'mail' | 'chat' | 'notes' | 'mynotes'
 
 const APPS: { id: AppId; name: string; Icon: typeof Mail }[] = [
   { id: 'case', name: 'Case File', Icon: FolderOpen },
@@ -21,6 +22,7 @@ const APPS: { id: AppId; name: string; Icon: typeof Mail }[] = [
   { id: 'mail', name: 'PFPS Mail', Icon: Mail },
   { id: 'chat', name: 'PFPS Chat', Icon: MessageCircle },
   { id: 'notes', name: 'Transcript', Icon: NotebookPen },
+  { id: 'mynotes', name: 'My Notes', Icon: StickyNote },
 ]
 
 /** The teacher's laptop screen, facing the teacher (and the viewer). */
@@ -132,6 +134,9 @@ export function Computer({
               <ChatApp scenario={scenario} busy={busy} onSend={onConsult} onOpenDocument={openDocument} initial={chatWith} />
             )}
             {app === 'notes' && <NotesApp scenario={scenario} teacherName={teacherName} pendingTeacherLine={pendingTeacherLine} />}
+            {app === 'mynotes' && (
+              <MyNotesApp value={notesForm.form[MY_NOTES_KEY] ?? ''} onChange={(v) => notesForm.onChange(MY_NOTES_KEY, v)} />
+            )}
           </Window>
         )}
 
@@ -158,8 +163,9 @@ export function Computer({
       </div>
 
       {/* dock */}
-      <div className="flex flex-none justify-center pb-2">
-        <nav className="flex gap-1 rounded-2xl bg-ghost/15 p-1.5 backdrop-blur" aria-label="Apps">
+      {/* On narrow screens the dock scrolls sideways instead of cutting apps off. */}
+      <div className="flex flex-none justify-start overflow-x-auto px-2 pb-2 sm:justify-center">
+        <nav className="flex flex-none gap-1 rounded-2xl bg-ghost/15 p-1.5 backdrop-blur" aria-label="Apps">
           {APPS.map(({ id, name, Icon }) => (
             <button
               key={id}
@@ -168,7 +174,7 @@ export function Computer({
               onClick={() => open(id)}
               title={name}
               className={cn(
-                'relative flex w-[76px] flex-col items-center gap-1 rounded-xl px-2 py-1.5 font-body text-[10px] text-ghost transition-colors',
+                'relative flex w-[76px] flex-none flex-col items-center gap-1 rounded-xl px-2 py-1.5 font-body text-[10px] text-ghost transition-colors',
                 app === id ? 'bg-ghost/20' : 'hover:bg-ghost/10',
               )}
             >

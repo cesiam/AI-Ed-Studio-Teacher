@@ -1,5 +1,6 @@
 'use client'
 
+import { useCallback, useEffect, useRef } from 'react'
 import { AnimatePresence, motion } from 'motion/react'
 import type { EventView } from '@/lib/api-types'
 import { cn } from '@/lib/utils'
@@ -256,10 +257,58 @@ function Bubble({
   /** Wider and shorter, for a bubble low on the stage. */
   wide?: boolean
 }) {
+  const ref = useRef<HTMLDivElement | null>(null)
+
+  // Keep the bubble on screen: if it would run past either edge, nudge it back in.
+  // Uses the CSS `translate` property so it doesn't fight the entrance animation's transform.
+  const fit = useCallback(() => {
+    const el = ref.current
+    if (!el) return
+    el.style.translate = '0px 0px'
+    const r = el.getBoundingClientRect()
+    const margin = 12
+    let dx = r.left < margin ? margin - r.left : r.right > window.innerWidth - margin ? window.innerWidth - margin - r.right : 0
+    // Steer clear of panels that float over the stage (the coach in the corner).
+    for (const panel of document.querySelectorAll('[data-avoid-bubbles]')) {
+      const p = panel.getBoundingClientRect()
+      const overlapsVertically = r.top < p.bottom && r.bottom > p.top
+      if (p.width && overlapsVertically && r.right + dx > p.left - margin) dx = Math.min(dx, p.left - margin - r.right)
+    }
+    // Never push it off the left edge to dodge a panel.
+    dx = Math.max(dx, margin - r.left)
+    el.style.translate = `${Math.round(dx)}px 0px`
+  }, [])
+  // Runs as soon as the bubble mounts (AnimatePresence can mount it after this render),
+  // again once the entrance settles, and whenever the stage it sits on changes size.
+  const observer = useRef<ResizeObserver | null>(null)
+  const attach = useCallback(
+    (el: HTMLDivElement | null) => {
+      ref.current = el
+      observer.current?.disconnect()
+      if (!el) return
+      requestAnimationFrame(fit)
+      setTimeout(fit, 450)
+      const stage = el.offsetParent
+      observer.current = new ResizeObserver(() => fit())
+      if (stage) observer.current.observe(stage)
+      // The coach panel grows when a tip arrives; refit then too.
+      document.querySelectorAll('[data-avoid-bubbles]').forEach((p) => observer.current!.observe(p))
+    },
+    [fit],
+  )
+  useEffect(() => {
+    window.addEventListener('resize', fit)
+    return () => {
+      window.removeEventListener('resize', fit)
+      observer.current?.disconnect()
+    }
+  }, [fit])
+
   return (
     <AnimatePresence mode="wait">
       {line && (
         <motion.div
+          ref={attach}
           key={line.id}
           initial={{ opacity: 0, scale: 0.9, x: side === 'left' ? 10 : -10 }}
           animate={{ opacity: 1, scale: 1, x: 0 }}
@@ -267,7 +316,8 @@ function Bubble({
           transition={{ type: 'spring', stiffness: 260, damping: 24 }}
           className={cn(
             'absolute z-10 w-max rounded-[22px]',
-            wide ? 'max-w-[min(460px,40vw)]' : 'max-w-[min(340px,34vw)]',
+            // Phones get most of the width; larger screens keep the bubble beside the head.
+            wide ? 'max-w-[min(460px,86vw)] sm:max-w-[min(460px,40vw)]' : 'max-w-[min(340px,78vw)] sm:max-w-[min(340px,34vw)]',
             'bg-ghost px-4 py-3 font-body text-coffee shadow-[0_12px_40px_rgba(13,1,6,0.55)]',
             side === 'left' ? 'origin-top-right rounded-tr-md' : 'origin-top-left rounded-tl-md',
           )}

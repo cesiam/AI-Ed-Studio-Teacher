@@ -8,7 +8,7 @@ export const metadata: Metadata = {
 
 export default function PracticePage() {
   return (
-    <main className="relative min-h-svh bg-coffee px-6 pb-10 pt-28 text-ghost sm:px-10">
+    <main className="relative min-h-svh bg-coffee px-6 pb-10 pt-28 text-ghost sm:px-10 md:px-20 lg:px-32">
       <SiteNav action={{ href: '/practice/history', label: 'Past conferences' }} />
       {/* The notebook margin line, meeting the nav's rule as on the landing page. */}
       <div aria-hidden className="margin-rule" />

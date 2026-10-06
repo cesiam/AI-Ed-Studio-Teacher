@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import type { CreateSessionRequest, Mode, Mood, ScenarioSummary, Temperature } from '@/lib/api-types'
 import { COACH_STYLES, DEFAULT_COACH_STYLE, isCoachStyle, type CoachStyle } from '@/lib/coach-styles'
@@ -109,7 +109,13 @@ export function SetupForm() {
   // Which U.S. school level to practice for; 'all' shows every scenario.
   const [level, setLevel] = useState<SchoolLevel | 'all'>('all')
   const inLevel = (s: ScenarioSummary) => level === 'all' || levelFor(s.grade) === level
-  const visible = scenarios.filter(inLevel)
+  // Cards are numbered in list order (the tutorial is 00), not by internal id.
+  const listNumber = (s: ScenarioSummary) =>
+    s.tutorial ? '00' : String(visible.filter((x) => !x.tutorial).indexOf(s) + 1).padStart(2, '0')
+  // Tutorial first, then by grade (K to 12), so the list reads elementary, middle, high.
+  const visible = scenarios
+    .filter(inLevel)
+    .sort((a, b) => Number(b.tutorial) - Number(a.tutorial) || a.grade - b.grade || a.id.localeCompare(b.id))
 
   function chooseLevel(next: SchoolLevel | 'all') {
     setLevel(next)
@@ -289,7 +295,7 @@ export function SetupForm() {
                         on ? 'bg-scarlet text-ghost' : 'bg-ghost/10 text-ghost/60',
                       )}
                     >
-                      {on ? (temperature === 'low' && needed > 1 ? pos + 1 : '✓') : s.id}
+                      {on ? (temperature === 'low' && needed > 1 ? pos + 1 : '✓') : listNumber(s)}
                     </span>
                     <span className="min-w-0 flex-1">
                       <span className="flex items-center gap-2">
@@ -467,11 +473,9 @@ function TensionRange({ value, onChange }: { value: Tension; onChange: (t: Tensi
 
   return (
     <div className="mt-5 max-w-xl">
-      {/* preview: the reachable band, and where the meter starts */}
-      <div className="relative h-3 rounded-full bg-ghost/10" aria-hidden>
-        <div className="absolute inset-y-0 rounded-full bg-gradient-to-r from-glaucous to-scarlet" style={{ left: `${pos(min)}%`, right: `${100 - pos(max)}%` }} />
-        <div className="absolute top-1/2 size-5 -translate-x-1/2 -translate-y-1/2 rounded-full border-2 border-coffee bg-ghost" style={{ left: `${pos(start)}%` }} />
-      </div>
+      {/* The bar itself is the control: drag the round knob to set where the meter
+          starts, and the end handles to set how low and high it can go. */}
+      <TensionBar value={value} set={set} pos={pos} />
       <div className="mt-1 flex justify-between text-[11px] text-ghost/60">
         <span>{FLOOR} guarded (lowest)</span>
         <span>100 walks out</span>
@@ -515,6 +519,100 @@ function TensionRange({ value, onChange }: { value: Tension; onChange: (t: Tensi
           </label>
         ))}
       </div>
+    </div>
+  )
+}
+
+const BAR_THUMBS: { key: keyof Tension; label: string }[] = [
+  { key: 'min', label: 'Lowest tension it can go' },
+  { key: 'start', label: 'Starting tension' },
+  { key: 'max', label: 'Highest tension it can go' },
+]
+
+/** The tension bar with three draggable handles. Clicking the track moves the nearest handle. */
+function TensionBar({
+  value,
+  set,
+  pos,
+}: {
+  value: Tension
+  set: (key: keyof Tension, n: number) => void
+  pos: (v: number) => number
+}) {
+  const track = useRef<HTMLDivElement>(null)
+  const dragging = useRef<keyof Tension | null>(null)
+
+  const valueAt = (clientX: number) => {
+    const r = track.current!.getBoundingClientRect()
+    const t = Math.min(1, Math.max(0, (clientX - r.left) / r.width))
+    return Math.round(FLOOR + t * (100 - FLOOR))
+  }
+  const nearest = (v: number): keyof Tension => {
+    // Ties go to the start knob, the one people move most.
+    const order: (keyof Tension)[] = ['start', 'min', 'max']
+    return order.reduce((best, k) => (Math.abs(value[k] - v) < Math.abs(value[best] - v) ? k : best), 'start' as keyof Tension)
+  }
+
+  const onPointerDown = (e: React.PointerEvent<HTMLDivElement>, key?: keyof Tension) => {
+    e.preventDefault()
+    const v = valueAt(e.clientX)
+    const k = key ?? nearest(v)
+    dragging.current = k
+    track.current!.setPointerCapture(e.pointerId)
+    set(k, v)
+  }
+  const onPointerMove = (e: React.PointerEvent<HTMLDivElement>) => {
+    if (dragging.current) set(dragging.current, valueAt(e.clientX))
+  }
+  const stop = () => (dragging.current = null)
+
+  const onKey = (key: keyof Tension) => (e: React.KeyboardEvent) => {
+    const step = e.shiftKey ? 5 : 1
+    const delta = e.key === 'ArrowRight' || e.key === 'ArrowUp' ? step : e.key === 'ArrowLeft' || e.key === 'ArrowDown' ? -step : 0
+    if (e.key === 'Home') set(key, FLOOR)
+    else if (e.key === 'End') set(key, 100)
+    else if (delta) set(key, value[key] + delta)
+    else return
+    e.preventDefault()
+  }
+
+  return (
+    <div
+      ref={track}
+      onPointerDown={(e) => onPointerDown(e)}
+      onPointerMove={onPointerMove}
+      onPointerUp={stop}
+      onPointerCancel={stop}
+      data-cursor="hover"
+      className="relative flex h-8 cursor-pointer touch-none items-center"
+    >
+      <div className="relative h-3 w-full rounded-full bg-ghost/10">
+        <div
+          className="absolute inset-y-0 rounded-full bg-gradient-to-r from-glaucous to-scarlet"
+          style={{ left: `${pos(value.min)}%`, right: `${100 - pos(value.max)}%` }}
+        />
+      </div>
+      {BAR_THUMBS.map(({ key, label }) => (
+        <span
+          key={key}
+          role="slider"
+          tabIndex={0}
+          aria-label={label}
+          aria-valuemin={FLOOR}
+          aria-valuemax={100}
+          aria-valuenow={value[key]}
+          onKeyDown={onKey(key)}
+          onPointerDown={(e) => {
+            e.stopPropagation()
+            onPointerDown(e as unknown as React.PointerEvent<HTMLDivElement>, key)
+          }}
+          className={cn(
+            'absolute top-1/2 -translate-x-1/2 -translate-y-1/2 border-2 border-coffee shadow focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-glaucous',
+            key === 'start' ? 'z-10 size-6 rounded-full bg-ghost' : 'h-5 w-2.5 rounded-full bg-ghost/80',
+          )}
+          style={{ left: `${pos(value[key])}%` }}
+        />
+      ))}
     </div>
   )
 }

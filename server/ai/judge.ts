@@ -17,6 +17,9 @@ const Verdict = z.object({
   proposes_next_step: z
     .boolean()
     .describe('True if the teacher proposes, asks about, or accepts a concrete next step or plan (who will do what), including agreeing to something the family suggested.'),
+  teacher_wrapping_up: z
+    .boolean()
+    .describe('True if the teacher is closing the meeting: summarizing what was agreed, thanking the family for coming, or saying the conference can end. False otherwise.'),
 })
 export type Verdict = z.infer<typeof Verdict>
 

@@ -8,7 +8,7 @@ import { GAME } from '../config'
 import { CONTACT_ROLES, firstName, type ContactRole, type DocLetter, type Scenario } from '../content/types'
 import { said } from '../ai/transcript'
 import { badRequest, conflict } from '../errors'
-import { getScenario, listScenarios } from '../db/scenarios'
+import { getScenario, listScenarios, RETIRED_SCENARIO_IDS } from '../db/scenarios'
 import {
   addEvent,
   createSession,
@@ -86,6 +86,9 @@ export function createSessionFromRequest(body: Record<string, unknown>): string 
   }
 
   const plan = buildPlan(config, seed)
+  if (replayOf && plan.some((p) => RETIRED_SCENARIO_IDS.has(p.scenario_id))) {
+    throw badRequest('That session used a scenario that has been retired, so it can\'t be replayed. Start a new session instead.')
+  }
   const id = randomUUID()
   createSession({ id, seed, config, plan, startingTension: tensionRange(config).start, replayOf })
   return id
@@ -162,18 +165,20 @@ export function takeTurn(sessionId: string, message: string, show?: string, to: 
           : to === 'staff'
             ? staff!.name
             : null
-    const meta = shown || toName ? { ...shown, ...(toName && { to, to_name: toName }) } : null
+    const baseMeta = shown || toName ? { ...shown, ...(toName && { to, to_name: toName }) } : null
 
     const verdict = await judgeTurn({
       scenario,
       teacherName,
       events: prior,
-      teacherMessage: said({ content, meta }),
+      teacherMessage: said({ content, meta: baseMeta }),
       tension: row.tension,
       visibleDocs: visibleDocs(row, scenario),
       staffInRoom: staff ? `${staff.name}, ${staff.title}` : undefined,
     })
 
+    // The teacher closing the meeting lets the room offer to end it once a plan is agreed.
+    const meta = verdict.teacher_wrapping_up ? { ...baseMeta, wrap_up: true } : baseMeta
     addEvent({ sessionId, idx, turn, kind: 'teacher', speaker: teacherName, content, meta })
     // Talking to one of them means that person answers.
     if (to === 'student') {
@@ -184,6 +189,8 @@ export function takeTurn(sessionId: string, message: string, show?: string, to: 
     } else if (to === 'staff') {
       verdict.staff_should_respond = true
     }
+    // Showing or handing over a document always gets a reaction from the parent.
+    if (shown) verdict.parent_should_respond = true
     if (!staff) verdict.staff_should_respond = false
     const range = { ...tensionRange(session.config) }
     // The tutorial is meant to feel good: it can get a little tense, but nobody walks out.
@@ -221,7 +228,14 @@ export function takeTurn(sessionId: string, message: string, show?: string, to: 
     }
 
     if (verdict.parent_should_respond) {
-      const line = await parentLine({ scenario, teacherName, events: getEvents(sessionId, idx), tension: after })
+      const line = await parentLine({
+        scenario,
+        teacherName,
+        events: getEvents(sessionId, idx),
+        tension: after,
+        ...(shown && { shown: { title: shown.title, summary: shown.summary, printed: !!shown.printed } }),
+        wrappingUp: verdict.teacher_wrapping_up,
+      })
       addEvent({ sessionId, idx, turn, kind: 'parent', speaker: scenario.parent_persona.name, content: line })
     }
     if (verdict.student_should_respond) {

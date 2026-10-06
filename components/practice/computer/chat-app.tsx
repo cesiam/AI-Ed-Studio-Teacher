@@ -59,20 +59,20 @@ export function ChatApp({
             onClick={() => setRole(c.role)}
             className={cn(
               'mb-1 flex w-full items-center gap-2 rounded-lg px-2 py-2 text-left',
-              c.role === role ? 'bg-royal text-ghost' : 'hover:bg-coffee/5',
+              c.role === role ? 'bg-royal text-[#fbfbff]' : 'hover:bg-coffee/5',
             )}
           >
             <span
               className={cn(
                 'grid size-8 flex-none place-items-center rounded-full font-display text-xs font-bold',
-                c.role === role ? 'bg-ghost text-brand-inverse' : 'bg-coffee text-ghost',
+                c.role === role ? 'bg-[#fbfbff] text-royal' : 'bg-coffee/10 text-coffee',
               )}
             >
               {initials(c.name)}
             </span>
             <span className="min-w-0">
               <span className="block truncate text-sm font-medium">{c.name}</span>
-              <span className={cn('block truncate text-xs', c.role === role ? 'text-ghost/70' : 'text-coffee/60')}>
+              <span className={cn('block truncate text-xs', c.role === role ? 'text-[#fbfbff]/75' : 'text-coffee/60')}>
                 {c.title}
               </span>
             </span>
@@ -96,7 +96,7 @@ export function ChatApp({
                 <div
                   className={cn(
                     'max-w-[80%] rounded-2xl px-3.5 py-2 text-sm leading-snug',
-                    mine ? 'bg-royal text-ghost' : 'bg-coffee/5',
+                    mine ? 'bg-royal text-[#fbfbff]' : 'bg-coffee/5',
                   )}
                 >
                   {e.content}
@@ -116,7 +116,7 @@ export function ChatApp({
           {sending && (
             <>
               <div className="flex justify-end">
-                <div className="max-w-[80%] rounded-2xl bg-royal/70 px-3.5 py-2 text-sm text-ghost">{sending}</div>
+                <div className="max-w-[80%] rounded-2xl bg-royal/70 px-3.5 py-2 text-sm text-[#fbfbff]">{sending}</div>
               </div>
               <p className="text-xs text-coffee/60">{contact.name} is typing…</p>
             </>
@@ -132,7 +132,7 @@ export function ChatApp({
           <button
             type="submit"
             disabled={busy || !draft.trim()}
-            className="grid size-9 place-items-center rounded-full bg-royal text-ghost disabled:opacity-40"
+            className="grid size-9 place-items-center rounded-full bg-royal text-[#fbfbff] disabled:opacity-40"
             aria-label="Send"
           >
             <Send className="size-4" />

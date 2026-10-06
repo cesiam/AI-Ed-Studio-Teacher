@@ -58,6 +58,11 @@ const STEPS: { target: string; title: string; body: string }[] = [
     body: 'A running record of everything said once the family sits down.',
   },
   {
+    target: 'app-mynotes',
+    title: 'My Notes',
+    body: 'A blank page for your own notes: questions to ask, things to remember. It saves as you type and stays with this session.',
+  },
+  {
     target: 'coach',
     title: 'Coach tips',
     body: 'After each exchange, the coach suggests a direction to move in. The words are yours. Turn it off here if you’d rather go it alone.',

@@ -14,6 +14,8 @@ Rules:
 - Talk the way people talk out loud in a meeting: usually 1 to 4 sentences. No lists, headings, or markdown. You may add one short action in asterisks, like *looks down at the table*.
 - You only know what is listed under "What you know" plus what is said in this room. You have not seen any school documents, emails, or records unless someone in the room shows or describes them.
 - If someone presents evidence that contradicts what you said, react like a real person: surprise, defensiveness, embarrassment, or grudging honesty, depending on how respectfully it is presented.
+- When you bring up someone or somewhere the teacher may not know (a sibling, another school, your job), say plainly who or what it is, e.g. "my son's school, the elementary" rather than "the elementary kids". Only talk about things this family is actually dealing with.
+- Let the teacher lead the plan. Don't invent the fix or the routine yourself (no "maybe a sticky note by the door"). Say what you need or what won't work in your life, and react to what the teacher suggests: agree, push back, or adjust it. If you came in wanting something specific, you can ask for it, but the how is the teacher's job.
 - React in proportion. You are a reasonable adult, not a reality-TV character. A single clumsy remark gets a pointed question or a flat "okay," not an outburst. Your mood shifts gradually over several exchanges, never all at once. Avoid exclamation marks, sarcasm, and dramatic gestures; at most one small action.
 - Each turn ends with a note in [brackets] about what is happening and how you feel. Let it guide you. Never mention the note, tension, scores, or numbers from it.`
 
@@ -102,6 +104,10 @@ export async function parentLine(opts: {
   tension: number
   opening?: boolean
   walkout?: boolean
+  /** The teacher just showed (or handed over) this document: react to it first. */
+  shown?: { title: string; summary: string; printed?: boolean }
+  /** The teacher is closing the meeting. */
+  wrappingUp?: boolean
 }): Promise<string> {
   const { scenario: s, teacherName, events, tension } = opts
   const name = firstName(s.parent_persona.name)
@@ -113,6 +119,12 @@ export async function parentLine(opts: {
         : `You just sat down in ${teacherName}'s classroom. The teacher asked for this meeting. Greet them briefly and let them lead; you don't know exactly what they want yet. How you feel right now: ${parentToneGuide(tension)}`
   } else if (opts.walkout) {
     direction = `You have had enough. Say one or two final sentences as ${name} and leave the meeting, taking ${firstName(s.student_name)} with you.`
+  } else if (opts.wrappingUp && !opts.shown) {
+    direction = `Your turn to speak as ${name}. The teacher is wrapping up the meeting. Respond to their summary and say goodbye in one or two sentences, in character. Don't raise anything new. How you feel right now: ${parentToneGuide(tension)}`
+  } else if (opts.shown) {
+    const how = opts.shown.printed ? 'handed you a printed copy of' : 'turned the laptop around to show you'
+    direction = `Your turn to speak as ${name}. The teacher just ${how} the "${opts.shown.title}", and you have read it. What it shows: ${opts.shown.summary}
+Start by acknowledging what you just read, in your own words: name the specific detail that stands out to you and react the way you honestly would (surprise, embarrassment, defensiveness, relief or grudging agreement), in proportion to how respectfully it was shown. Then respond to anything the teacher said. Don't recite the document. How you feel right now: ${parentToneGuide(tension)}`
   } else {
     direction = `Your turn to speak as ${name}. How you feel right now: ${parentToneGuide(tension)}`
   }

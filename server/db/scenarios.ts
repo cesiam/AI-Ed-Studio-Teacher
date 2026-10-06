@@ -37,10 +37,18 @@ function ensureSeeded(): void {
   globalForSeed.__bbSeeded = true
 }
 
+/**
+ * Scenarios replaced by the Conference Documentation set (October 2026). They
+ * stay in the database so past sessions still open in history, but they are
+ * never offered or drawn again, and uploads never reuse their ids.
+ */
+export const RETIRED_SCENARIO_IDS = new Set(['02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12'])
+
+/** Scenarios teachers can pick or draw (retired ones excluded). */
 export function listScenarios(): Scenario[] {
   ensureSeeded()
   const rows = db().prepare('SELECT data FROM scenarios ORDER BY id').all() as unknown as ScenarioRow[]
-  return rows.map((r) => JSON.parse(r.data) as Scenario)
+  return rows.map((r) => JSON.parse(r.data) as Scenario).filter((s) => !RETIRED_SCENARIO_IDS.has(s.id))
 }
 
 export function getScenario(id: string): Scenario {

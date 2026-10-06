@@ -95,8 +95,8 @@ export function StatsSection() {
                 <CountUp to={28} suffix="%" />
               </motion.p>
               <p className="mt-5 max-w-md font-body text-lg text-ghost/75">
-                of U.S. students were chronically absent in the {'2022\u2060–\u206023'} school year. Maya, at 76%
-                attendance, is one of them.
+                of U.S. students were chronically absent in the {'2022\u2060–\u206023'} school year. Maya, with 12 absences by
+                November, is on track to be one of them.
               </p>
               <p className="mt-2 font-body text-xs font-semibold uppercase tracking-[0.18em] text-ghost/60">
                 U.S. Department of Education

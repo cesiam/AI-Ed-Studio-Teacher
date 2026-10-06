@@ -4,7 +4,7 @@ import Ajv from 'ajv'
 import { z } from 'zod'
 import { speak } from '../ai/client'
 import { paths } from '../config'
-import { getScenario, listScenarios, upsertScenario } from '../db/scenarios'
+import { getScenario, listScenarios, RETIRED_SCENARIO_IDS, upsertScenario } from '../db/scenarios'
 import { transaction } from '../db/client'
 import { badRequest, HttpError } from '../errors'
 import { CONTACT_ROLES, type DocLetter, type Scenario } from './types'
@@ -24,7 +24,7 @@ function validate(scenarios: Scenario[]): void {
 
 /** Next free two-digit id ("12", "13", ...). */
 function nextIds(n: number): string[] {
-  const taken = new Set(listScenarios().map((s) => s.id))
+  const taken = new Set([...listScenarios().map((s) => s.id), ...RETIRED_SCENARIO_IDS])
   const ids: string[] = []
   for (let i = 1; i <= 99 && ids.length < n; i++) {
     const id = String(i).padStart(2, '0')
@@ -47,7 +47,7 @@ export function importScenarioJson(raw: unknown): Scenario[] {
   }
 
   // Never overwrite a scenario that's already here: give clashing uploads fresh ids.
-  const taken = new Set(listScenarios().map((s) => s.id))
+  const taken = new Set([...listScenarios().map((s) => s.id), ...RETIRED_SCENARIO_IDS])
   const clashes = list.filter((s) => typeof s.id !== 'string' || taken.has(s.id))
   const fresh = nextIds(clashes.length)
   const scenarios = list.map((s) => ({ ...s, status: s.status ?? 'ready', id: clashes.includes(s) ? fresh.shift()! : s.id }))

@@ -140,9 +140,9 @@ function Briefing({
   notesForm,
   coach,
 }: Props & { notesForm: NotesForm; coach: CoachSetting }) {
-  // First-timers get a walkthrough of the laptop; anyone can replay it from the footer.
+  // Every session opens with a walkthrough of the laptop (skippable); it can be replayed from the footer.
   const [touring, setTouring] = useState(false)
-  useEffect(() => setTouring(!tourDone()), [])
+  useEffect(() => setTouring(!tourDone(session.id)), [session.id])
 
   return (
     <main className="relative flex h-svh flex-col overflow-hidden bg-coffee font-body text-ghost">
@@ -214,7 +214,7 @@ function Briefing({
       </footer>
 
       <ErrorToast error={error} onDismiss={onDismissError} />
-      <BriefingTour open={touring} onClose={() => setTouring(false)} />
+      <BriefingTour sessionId={session.id} open={touring} onClose={() => setTouring(false)} />
     </main>
   )
 }

@@ -3,20 +3,23 @@
 import { useCallback, useEffect, useLayoutEffect, useState } from 'react'
 import { AnimatePresence, motion } from 'motion/react'
 
-const TOUR_KEY = 'bb-briefing-tour'
+// There are no accounts, so the app can't tell who is new: the tour runs at the
+// start of every session's briefing. Finishing or skipping it only dismisses it
+// for that session (so a reload doesn't bring it back).
+const tourKey = (sessionId: string) => `bb-briefing-tour:${sessionId}`
 
-/** Whether this browser has finished or skipped the laptop tour. */
-export function tourDone() {
+/** Whether the tour was finished or skipped in this session. */
+export function tourDone(sessionId: string) {
   try {
-    return localStorage.getItem(TOUR_KEY) === 'done'
+    return localStorage.getItem(tourKey(sessionId)) === 'done'
   } catch {
     return false
   }
 }
 
-function markTourDone() {
+function markTourDone(sessionId: string) {
   try {
-    localStorage.setItem(TOUR_KEY, 'done')
+    localStorage.setItem(tourKey(sessionId), 'done')
   } catch {}
 }
 
@@ -98,10 +101,10 @@ function holePath(b: Box, vw: number, vh: number) {
 }
 
 /**
- * First-time walkthrough of the briefing laptop. A translucent grey layer covers
+ * Walkthrough of the briefing laptop, shown by default. A translucent grey layer covers
  * the page and blocks it; only the highlighted feature stays lit and clickable.
  */
-export function BriefingTour({ open, onClose }: { open: boolean; onClose: () => void }) {
+export function BriefingTour({ sessionId, open, onClose }: { sessionId: string; open: boolean; onClose: () => void }) {
   const [step, setStep] = useState(0)
   const [box, setBox] = useState<Box | null>(null)
   const [vp, setVp] = useState({ w: 0, h: 0 })
@@ -125,10 +128,10 @@ export function BriefingTour({ open, onClose }: { open: boolean; onClose: () => 
   }, [open, current.target])
 
   const finish = useCallback(() => {
-    markTourDone()
+    markTourDone(sessionId)
     setStep(0)
     onClose()
-  }, [onClose])
+  }, [onClose, sessionId])
 
   const next = useCallback(() => (step === STEPS.length - 1 ? finish() : setStep(step + 1)), [step, finish])
   const back = useCallback(() => setStep((s) => Math.max(0, s - 1)), [])
